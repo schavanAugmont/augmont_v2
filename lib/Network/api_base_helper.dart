@@ -34,8 +34,8 @@ class ApiBaseHelper {
 
   final String _emiBaseUrl =
       "https://92e2-2402-a00-162-3c4-149f-f0c3-20f6-3c60.ngrok-free.app/api/";
-  final String _baseUrl = "http://c5c1-103-247-6-247.ngrok-free.app";
-  final String _webUrl = "http://c5c1-103-247-6-247.ngrok-free.app/";
+  final String _baseUrl = "http://b677-122-169-52-72.ngrok-free.app";
+  final String _webUrl = "http://b677-122-169-52-72.ngrok-free.app/";
   static bool LogEvent = false;
 
   //

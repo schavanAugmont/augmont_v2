@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:augmont_v2/Screens/SignIn/signin_page1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
@@ -9,15 +10,17 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import '../Models/SignInModel.dart';
+import '../Models/StateModel.dart';
 import '../Models/generateOtpModel.dart';
 import '../Network/Providers/SignInProvider.dart';
 import '../Network/app_exception.dart';
+import '../Screens/SignIn/signin_page2.dart';
+import '../Utils/Validator.dart';
 import '../Utils/dialog_helper.dart';
 import '../Utils/print_logs.dart';
 import '../Utils/session_manager.dart';
 import '../network/ApiMessage.dart';
 import '../network/ErrorHandling.dart';
-
 
 class SignInController extends GetxController with StateMixin<dynamic> {
   late LocalAuthentication _localAuthentication;
@@ -27,21 +30,53 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   var isTimeOnGoing = false.obs;
 
+  var isStateSelected = false.obs;
+  var isCitySelected = false.obs;
+
+  var selectedState = "".obs;
+  var selectedCity = "".obs;
+  var selectedStateId = "".obs;
+  var selectedCityId = "".obs;
+
+  List<StateModel> listOfStates = [];
+
+  List<StateModel> listOfCities = [];
+
   //late final TextEditingController otpTextController;
- //late OTPTextEditController otpTextController;
+  //late OTPTextEditController otpTextController;
   late TextEditingController otpTextController;
-  late final TextEditingController mobileTextController;
+  late TextEditingController firstNameController;
+  late TextEditingController lastNameController;
+  late TextEditingController emailController;
+  late TextEditingController refernceController;
+  late TextEditingController stateController;
+  late TextEditingController cityController;
+  late TextEditingController searchController;
+  late TextEditingController mobileTextController;
   late GlobalKey<FormState> formKey;
 
   //late OTPInteractor otpInteractor;
 
   late String referenceCode;
 
+  late TextEditingController pinTextController;
+  late TextEditingController reenterpinTextController;
+
   var enableOtpButton = false.obs;
   var enableSubmitOtpButton = false.obs;
-  var enableGenrateOtpButton= false.obs;
-  var enableMobileView=true.obs;
-  var enableOtpView=false.obs;
+  var enableGenrateOtpButton = false.obs;
+  var enablePINButton = false.obs;
+  var enableMobileView = true.obs;
+  var enableOtpView = false.obs;
+
+  var isFirstNameError = false.obs;
+  var isLastNameError = false.obs;
+  var isStateError = false.obs;
+  var isCityError = false.obs;
+  var isEmailError = false.obs;
+
+  var pinError = false.obs;
+  var repinError = false.obs;
 
   late SessionManager sessionManager;
 
@@ -70,8 +105,17 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     //     },
     //     otpInteractor: otpInteractor);
 
+    pinTextController = TextEditingController();
+    reenterpinTextController = TextEditingController();
     mobileTextController = TextEditingController();
     otpTextController = TextEditingController();
+    firstNameController = TextEditingController();
+    lastNameController = TextEditingController();
+    stateController = TextEditingController();
+    cityController = TextEditingController();
+    emailController = TextEditingController();
+    searchController = TextEditingController();
+    refernceController = TextEditingController();
     formKey = GlobalKey<FormState>();
 
     countdownTimerController = CountdownTimerController(
@@ -95,21 +139,48 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     update();
   }
 
+  void setPINButton(bool boo) {
+    enablePINButton(boo);
+    update();
+  }
+
   void setEnableSubmitOtpButton(bool boo) {
     enableSubmitOtpButton(boo);
     update();
   }
 
-  void setMobileView(){
+  void setMobileView() {
     enableMobileView(true);
     enableOtpView(false);
     otpTextController.clear();
     update();
   }
 
-  void setOTPView(){
+  void setOTPView() {
     enableOtpView(true);
     enableMobileView(false);
+
+    update();
+  }
+
+  void setSelectedState(value, id) {
+    isStateSelected(true);
+    isCitySelected(false);
+    isStateError(false);
+    selectedState(value);
+    selectedStateId(id);
+    selectedCity("");
+    selectedCityId("-1");
+    //fetchCityList();
+
+    update();
+  }
+
+  void setSelectedCity(value, id) {
+    isCitySelected(true);
+    isCityError(false);
+    selectedCity(value);
+    selectedCityId(id);
     update();
   }
 
@@ -223,7 +294,6 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     });
   }
 
-
   void clearBackStack() {
     Get.until((route) => route.isFirst);
     Get.until((route) => route.isFirst, id: 0);
@@ -278,16 +348,16 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   @override
   Future<void> onClose() async {
-  //  await otpTextController.stopListen();
+    //  await otpTextController.stopListen();
     super.onClose();
   }
 
   @override
   Future<void> dispose() async {
-   //await otpTextController.stopListen();
+    //await otpTextController.stopListen();
     countdownTimerController.dispose();
     mobileTextController.dispose();
- //   otpTextController.dispose();
+    //   otpTextController.dispose();
     super.dispose();
   }
 
@@ -352,4 +422,122 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   //         .then((value) => PrintLogs.printData('signature - $value'));
   //   }
   // }
+
+  bool validateBasciInformation() {
+    var isValid = true;
+
+    if (firstNameController.text.trim().isEmpty) {
+      isFirstNameError(true);
+      isValid = false;
+    } else if (lastNameController.text.trim().isEmpty) {
+      isFirstNameError(false);
+      isLastNameError(true);
+      isValid = false;
+    } else if (!Validator.validateEmailAddress(emailController.text.trim())) {
+      isLastNameError(false);
+      isFirstNameError(false);
+      isEmailError(true);
+      isValid = false;
+    } else if (selectedState.trim().isEmpty) {
+      isLastNameError(false);
+      isFirstNameError(false);
+      isEmailError(false);
+      isStateError(true);
+      isValid = false;
+    } else if (selectedCity.trim().isEmpty) {
+      isLastNameError(false);
+      isFirstNameError(false);
+      isEmailError(false);
+      isStateError(false);
+      isCityError(true);
+      isValid = false;
+    } else {
+      isLastNameError(false);
+      isFirstNameError(false);
+      isEmailError(false);
+      isStateError(false);
+      isCityError(false);
+      isValid = true;
+    }
+
+    update();
+
+    return isValid;
+  }
+
+  bool validatePINChange() {
+    var isValid = true;
+
+    if (pinTextController.text.trim().isEmpty) {
+      pinError(true);
+      isValid = false;
+    } else if (reenterpinTextController.text.trim().isEmpty) {
+      pinError(false);
+      repinError(true);
+      isValid = false;
+    } else if (reenterpinTextController.text.trim() !=
+        pinTextController.text.trim()) {
+      pinError(false);
+      repinError(true);
+      isValid = false;
+    } else {
+      pinError(false);
+      repinError(false);
+      isValid = true;
+    }
+
+    update();
+
+    return isValid;
+  }
+
+  void onBackPress() {
+    Get.back();
+  }
+
+  void navigateToBasicDetails() {
+    Get.to(SignInPage2());
+  }
+
+
+  void showBiomatricPopup(BuildContext context){
+    showGeneralDialog(
+      barrierLabel: "showGeneralDialog",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.6),
+      transitionDuration: const Duration(milliseconds: 400),
+      context: context,
+      pageBuilder: (context, _, __) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: Column(
+            children: [
+
+              Container(
+                padding: EdgeInsets.only(top: 20),
+                margin: EdgeInsets.symmetric(vertical: 30),
+                width: double.infinity,
+                child: Image.asset(
+                  'assets/images/ic_lock.png',
+                  width: 80,
+                  height: 80,
+                ),
+              ),
+
+
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (_, animation1, __, child) {
+        return SlideTransition(
+          position: Tween(
+            begin: const Offset(0, 1),
+            end: const Offset(0, 0),
+          ).animate(animation1),
+          child: child,
+        );
+      },
+    );
+  }
 }

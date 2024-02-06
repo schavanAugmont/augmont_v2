@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../../Bindings/signin_binding.dart';
 import '../../Models/allinboard_screen.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
@@ -156,7 +157,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                                 fontSize: 15,
                               )),
                           onTap: () {
-                            Get.off(() => SignInPage1());
+                            Get.off(() => SignInPage1(),binding: SignInBiding());
                           },
                         )
                       ],

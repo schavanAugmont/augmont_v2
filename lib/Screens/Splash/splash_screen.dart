@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../SignIn/signin_page1.dart';
+import '../SignIn/signin_page2.dart';
+import '../SignIn/signin_page3.dart';
 class SplashScreen extends StatefulWidget {
   static String routeName = "/SplashScreen";
 
@@ -42,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen>
           //   Get.off(() =>  OnboardScreen(),binding: IntroBiding());
           // });
 
-          Get.off(() => SignInPage1(),binding: SignInBiding());
+          Get.off(() => SignInPage3(),binding: SignInBiding());
         }
       })
       ..addStatusListener((status) => print('$status'));

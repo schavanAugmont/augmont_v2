@@ -25,7 +25,7 @@ class Strings {
   static String countryCode = '+91';
   static String generateOtp = 'Generate OTP';
   static String submitOtp = 'Submit OTP';
-  static String didntGetAnOtp = "Didn't get an OTP? ";
+  static String didntGetAnOtp = "Didn't recevie an OTP? ";
   static String resend = "Resend Via SMS";
   static String getcall = "Call";
   static String otpExpiresIn = "OTP expires in ";
@@ -165,6 +165,8 @@ class Strings {
   static String addressLine2 = "Address Line 2";
   static String enterAddressLine2 = "Enter Address Line 2";
   static String enterPinCode = "Enter Pincode";
+  static String enterPin="Enter PIN";
+  static String reenterPin='Re-enter PIN';
   static String pinCode = "Pincode";
   static String shippingAddress = "Shipping Address";
   static String changeAddress = "CHANGE ADDRESS";
@@ -226,6 +228,12 @@ class Strings {
   static String paymentMethod = "Payment Method";
   static String orderDate = "Order Date";
   static String personalDetails = "PERSONAL DETAILS";
+  static String personalInformation='Personal Information';
+  static String enterPIn="Enter PIN";
+  static String reenterPIN="Re-enter PIN";
+  static String pinTitle='Set your security PIN';
+  static String pinDescp="Set a 6 digit pin for easy access to Augmont";
+  static String personalInformationDesc='Enter your personal information to proceed forward';
   static String otherDetails = "OTHER DETAILS";
   static String gstDetails = "GST DETAILS";
   static String identity = "IDENTITY";
@@ -620,7 +628,8 @@ class Strings {
   static String pleaseSaveTheFormBeforeProceedingFurther =
       "Please save the form before proceeding further..";
   static String cntinue = "Continue";
-  static String reference = "Reference";
+  static String reference = "Reference Code";
+  static String referencedesc = "Reference Code (if any)";
   static String productWillBeDeliveredOnceAllEmiArePaid =
       "Product will be delivered once all EMIs are paid.";
   static String emiScheme = "EMI Scheme";
