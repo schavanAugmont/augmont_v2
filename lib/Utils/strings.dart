@@ -569,6 +569,7 @@ class Strings {
   static String changeProfilePicture = "Change Profile Picture";
   static String enterAadhaarNo = "Enter Aadhaar Number";
   static String otp = "OTP";
+  static String otpVerification="OTP Verification";
   static String sendOtp = "Send OTP";
   static String landmark = "Landmark";
   static String selectAddressProof = "Select Address Proof";

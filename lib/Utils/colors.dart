@@ -40,7 +40,7 @@ const kycProductBackgroundColor = Color(0xffF7F8FA);
 const greenColor = Color(0xff00A300);
 const grayColor = Color(0xff95a5a6);
 
-Color lightgreenshede = Color(0xFFF0FAF6);
+const lightgreenshede = Color(0xFFF0FAF6);
 Color lightgreenshede1 = Color(0xFFB2D9CC);
 Color greenshede0 = Color(0xFF66A690);
 Color greenshede1 = Color(0xFF93C9B5);

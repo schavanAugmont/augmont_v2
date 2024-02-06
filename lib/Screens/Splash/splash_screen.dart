@@ -1,7 +1,12 @@
+import 'package:augmont_v2/Bindings/intro_binding.dart';
+import 'package:augmont_v2/Bindings/signin_binding.dart';
+import 'package:augmont_v2/Controllers/sing_in_controller.dart';
 import 'package:augmont_v2/Screens/AppIntro/onboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+
+import '../SignIn/signin_page1.dart';
 class SplashScreen extends StatefulWidget {
   static String routeName = "/SplashScreen";
 
@@ -33,9 +38,11 @@ class _SplashScreenState extends State<SplashScreen>
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          Future.delayed(const Duration(seconds: 2),(){
-            Get.off(() =>  OnboardScreen());
-          });
+          // Future.delayed(const Duration(seconds: 2),(){
+          //   Get.off(() =>  OnboardScreen(),binding: IntroBiding());
+          // });
+
+          Get.off(() => SignInPage1(),binding: SignInBiding());
         }
       })
       ..addStatusListener((status) => print('$status'));
