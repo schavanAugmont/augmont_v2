@@ -4,6 +4,7 @@ class Strings {
 
   static String goldForAll = 'Gold For All';
   static String home = 'HOME';
+  static String exchange='Exchange';
   static String notification = 'NOTIFICATIONS';
   static String myAccount = 'MY ACCOUNT';
   static String bolg = 'BLOG';
@@ -698,6 +699,9 @@ class Strings {
   static String moduleGoldSIP = "5";
   static String moduleGoldFD = "6";
   static String moduleOther = "7";
+
+  static String createProfile="Create Profile";
+  static String createProfileDec="Onboard to Augmont and avail world class service";
 }
 
 extension StringExtension on String {

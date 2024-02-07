@@ -1,11 +1,14 @@
 import 'package:augmont_v2/Bindings/intro_binding.dart';
+import 'package:augmont_v2/Bindings/main_screen_binding.dart';
 import 'package:augmont_v2/Bindings/signin_binding.dart';
+import 'package:augmont_v2/Controllers/main_screen_controller.dart';
 import 'package:augmont_v2/Controllers/sing_in_controller.dart';
 import 'package:augmont_v2/Screens/AppIntro/onboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../Main/main_screen.dart';
 import '../SignIn/signin_page1.dart';
 import '../SignIn/signin_page2.dart';
 import '../SignIn/signin_page3.dart';
@@ -44,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen>
           //   Get.off(() =>  OnboardScreen(),binding: IntroBiding());
           // });
 
-          Get.off(() => SignInPage3(),binding: SignInBiding());
+          Get.off(() => MainScreen(),binding: MainScreenBinding());
         }
       })
       ..addStatusListener((status) => print('$status'));
