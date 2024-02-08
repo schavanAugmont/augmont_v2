@@ -691,6 +691,7 @@ class Strings {
   static String getStarted="Get Started";
   static String enterPhoneNo="Enter Phone Number";
   static String enterPhoneNoDec="Enter your phone numer in order to begin your journey with Augmont";
+  static String digitalInv="Digital Investments";
 
   static String moduleGoldLoan = "1";
   static String moduleGoldEMI = "2";
