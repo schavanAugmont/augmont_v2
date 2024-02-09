@@ -35,8 +35,7 @@ class SignInPageState1 extends State<SignInPage1> {
                       child: ElevatedButton(
                           onPressed: controller.enableGenrateOtpButton.value
                               ? () {
-                            controller.startTimer(
-                                context, false, true);
+                            controller.startTimer(false, true);
                                 }
                               : null,
                           style: ElevatedButton.styleFrom(

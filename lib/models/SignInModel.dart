@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class SignInModel {
   String? message;
   String? token;
@@ -32,15 +30,15 @@ class SignInModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['token'] = this.token;
-    data['isQuizAvailable'] = this.isQuizAvailable;
-    data['customerId'] = this.customerId;
-    data['productRequestId'] = this.productRequestId;
-    data['prductRequestMsg'] = this.prductRequestMsg;
-    data['productStatus'] = this.productStatus;
-    data['isPinAdded']=this.isPinAdded;
+    final Map<String, dynamic> data = {};
+    data['message'] = message;
+    data['token'] = token;
+    data['isQuizAvailable'] = isQuizAvailable;
+    data['customerId'] = customerId;
+    data['productRequestId'] = productRequestId;
+    data['prductRequestMsg'] = prductRequestMsg;
+    data['productStatus'] = productStatus;
+    data['isPinAdded']=isPinAdded;
     return data;
   }
 }

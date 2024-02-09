@@ -170,8 +170,7 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                             ..onTap = () => {
                                   if (!controller.isTimeOnGoing.value)
                                     {
-                                      controller.startTimer(
-                                          context, false, false)
+                                      controller.startTimer(false, false)
                                     }
                                 },
                           style: TextStyle(
@@ -200,7 +199,7 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                                   if (!controller.isTimeOnGoing.value)
                                     {
                                       controller.startTimer(
-                                          context, false, false)
+                                           false, false)
                                     }
                                 },
                           style: TextStyle(

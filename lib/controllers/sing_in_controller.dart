@@ -563,8 +563,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   void signUp() async {
     DialogHelper.showLoading();
-    SignInProvider()
-        .signUp(
+    SignInProvider().signUp(
       firstNameController.text.toString(),
       lastNameController.text.toString(),
       mobileTextController.text.toString(),

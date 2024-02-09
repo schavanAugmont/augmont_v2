@@ -24,7 +24,7 @@ class AugmontApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: Strings.goldForAll,
       theme: CustomTheme.lightTheme,
-      initialRoute: SplashScreen.routeName,
+      home:const SplashScreen(),
       defaultTransition: Transition.rightToLeft,
     );
   }

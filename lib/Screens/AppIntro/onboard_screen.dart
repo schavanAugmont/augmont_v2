@@ -2,15 +2,13 @@ import 'package:augmont_v2/Controllers/intro_controller.dart';
 import 'package:augmont_v2/Screens/SignIn/signin_page1.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../Bindings/signin_binding.dart';
-import '../../Models/allinboard_screen.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
 
 class OnboardScreen extends StatefulWidget {
-  OnboardScreen({Key? key}) : super(key: key);
+  const OnboardScreen({Key? key}) : super(key: key);
 
   @override
   State<OnboardScreen> createState() => _OnboardScreenState();
