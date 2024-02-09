@@ -8,6 +8,7 @@ class SignInModel {
   String? productRequestId;
   dynamic prductRequestMsg;
   String? productStatus;
+  bool? isPinAdded;
 
   SignInModel(
       {this.message,
@@ -16,7 +17,8 @@ class SignInModel {
         this.customerId,
         this.productRequestId,
         this.prductRequestMsg,
-        this.productStatus});
+        this.productStatus,
+      this.isPinAdded});
 
   SignInModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
@@ -26,6 +28,7 @@ class SignInModel {
     productRequestId = json['productRequestId'];
     prductRequestMsg = json['prductRequestMsg'];
     productStatus = json['productStatus'];
+    isPinAdded=json['isPinAdded'];
   }
 
   Map<String, dynamic> toJson() {
@@ -37,6 +40,7 @@ class SignInModel {
     data['productRequestId'] = this.productRequestId;
     data['prductRequestMsg'] = this.prductRequestMsg;
     data['productStatus'] = this.productStatus;
+    data['isPinAdded']=this.isPinAdded;
     return data;
   }
 }

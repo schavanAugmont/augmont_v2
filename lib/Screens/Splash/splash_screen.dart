@@ -44,11 +44,11 @@ class _SplashScreenState extends State<SplashScreen>
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          // Future.delayed(const Duration(seconds: 2),(){
-          //   Get.off(() =>  OnboardScreen(),binding: IntroBiding());
-          // });
+          Future.delayed(const Duration(seconds: 2),(){
+            Get.off(() =>  OnboardScreen(),binding: IntroBiding());
+          });
 
-          Get.off(() => DigitalInvestmentGoldScreen());
+          //Get.off(() => DigitalInvestmentGoldScreen());
         }
       })
       ..addStatusListener((status) => print('$status'));

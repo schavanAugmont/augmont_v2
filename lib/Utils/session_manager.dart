@@ -26,11 +26,18 @@ class SessionManager {
   final String userInformationForm = "userInformationForm";
   final String occupationList = "occupationList";
 
-  Future<void> setIsLoggedIn(bool flag, String token) async {
+  Future<void> setIsLoggedIn(bool flag) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setBool(isUserLoggedIn, flag);
+  }
+
+
+  Future<void> setToken(String token) async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString(tokenKey, token);
   }
+
+
 
   Future<bool> isLoggedIn() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();

@@ -13,7 +13,7 @@ class Validator {
   static bool validateOtp(String pin) {
     if (pin.isEmpty) {
       return false;
-    } else if (pin.length < 6) {
+    } else if (pin.length < 4) {
       return false;
     }
     return true;

@@ -1,25 +1,28 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:augmont_v2/Screens/SignIn/signin_page1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
+import '../Bindings/main_screen_binding.dart';
+import '../Models/CustomerDetailsModel.dart';
+import '../Models/PassbookDetailsModel.dart';
+import '../Models/PersonalInfoModel.dart';
 import '../Models/SignInModel.dart';
 import '../Models/StateModel.dart';
 import '../Models/generateOtpModel.dart';
+import '../Network/ApiMessage.dart';
 import '../Network/Providers/SignInProvider.dart';
 import '../Network/app_exception.dart';
+import '../Screens/Main/main_screen.dart';
 import '../Screens/SignIn/signin_page2.dart';
+import '../Screens/SignIn/signin_page3.dart';
 import '../Utils/Validator.dart';
 import '../Utils/dialog_helper.dart';
 import '../Utils/print_logs.dart';
 import '../Utils/session_manager.dart';
-import '../network/ApiMessage.dart';
 import '../network/ErrorHandling.dart';
 
 class SignInController extends GetxController with StateMixin<dynamic> {
@@ -32,6 +35,8 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   var isStateSelected = false.obs;
   var isCitySelected = false.obs;
+  var isCustomer = false;
+  var isPinAdded = false.obs;
 
   var selectedState = "".obs;
   var selectedCity = "".obs;
@@ -125,7 +130,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
     _localAuthentication = LocalAuthentication();
     checkingForBioMetrics();
-
+    fetchStateList();
     super.onInit();
   }
 
@@ -171,7 +176,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     selectedStateId(id);
     selectedCity("");
     selectedCityId("-1");
-    //fetchCityList();
+    fetchCityList();
 
     update();
   }
@@ -222,68 +227,28 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     return authenticated;
   }
 
-  Future<void> generateOTP(String mobileNo, BuildContext context) async {
-    otpTextController.clear();
-
-    // await otpTextController.stopListen();
-    // getSignature();
-    // startListening();
-
-    DialogHelper.showLoading();
-    SignInProvider().generateOtp(mobileNo, false).then(
-      (value) async {
-        DialogHelper.dismissLoader();
-        var jsonMap = jsonDecode(value);
-        var model = GenerateOtpModel.fromJson(jsonMap);
-        referenceCode = model.referenceCode;
-
-        if (model.isCustomer) {
-          /*if (canCheckBiometrics.value) {
-            authenticateMe();
-          } else {
-            isUserAuthenticated(true);
-            update();
-          }*/
-
-          isUserAuthenticated(true);
-          update();
-          setstartTime();
-        } else {
-          /*if (canCheckBiometrics.value) {
-            bool isAuth = await authenticateForSignUp();
-            if (isAuth) {
-              navigateToSignUp(model);
-            }
-          } else {
-            navigateToSignUp(model);
-          }*/
-          navigateToSignUp(model);
-        }
-        showSnackBar(context, model.message);
-      },
-      onError: (error) {
-        DialogHelper.dismissLoader();
-        if (error is BadRequestException) {
-          var object = jsonDecode(error.toString());
-
-          showSnackBar(context, object['message']);
-        } else {
-          ErrorHandling.handleErrors(error);
-        }
-      },
-    );
-  }
-
-  void signIn(String mobileNo, String otp, BuildContext context) async {
+  void signIn() async {
     DialogHelper.showLoading();
     model = null;
+    var mobileNo = mobileTextController.text.toString();
+    var otp = otpTextController.text.toString();
     SignInProvider().signIn(mobileNo, otp, referenceCode).then((value) async {
       var jsonMap = jsonDecode(value);
-
+      DialogHelper.dismissLoader();
       model = SignInModel.fromJson(jsonMap);
       if (model != null) {
-        await sessionManager.setIsLoggedIn(true, model!.token!);
+        await sessionManager.setToken(model!.token!);
         await sessionManager.setMobileNumber(mobileNo);
+        print("object ${model!.isPinAdded} ${isCustomer}");
+        isPinAdded(model!.isPinAdded);
+        update();
+        if (model!.isPinAdded! && isCustomer) {
+          navigateToPinSetup();
+        } else if (!model!.isPinAdded! && isCustomer) {
+          navigateToPinSetup();
+        } else if (!model!.isPinAdded! && !isCustomer) {
+          navigateToBasicDetails();
+        }
       }
     }, onError: (error) {
       if (error is InvalidInputException) {
@@ -299,16 +264,15 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     Get.until((route) => route.isFirst, id: 0);
   }
 
-  void startTimer(
-    BuildContext context,
-    bool isVoice,
-  ) {
-    setstartTime();
-    resendOtp(mobileTextController.text.trim(), context, isVoice);
+  void startTimer(BuildContext context, bool isVoice, bool isOtpView) {
+    if (isOtpView) {
+      setOTPView();
+    }
+    otpTextController.clear();
+    sendOtp(mobileTextController.text.trim(), context, isVoice);
   }
 
   void setstartTime() {
-    otpTextController.clear();
     countdownTimerController.endTime =
         DateTime.now().millisecondsSinceEpoch + 1000 * 60;
     countdownTimerController.start();
@@ -321,7 +285,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     update();
   }
 
-  Future<void> resendOtp(
+  Future<void> sendOtp(
       String mobileNo, BuildContext context, bool isVoice) async {
     // await otpTextController.stopListen();
     // getSignature();
@@ -332,7 +296,8 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
         var model = GenerateOtpModel.fromJson(jsonMap);
         referenceCode = model.referenceCode;
-
+        isCustomer = model.isCustomer;
+        setstartTime();
         showSnackBar(context, model.message);
       },
       onError: (error) {
@@ -496,11 +461,10 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   void navigateToBasicDetails() {
-    Get.to(SignInPage2());
+    Get.to(() => SignInPage2());
   }
 
-
-  void showBiomatricPopup(BuildContext context){
+  void showBiomatricPopup(BuildContext context) {
     showGeneralDialog(
       barrierLabel: "showGeneralDialog",
       barrierDismissible: true,
@@ -512,7 +476,6 @@ class SignInController extends GetxController with StateMixin<dynamic> {
           alignment: Alignment.bottomCenter,
           child: Column(
             children: [
-
               Container(
                 padding: EdgeInsets.only(top: 20),
                 margin: EdgeInsets.symmetric(vertical: 30),
@@ -523,8 +486,6 @@ class SignInController extends GetxController with StateMixin<dynamic> {
                   height: 80,
                 ),
               ),
-
-
             ],
           ),
         );
@@ -539,5 +500,166 @@ class SignInController extends GetxController with StateMixin<dynamic> {
         );
       },
     );
+  }
+
+  void fetchStateList() async {
+    SignInProvider().getStateList().then((value) {
+      var jsonMap = jsonDecode(value);
+
+      listOfStates.clear();
+      var data = jsonMap["data"];
+      listOfStates =
+          List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
+    }, onError: (error) {
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
+  void fetchCityList() async {
+    SignInProvider().getCityList(selectedStateId.value).then((value) {
+      var jsonMap = jsonDecode(value);
+
+      var data = jsonMap["data"];
+      listOfCities.clear;
+      listOfCities =
+          List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
+    }, onError: (error) {
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
+  void fetchPersonalDetails() async {
+    SignInProvider().getPersonalDetails().then((value) {
+      var jsonMap = jsonDecode(value);
+      var details = PersonalInfoModel.fromJson(jsonMap);
+      SessionManager().setUserDetail(value);
+      SessionManager().setCustomerId(details.data!.id.toString());
+      //UserinfoUpdateService.userInfo.getOccupation();
+    }, onError: (error) {
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
+  void fetchPassbookDetails() async {
+    SignInProvider().getPassbookDetails().then((value) {
+      try {
+        var jsonMap = jsonDecode(value);
+
+        var details = PassbookDetailsModel.fromJson(jsonMap);
+        fetchPersonalDetails();
+        fetchCustomerDetails();
+      } catch (e) {
+        DialogHelper.dismissLoader();
+        PrintLogs.printException(e);
+      }
+    }, onError: (error) {
+      DialogHelper.dismissLoader();
+      if (error is UnProcessableEntity) {
+        existentCustomer();
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
+    });
+  }
+
+  void existentCustomer() async {
+    SignInProvider().existentCustomer().then((value) {
+      var jsonMap = jsonDecode(value);
+      var details = ApiMessage.fromJson(jsonMap);
+      fetchPassbookDetails();
+    }, onError: (error) {
+      DialogHelper.dismissLoader();
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
+  void fetchCustomerDetails() async {
+    SignInProvider().getCustomerDetails().then((value) {
+      DialogHelper.dismissLoader();
+
+      var jsonMap = jsonDecode(value);
+
+      var details = CustomerDetailsModel.fromJson(jsonMap);
+      if (details.result.data.cityId?.id == -1) {
+      } else {
+        Get.offAll(
+          () => const MainScreen(),
+          binding: MainScreenBinding(),
+          transition: Transition.rightToLeft,
+        );
+      }
+    }, onError: (error) {
+      DialogHelper.dismissLoader();
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
+  void navigateToPinSetup() {
+    Get.to(() => SignInPage3());
+  }
+
+  void setPin() async {
+    sessionManager.setIsLoggedIn(true);
+    SignInProvider().setPIN(pinTextController.text.toString()).then((value) {
+      try {
+        var jsonMap = jsonDecode(value);
+        print("${jsonEncode(jsonMap)}");
+        fetchPassbookDetails();
+      } catch (e) {
+        DialogHelper.dismissLoader();
+        PrintLogs.printException(e);
+      }
+    }, onError: (error) {
+      DialogHelper.dismissLoader();
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
+  void verifyPin() async {
+    sessionManager.setIsLoggedIn(true);
+    SignInProvider()
+        .setValidatePIN(pinTextController.text.toString(), true)
+        .then((value) {
+      try {
+        var jsonMap = jsonDecode(value);
+        print("${jsonEncode(jsonMap)}");
+        fetchPassbookDetails();
+      } catch (e) {
+        DialogHelper.dismissLoader();
+        PrintLogs.printException(e);
+      }
+    }, onError: (error) {
+      DialogHelper.dismissLoader();
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
+  void signUp() async {
+    var sessionManager = SessionManager();
+    DialogHelper.showLoading();
+    var screeName = await SessionManager().getAfterSignInScreen();
+    SignInProvider()
+        .signUp(
+            firstNameController.text.toString(),
+            lastNameController.text.toString(),
+            mobileTextController.text.toString(),
+            selectedCityId.toString(),
+            selectedStateId.toString(),
+            otpTextController.text.toString(),
+            referenceCode)
+        .then((value) {
+      var jsonMap = jsonDecode(value);
+
+      var model = SignInModel.fromJson(jsonMap);
+      sessionManager.setToken(model!.token!);
+      sessionManager.setMobileNumber(mobileTextController.text.toString());
+      navigateToPinSetup();
+    }, onError: (error) {
+      DialogHelper.dismissLoader();
+      if (error is InvalidInputException) {
+        otpTextController.text = "";
+      }
+      ErrorHandling.handleErrors(error);
+    });
   }
 }

@@ -2,19 +2,11 @@ import 'package:augmont_v2/Controllers/sing_in_controller.dart';
 import 'package:augmont_v2/Screens/SignIn/Components/signIn_mobileview.dart';
 import 'package:augmont_v2/Screens/SignIn/Components/signIn_otpview.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_countdown_timer/current_remaining_time.dart';
-import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:get/get.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
-
-import '../../Utils/Validator.dart';
 import '../../Utils/colors.dart';
-import '../../Utils/print_logs.dart';
 import '../../Utils/strings.dart';
-import 'Components/OtpView.dart';
 
 class SignInPage1 extends StatefulWidget {
   const SignInPage1({super.key});
@@ -43,7 +35,8 @@ class SignInPageState1 extends State<SignInPage1> {
                       child: ElevatedButton(
                           onPressed: controller.enableGenrateOtpButton.value
                               ? () {
-                                  controller.setOTPView();
+                            controller.startTimer(
+                                context, false, true);
                                 }
                               : null,
                           style: ElevatedButton.styleFrom(
@@ -61,8 +54,8 @@ class SignInPageState1 extends State<SignInPage1> {
                       child: ElevatedButton(
                           onPressed:
                               controller.enableOtpButton.value ? () {
+                            controller.signIn();
 
-                            controller.navigateToBasicDetails();
                               } : null,
                           style: ElevatedButton.styleFrom(
                               minimumSize: Size(double.infinity, 55.0),
@@ -94,7 +87,7 @@ class SignInPageState1 extends State<SignInPage1> {
                         color: Colors.black,
                       ),
                       onTap: () {
-                        Navigator.pop(context);
+                       controller.clearBackStack();
                       },
                     ),
                     Spacer(),

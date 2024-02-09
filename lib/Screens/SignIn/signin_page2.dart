@@ -1,22 +1,13 @@
 import 'package:augmont_v2/Controllers/sing_in_controller.dart';
 import 'package:augmont_v2/Screens/SignIn/Components/SignInComponents.dart';
-import 'package:augmont_v2/Screens/SignIn/Components/signIn_mobileview.dart';
-import 'package:augmont_v2/Screens/SignIn/Components/signIn_otpview.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_countdown_timer/current_remaining_time.dart';
-import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:get/get.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
-
 import '../../Models/StateModel.dart';
-import '../../Utils/Validator.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/print_logs.dart';
 import '../../Utils/strings.dart';
-import 'Components/OtpView.dart';
 import 'Components/RoundedTextField.dart';
 import 'Components/TextFieldContainer.dart';
 

@@ -234,6 +234,8 @@ class Strings {
   static String reenterPIN="Re-enter PIN";
   static String pinTitle='Set your security PIN';
   static String pinDescp="Set a 6 digit pin for easy access to Augmont";
+  static String pinTitle1='Enter your security PIN';
+  static String pinDescp1="Enter a 6 digit pin for easy access to Augmont";
   static String personalInformationDesc='Enter your personal information to proceed forward';
   static String otherDetails = "OTHER DETAILS";
   static String gstDetails = "GST DETAILS";

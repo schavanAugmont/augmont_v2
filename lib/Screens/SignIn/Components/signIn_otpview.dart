@@ -55,8 +55,9 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                   fontSize: 13,
                 ),
               ),
-               WidgetSpan(
-                child: GestureDetector(child: const Padding(
+              WidgetSpan(
+                  child: GestureDetector(
+                child: const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4.0),
                   child: Icon(
                     size: 15,
@@ -64,65 +65,15 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                     color: primaryTextColor,
                   ),
                 ),
-                onTap: (){
+                onTap: () {
                   controller.setMobileView();
-                },)
-
-              ),
+                },
+              )),
             ],
           )),
           SizedBox(
             height: 30,
           ),
-          // PinCodeTextField(
-          //   enabled: true,
-          //   enablePinAutofill: true,
-          //   appContext: context,
-          //   length: 6,
-          //   obscureText: false,
-          //   enableActiveFill: true,
-          //   animationType: AnimationType.none,
-          //   inputFormatters: <TextInputFormatter>[
-          //     FilteringTextInputFormatter.digitsOnly
-          //   ],
-          //   textStyle: TextStyle(
-          //     fontFamily: Strings.fontFamilyName,
-          //     fontWeight: FontWeight.w600,
-          //     fontSize: 14,
-          //     color: primaryTextColor,
-          //   ),
-          //   pinTheme: PinTheme(
-          //     shape: PinCodeFieldShape.box,
-          //     borderRadius: BorderRadius.circular(5),
-          //     fieldHeight: 50,
-          //     fieldWidth: 40,
-          //     activeFillColor: Colors.white,
-          //     activeColor: divider,
-          //     inactiveColor: divider,
-          //     inactiveFillColor: white,
-          //     selectedColor: divider,
-          //     selectedFillColor: white,
-          //   ),
-          //   cursorColor: Colors.black,
-          //   animationDuration: const Duration(milliseconds: 300),
-          //   // errorAnimationController: errorController,
-          //   controller: controller.otpTextController,
-          //   keyboardType: TextInputType.number,
-          //   boxShadows: const [
-          //     BoxShadow(
-          //       offset: Offset(0, 1),
-          //       color: Colors.black12,
-          //       blurRadius: 10,
-          //     )
-          //   ],
-          //   onChanged: (value) {
-          //     if (Validator.validateOtp(value)) {
-          //       controller.setEnableOtpButton(true);
-          //     } else {
-          //       controller.setEnableOtpButton(false);
-          //     }
-          //   },
-          // ),
 
           OtpView(
             controller: controller.otpTextController,
@@ -218,7 +169,10 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => {
                                   if (!controller.isTimeOnGoing.value)
-                                    {controller.startTimer(context, false)}
+                                    {
+                                      controller.startTimer(
+                                          context, false, false)
+                                    }
                                 },
                           style: TextStyle(
                             decoration: TextDecoration.underline,
@@ -244,7 +198,10 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => {
                                   if (!controller.isTimeOnGoing.value)
-                                    {controller.startTimer(context, true)}
+                                    {
+                                      controller.startTimer(
+                                          context, false, false)
+                                    }
                                 },
                           style: TextStyle(
                             decoration: TextDecoration.underline,

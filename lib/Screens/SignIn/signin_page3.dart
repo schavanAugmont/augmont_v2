@@ -1,24 +1,13 @@
 import 'package:augmont_v2/Controllers/sing_in_controller.dart';
 import 'package:augmont_v2/Screens/SignIn/Components/SignInComponents.dart';
-import 'package:augmont_v2/Screens/SignIn/Components/signIn_mobileview.dart';
-import 'package:augmont_v2/Screens/SignIn/Components/signIn_otpview.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_countdown_timer/current_remaining_time.dart';
-import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:get/get.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
-
-import '../../Models/StateModel.dart';
 import '../../Utils/Validator.dart';
 import '../../Utils/colors.dart';
-import '../../Utils/print_logs.dart';
 import '../../Utils/strings.dart';
 import 'Components/OtpView.dart';
-import 'Components/RoundedTextField.dart';
-import 'Components/TextFieldContainer.dart';
 
 class SignInPage3 extends StatefulWidget {
   const SignInPage3({super.key});
@@ -46,8 +35,12 @@ class SignInPageState3 extends State<SignInPage3> {
                     child: ElevatedButton(
                         onPressed: controller.enablePINButton.value
                             ? () {
-                                if (controller.validatePINChange()) {
-                                  controller.showBiomatricPopup(context);
+                                if (controller.isPinAdded.value) {
+                                  controller.verifyPin();
+                                } else {
+                                  if (controller.validatePINChange()) {
+                                    controller.setPin();
+                                  }
                                 }
                               }
                             : null,
@@ -116,11 +109,15 @@ class SignInPageState3 extends State<SignInPage3> {
                                   height: 60,
                                 ),
                               ),
-                              maintitle(Strings.pinTitle),
+                              maintitle(controller.isPinAdded.value
+                                  ? Strings.pinTitle1
+                                  : Strings.pinTitle),
                               SizedBox(
                                 height: 5,
                               ),
-                              mainDescp(Strings.pinDescp),
+                              mainDescp(controller.isPinAdded.value
+                                  ? Strings.pinDescp1
+                                  : Strings.pinDescp),
                             ],
                           ),
                           SizedBox(
@@ -163,34 +160,36 @@ class SignInPageState3 extends State<SignInPage3> {
                           const SizedBox(
                             height: 10,
                           ),
-                          subtitle(Strings.reenterPin),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          OtpView(
-                            controller: controller.reenterpinTextController,
-                            otpLength: 6,
-                            isobscureText: true,
-                            onChanged: (pin) async {},
-                            keyboardType: TextInputType.number,
-                            validator: (value) {
-                              return null;
-                            },
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          if (controller.repinError.value)
-                            Text(
-                              "PIN Didn't Match",
-                              textAlign: TextAlign.start,
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                                fontFamily: Strings.fontFamilyName,
-                              ),
+                          if (!controller.isPinAdded.value) ...[
+                            subtitle(Strings.reenterPin),
+                            const SizedBox(
+                              height: 10,
                             ),
+                            OtpView(
+                              controller: controller.reenterpinTextController,
+                              otpLength: 6,
+                              isobscureText: true,
+                              onChanged: (pin) async {},
+                              keyboardType: TextInputType.number,
+                              validator: (value) {
+                                return null;
+                              },
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            if (controller.repinError.value)
+                              Text(
+                                "PIN Didn't Match",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                  fontFamily: Strings.fontFamilyName,
+                                ),
+                              ),
+                          ]
                         ],
                       )),
                 )
@@ -201,5 +200,4 @@ class SignInPageState3 extends State<SignInPage3> {
       ));
     });
   }
-
 }
