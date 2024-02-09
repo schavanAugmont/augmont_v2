@@ -2,14 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import '../Utils/colors.dart';
 import '../Utils/session_manager.dart';
 import '../Utils/strings.dart';
 import 'ApiMessage.dart';
-import 'api_base_helper.dart';
 import 'app_exception.dart';
 
 class ErrorHandling {
@@ -149,18 +146,25 @@ class ErrorHandling {
 
   static void logout() {
     isAlreadyOnLogout = true;
-    SessionManager().clearAll();
+    SessionManager.clearAll();
     showToast(Strings.yourAccIsCurrentlyLoggedInOnAnotherDevice);
-
   }
 
   static void showToast(String msg) {
-    Fluttertoast.showToast(
-      msg: msg,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      fontSize: 16.0,
-    );
+    Get.closeAllSnackbars();
+    Get.showSnackbar(GetSnackBar(
+      backgroundColor: Colors.black54,
+      padding: const EdgeInsets.all(12),
+      duration: const Duration(seconds: 3),
+      dismissDirection: DismissDirection.down,
+      margin: const EdgeInsets.all(20),
+      messageText: Row(
+        children: [
+          const Icon(Icons.check_circle_rounded, size: 24, color: Colors.white54),
+          const SizedBox(width: 12),
+          Flexible(child: Text(msg, textAlign: TextAlign.start)),
+        ],
+      ),
+    ));
   }
 }

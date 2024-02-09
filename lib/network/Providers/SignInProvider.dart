@@ -4,27 +4,24 @@ import 'package:get/get_connect/connect.dart';
 import '../../Utils/device_util.dart';
 import '../../Utils/print_logs.dart';
 import '../../Utils/session_manager.dart';
-import '../api_base_helper.dart';
+import '../api_client.dart';
 
 class SignInProvider extends GetConnect {
   Future<dynamic> generateOtp(String mobileNo, bool isVoice) async {
     try {
-      Map<String, dynamic> toJson() =>
-          {"mobileNumber": mobileNo, "isResendOtpByVoice": isVoice};
+      Map<String, dynamic> toJson() => {"mobileNumber": mobileNo, "isResendOtpByVoice": isVoice};
       var jsonMap = json.encode(toJson());
       PrintLogs.printData(jsonMap);
-      final response =
-          await ApiBaseHelper().postApi("customer/customer-sign-up", jsonMap);
+      final response = await ApiClient().postApi("customer/customer-sign-up", jsonMap);
       return response;
     } catch (e) {
       return Future.error(e);
     }
   }
 
-  Future<dynamic> signIn(
-      String mobileNo, String otp, String referenceCode) async {
+  Future<dynamic> signIn(String mobileNo, String otp, String referenceCode) async {
     try {
-      final token = await SessionManager().getFcmToken();
+      final token = SessionManager.getFcmToken();
       Map<String, dynamic> toJson() => {
             "mobileNumber": mobileNo,
             "otp": otp,
@@ -33,8 +30,7 @@ class SignInProvider extends GetConnect {
           };
       var jsonMap = json.encode(toJson());
       PrintLogs.printData(jsonMap);
-      final response =
-          await ApiBaseHelper().postApi("auth/verify-customer-login", jsonMap);
+      final response = await ApiClient().postApi("auth/verify-customer-login", jsonMap);
       return response;
     } catch (e) {
       return Future.error(e);
@@ -43,8 +39,7 @@ class SignInProvider extends GetConnect {
 
   Future<dynamic> getPersonalDetails() async {
     try {
-      final response =
-          await ApiBaseHelper().getApi("customer/app/personal-info");
+      final response = await ApiClient().getApi("customer/app/personal-info");
       return response;
     } catch (e) {
       return Future.error(e);
@@ -53,8 +48,7 @@ class SignInProvider extends GetConnect {
 
   Future<dynamic> getPassbookDetails() async {
     try {
-      final response = await ApiBaseHelper()
-          .getApi("digital-gold/customer/passbook-details");
+      final response = await ApiClient().getApi("digital-gold/customer/passbook-details");
       return response;
     } catch (e) {
       return Future.error(e);
@@ -63,8 +57,7 @@ class SignInProvider extends GetConnect {
 
   Future<dynamic> existentCustomer() async {
     try {
-      final response = await ApiBaseHelper()
-          .getApi("digital-gold/customer/create-existent-customer");
+      final response = await ApiClient().getApi("digital-gold/customer/create-existent-customer");
       return response;
     } catch (e) {
       return Future.error(e);
@@ -73,7 +66,7 @@ class SignInProvider extends GetConnect {
 
   Future<dynamic> getCustomerDetails() async {
     try {
-      final response = await ApiBaseHelper().getApi("digital-gold/customer");
+      final response = await ApiClient().getApi("digital-gold/customer");
       return response;
     } catch (e) {
       return Future.error(e);
@@ -82,7 +75,7 @@ class SignInProvider extends GetConnect {
 
   Future<dynamic> getStateList() async {
     try {
-      final response = await ApiBaseHelper().getApi("state");
+      final response = await ApiClient().getApi("state");
       return response;
     } catch (e) {
       return Future.error(e);
@@ -91,18 +84,16 @@ class SignInProvider extends GetConnect {
 
   Future<dynamic> getCityList(String id) async {
     try {
-      final response = await ApiBaseHelper().getApi("city?stateId=$id");
+      final response = await ApiClient().getApi("city?stateId=$id");
       return response;
     } catch (e) {
       return Future.error(e);
     }
   }
 
-  Future<dynamic> signUp(String firstName, String lastName, String mobileNo,
-      String cityId, String stateId, String otp, String referenceCode) async {
+  Future<dynamic> signUp(String firstName, String lastName, String mobileNo, String cityId, String stateId, String otp, String referenceCode) async {
     try {
-      final token = await SessionManager().getFcmToken();
-      var screeName = await SessionManager().getAfterSignInScreen();
+      final token =  SessionManager.getFcmToken();
       Map<String, dynamic> toJson() => {
             "mobileNumber": mobileNo,
             "otp": otp,
@@ -116,8 +107,7 @@ class SignInProvider extends GetConnect {
           };
       var jsonMap = json.encode(toJson());
       PrintLogs.printData(jsonMap);
-      final response =
-          await ApiBaseHelper().postApi("customer/sign-up", jsonMap);
+      final response = await ApiClient().postApi("customer/sign-up", jsonMap);
       return response;
     } catch (e) {
       return Future.error(e);
@@ -132,8 +122,7 @@ class SignInProvider extends GetConnect {
           };
       var jsonMap = json.encode(toJson());
       PrintLogs.printData(jsonMap);
-      final response =
-          await ApiBaseHelper().postApi("customer/app/add-pin", jsonMap);
+      final response = await ApiClient().postApi("customer/app/add-pin", jsonMap);
       return response;
     } catch (e) {
       return Future.error(e);
@@ -142,15 +131,10 @@ class SignInProvider extends GetConnect {
 
   Future<dynamic> setValidatePIN(String pin, bool verifyByPin) async {
     try {
-      Map<String, dynamic> toJson() => {
-            "pin": pin,
-            "deviceId": DeviceUtil.instance.deviceId.toString(),
-            "verifyByPin": verifyByPin
-          };
+      Map<String, dynamic> toJson() => {"pin": pin, "deviceId": DeviceUtil.instance.deviceId.toString(), "verifyByPin": verifyByPin};
       var jsonMap = json.encode(toJson());
       PrintLogs.printData(jsonMap);
-      final response = await ApiBaseHelper()
-          .postApi("customer/app/validate-pin-biometric", jsonMap);
+      final response = await ApiClient().postApi("customer/app/validate-pin-biometric", jsonMap);
       return response;
     } catch (e) {
       return Future.error(e);

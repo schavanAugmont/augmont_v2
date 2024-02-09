@@ -3,8 +3,6 @@ import 'package:augmont_v2/Screens/More/more_screen.dart';
 import 'package:augmont_v2/Screens/Shop/shop_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 import '../../Controllers/main_screen_controller.dart';
 import '../../Utils/colors.dart';
@@ -27,11 +25,9 @@ class MainScreen extends StatefulWidget {
 
 
 class _MainBodyState extends State<MainScreen> with WidgetsBindingObserver {
-  late SessionManager sessionManager;
 
   @override
   void initState() {
-    sessionManager = SessionManager();
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
@@ -205,14 +201,14 @@ class _MainBodyState extends State<MainScreen> with WidgetsBindingObserver {
 
   saveClosingTime() async {
     try {
-      var loggedIn = await sessionManager.isLoggedIn();
+      var loggedIn = SessionManager.isLoggedIn();
       if (loggedIn) {
         var date = DateTime.fromMillisecondsSinceEpoch(
             DateTime.now().millisecondsSinceEpoch);
 
-        await sessionManager.setCloseTimeInMillis(date.millisecondsSinceEpoch);
+        SessionManager.setCloseTimeInMillis(date.millisecondsSinceEpoch);
 
-        PrintLogs.printData("Date of closing " + date.toString());
+        PrintLogs.printData("Date of closing $date");
       }
     } catch (e) {
       PrintLogs.printException(e);

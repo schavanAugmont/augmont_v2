@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 import '../Bindings/main_screen_binding.dart';
@@ -83,8 +82,6 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   var pinError = false.obs;
   var repinError = false.obs;
 
-  late SessionManager sessionManager;
-
   late CountdownTimerController countdownTimerController;
 
   int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 60;
@@ -93,23 +90,6 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   @override
   Future<void> onInit() async {
-    sessionManager = SessionManager();
-
-    // otpInteractor = OTPInteractor();
-    // getSignature();
-    // otpTextController = OTPTextEditController(
-    //     codeLength: 4,
-    //     onCodeReceive: (code) async {
-    //       PrintLogs.printData('Your Application receive code - $code');
-    //       try {
-    //         SignUpController.to.setOtpCode(code);
-    //       } catch (e) {
-    //         PrintLogs.printException(e);
-    //       }
-    //       await otpTextController.stopListen();
-    //     },
-    //     otpInteractor: otpInteractor);
-
     pinTextController = TextEditingController();
     reenterpinTextController = TextEditingController();
     mobileTextController = TextEditingController();
@@ -237,9 +217,9 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       DialogHelper.dismissLoader();
       model = SignInModel.fromJson(jsonMap);
       if (model != null) {
-        await sessionManager.setToken(model!.token!);
-        await sessionManager.setMobileNumber(mobileNo);
-        print("object ${model!.isPinAdded} ${isCustomer}");
+        SessionManager.setToken(model!.token!);
+        SessionManager.setMobileNumber(mobileNo);
+        debugPrint("object ${model!.isPinAdded} $isCustomer");
         isPinAdded(model!.isPinAdded);
         update();
         if (model!.isPinAdded! && isCustomer) {
@@ -264,17 +244,16 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     Get.until((route) => route.isFirst, id: 0);
   }
 
-  void startTimer(BuildContext context, bool isVoice, bool isOtpView) {
+  void startTimer(bool isVoice, bool isOtpView) {
     if (isOtpView) {
       setOTPView();
     }
     otpTextController.clear();
-    sendOtp(mobileTextController.text.trim(), context, isVoice);
+    sendOtp(mobileTextController.text.trim(), isVoice);
   }
 
   void setstartTime() {
-    countdownTimerController.endTime =
-        DateTime.now().millisecondsSinceEpoch + 1000 * 60;
+    countdownTimerController.endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 60;
     countdownTimerController.start();
     isTimeOnGoing(true);
     update();
@@ -285,11 +264,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     update();
   }
 
-  Future<void> sendOtp(
-      String mobileNo, BuildContext context, bool isVoice) async {
-    // await otpTextController.stopListen();
-    // getSignature();
-    // startListening();
+  Future<void> sendOtp(String mobileNo,bool isVoice) async {
     SignInProvider().generateOtp(mobileNo, isVoice).then(
       (value) {
         var jsonMap = jsonDecode(value);
@@ -298,12 +273,12 @@ class SignInController extends GetxController with StateMixin<dynamic> {
         referenceCode = model.referenceCode;
         isCustomer = model.isCustomer;
         setstartTime();
-        showSnackBar(context, model.message);
+        ErrorHandling.showToast(model.message);
       },
       onError: (error) {
         if (error is BadRequestException) {
           var object = jsonDecode(error.toString());
-          showSnackBar(context, object['message']);
+          ErrorHandling.showToast(object['message']);
         } else {
           ErrorHandling.handleErrors(error);
         }
@@ -327,11 +302,11 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   void clearSessionFields() async {
-    sessionManager.setIsGoldSelected(true);
-    sessionManager.setIsAmountEdited(false);
-    sessionManager.setIsGramEdited(false);
-    sessionManager.setQuickValue("");
-    sessionManager.setAfterSignInScreen("");
+    SessionManager.setIsGoldSelected(true);
+    SessionManager.setIsAmountEdited(false);
+    SessionManager.setIsGramEdited(false);
+    SessionManager.setQuickValue("");
+    SessionManager.setAfterSignInScreen("");
   }
 
   void navigateToSignUp(GenerateOtpModel model) {
@@ -344,49 +319,6 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     //   transition: Transition.rightToLeft,
     // );
   }
-
-  void showSnackBar(BuildContext context, String message) {
-    if (message.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message),
-          duration: const Duration(milliseconds: 2000),
-        ),
-      );
-    }
-  }
-
-  void showToast(String message) {
-    if (message.isNotEmpty) {
-      Fluttertoast.showToast(
-        msg: message,
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        fontSize: 16.0,
-      );
-    }
-  }
-
-  // void startListening() {
-  //   if (Platform.isAndroid) {
-  //     otpTextController.startListenUserConsent(
-  //       (code) {
-  //         final exp = RegExp(r'(\d{4})');
-  //         return exp.stringMatch(code ?? '') ?? '';
-  //       },
-  //     );
-  //   }
-  // }
-  //
-  // Future<void> getSignature() async {
-  //   if (Platform.isAndroid) {
-  //     await otpInteractor
-  //         .getAppSignature()
-  //         //ignore: avoid_print
-  //         .then((value) => PrintLogs.printData('signature - $value'));
-  //   }
-  // }
 
   bool validateBasciInformation() {
     var isValid = true;
@@ -440,8 +372,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       pinError(false);
       repinError(true);
       isValid = false;
-    } else if (reenterpinTextController.text.trim() !=
-        pinTextController.text.trim()) {
+    } else if (reenterpinTextController.text.trim() != pinTextController.text.trim()) {
       pinError(false);
       repinError(true);
       isValid = false;
@@ -461,7 +392,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   void navigateToBasicDetails() {
-    Get.to(() => SignInPage2());
+    Get.to(() => const SignInPage2());
   }
 
   void showBiomatricPopup(BuildContext context) {
@@ -477,8 +408,8 @@ class SignInController extends GetxController with StateMixin<dynamic> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.only(top: 20),
-                margin: EdgeInsets.symmetric(vertical: 30),
+                padding: const EdgeInsets.only(top: 20),
+                margin: const EdgeInsets.symmetric(vertical: 30),
                 width: double.infinity,
                 child: Image.asset(
                   'assets/images/ic_lock.png',
@@ -508,8 +439,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
       listOfStates.clear();
       var data = jsonMap["data"];
-      listOfStates =
-          List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
+      listOfStates = List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
     }, onError: (error) {
       ErrorHandling.handleErrors(error);
     });
@@ -521,8 +451,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
       var data = jsonMap["data"];
       listOfCities.clear;
-      listOfCities =
-          List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
+      listOfCities = List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
     }, onError: (error) {
       ErrorHandling.handleErrors(error);
     });
@@ -532,8 +461,8 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     SignInProvider().getPersonalDetails().then((value) {
       var jsonMap = jsonDecode(value);
       var details = PersonalInfoModel.fromJson(jsonMap);
-      SessionManager().setUserDetail(value);
-      SessionManager().setCustomerId(details.data!.id.toString());
+      SessionManager.setUserDetail(value);
+      SessionManager.setCustomerId(details.data!.id.toString());
       //UserinfoUpdateService.userInfo.getOccupation();
     }, onError: (error) {
       ErrorHandling.handleErrors(error);
@@ -595,15 +524,15 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   void navigateToPinSetup() {
-    Get.to(() => SignInPage3());
+    Get.to(() => const SignInPage3());
   }
 
   void setPin() async {
-    sessionManager.setIsLoggedIn(true);
+    SessionManager.setIsLoggedIn(true);
     SignInProvider().setPIN(pinTextController.text.toString()).then((value) {
       try {
         var jsonMap = jsonDecode(value);
-        print("${jsonEncode(jsonMap)}");
+        debugPrint(jsonEncode(jsonMap));
         fetchPassbookDetails();
       } catch (e) {
         DialogHelper.dismissLoader();
@@ -616,13 +545,11 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   void verifyPin() async {
-    sessionManager.setIsLoggedIn(true);
-    SignInProvider()
-        .setValidatePIN(pinTextController.text.toString(), true)
-        .then((value) {
+    SessionManager.setIsLoggedIn(true);
+    SignInProvider().setValidatePIN(pinTextController.text.toString(), true).then((value) {
       try {
         var jsonMap = jsonDecode(value);
-        print("${jsonEncode(jsonMap)}");
+        debugPrint(jsonEncode(jsonMap));
         fetchPassbookDetails();
       } catch (e) {
         DialogHelper.dismissLoader();
@@ -635,24 +562,22 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   void signUp() async {
-    var sessionManager = SessionManager();
     DialogHelper.showLoading();
-    var screeName = await SessionManager().getAfterSignInScreen();
     SignInProvider()
         .signUp(
-            firstNameController.text.toString(),
-            lastNameController.text.toString(),
-            mobileTextController.text.toString(),
-            selectedCityId.toString(),
-            selectedStateId.toString(),
-            otpTextController.text.toString(),
-            referenceCode)
-        .then((value) {
+      firstNameController.text.toString(),
+      lastNameController.text.toString(),
+      mobileTextController.text.toString(),
+      selectedCityId.toString(),
+      selectedStateId.toString(),
+      otpTextController.text.toString(),
+      referenceCode,
+    ).then((value) {
       var jsonMap = jsonDecode(value);
 
       var model = SignInModel.fromJson(jsonMap);
-      sessionManager.setToken(model!.token!);
-      sessionManager.setMobileNumber(mobileTextController.text.toString());
+      SessionManager.setToken(model!.token!);
+      SessionManager.setMobileNumber(mobileTextController.text.toString());
       navigateToPinSetup();
     }, onError: (error) {
       DialogHelper.dismissLoader();

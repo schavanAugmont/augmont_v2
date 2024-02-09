@@ -11,8 +11,8 @@ class CustomTheme {
         primaryColorDark: primaryDarkColor,
         colorScheme: const ColorScheme.light(
             primary: primaryColor,
-            primaryVariant: primaryColor,
-            surface: backgroundColor),
+            surface: backgroundColor,
+        ),
         appBarTheme: appBarTheme,
         textTheme: textTheme,
         scaffoldBackgroundColor: white,
