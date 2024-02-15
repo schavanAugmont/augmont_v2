@@ -524,7 +524,7 @@ class _HomeScreenState extends State<HomeScreen> {
         border: Border.all(color: kycProductBackgroundColor),
         borderRadius: BorderRadius.circular(10.0),
       ),
-      height: 150,
+      height: 170,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,

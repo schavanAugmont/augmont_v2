@@ -30,29 +30,21 @@ class SignInPageState2 extends State<SignInPage2> {
           height: 55,
           padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
           // Adjust padding as needed
-          child: BottomAppBar(
-            child: Row(
-              children: [
-                Expanded(
-                    child: ElevatedButton(
-                        onPressed: (){
-                          if(controller.validateBasciInformation()){
+          child: ElevatedButton(
+              onPressed: (){
+                if(controller.validateBasciInformation()){
 
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                            minimumSize: Size(double.infinity, 55.0),
-                            backgroundColor: primaryColor),
-                        child: Text(Strings.proceed,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: Strings.fontFamilyName,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            )))),
-              ],
-            ),
-          ),
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor),
+              child: Text(Strings.proceed,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: Strings.fontFamilyName,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ))),
         ),
         body: SingleChildScrollView(
           child: Padding(

@@ -219,14 +219,13 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       if (model != null) {
         SessionManager.setToken(model!.token!);
         SessionManager.setMobileNumber(mobileNo);
-        debugPrint("object ${model!.isPinAdded} $isCustomer");
-        isPinAdded(model!.isPinAdded);
+        isPinAdded(model!.customerDetails!.isPinAdded);
         update();
-        if (model!.isPinAdded! && isCustomer) {
+        if (model!.customerDetails!.isPinAdded! && isCustomer) {
           navigateToPinSetup();
-        } else if (!model!.isPinAdded! && isCustomer) {
+        } else if (!model!.customerDetails!.isPinAdded! && isCustomer) {
           navigateToPinSetup();
-        } else if (!model!.isPinAdded! && !isCustomer) {
+        } else if (!model!.customerDetails!.isPinAdded! && !isCustomer) {
           navigateToBasicDetails();
         }
       }
@@ -272,6 +271,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
         var model = GenerateOtpModel.fromJson(jsonMap);
         referenceCode = model.referenceCode;
         isCustomer = model.isCustomer;
+        update();
         setstartTime();
         ErrorHandling.showToast(model.message);
       },

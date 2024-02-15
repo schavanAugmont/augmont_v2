@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import '../Controllers/home_controller.dart';
 import '../Controllers/main_screen_controller.dart';
+import '../controllers/more_controller.dart';
 
 class MainScreenBinding extends Bindings {
   @override
@@ -18,10 +19,10 @@ class MainScreenBinding extends Bindings {
       () => HomeController(),
       fenix: true,
     );
-    // Get.lazyPut<MoreController>(
-    //   () => MoreController(),
-    //   fenix: true,
-    // );
+    Get.lazyPut<MoreController>(
+      () => MoreController(),
+      fenix: true,
+    );
     // Get.lazyPut<MyProfileController>(
     //   () => MyProfileController(),
     //   fenix: true,

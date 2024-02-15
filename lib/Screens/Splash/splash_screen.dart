@@ -9,10 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../../Utils/session_manager.dart';
 import '../Main/main_screen.dart';
 import '../SignIn/signin_page1.dart';
 import '../SignIn/signin_page2.dart';
 import '../SignIn/signin_page3.dart';
+
 class SplashScreen extends StatefulWidget {
   static String routeName = "/SplashScreen";
 
@@ -26,14 +28,14 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-
   late AnimationController _controller;
   late Animation<double> _animation;
+  late SessionManager sessionManager;
 
   @override
   void initState() {
     super.initState();
-
+    sessionManager = SessionManager();
     _controller = AnimationController(
       duration: const Duration(seconds: 5),
       vsync: this,
@@ -41,19 +43,7 @@ class _SplashScreenState extends State<SplashScreen>
 
 //_animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
-    _animation = Tween<double>(begin: 0, end: 1).animate(_controller)
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) {
-          Future.delayed(const Duration(seconds: 2),(){
-            Get.off(() =>  OnboardScreen(),binding: IntroBiding());
-          });
-
-          //Get.off(() => DigitalInvestmentGoldScreen());
-        }
-      })
-      ..addStatusListener((status) => print('$status'));
-
-    _controller.forward();
+    animateSplash();
   }
 
   @override
@@ -78,5 +68,26 @@ class _SplashScreenState extends State<SplashScreen>
         ),
       ),
     );
+  }
+
+  void animateSplash() {
+    _animation = Tween<double>(begin: 0, end: 1).animate(_controller)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          Future.delayed(const Duration(seconds: 2), () async {
+            var bool = await SessionManager.isLoggedIn();
+            if (bool) {
+              Get.off(() => MainScreen(),binding: MainScreenBinding());
+            } else {
+              Get.off(() => OnboardScreen(), binding: IntroBiding());
+            }
+          });
+
+          //Get.off(() => DigitalInvestmentGoldScreen());
+        }
+      })
+      ..addStatusListener((status) => print('$status'));
+
+    _controller.forward();
   }
 }

@@ -24,52 +24,40 @@ class SignInPageState1 extends State<SignInPage1> {
       return SafeArea(
           child: Scaffold(
         bottomNavigationBar: Container(
-          height: 55,
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          // Adjust padding as needed
-          child: BottomAppBar(
-            child: Row(
-              children: [
-                if (controller.enableMobileView.value)
-                  Expanded(
-                      child: ElevatedButton(
-                          onPressed: controller.enableGenrateOtpButton.value
-                              ? () {
+            height: 55,
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            // Adjust padding as needed
+            child: controller.enableMobileView.value
+                ? ElevatedButton(
+                    onPressed: controller.enableGenrateOtpButton.value
+                        ? () {
                             controller.startTimer(false, true);
-                                }
-                              : null,
-                          style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 55.0),
-                              backgroundColor: primaryColor),
-                          child: Text(Strings.generateOtp,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              )))),
-                if (controller.enableOtpView.value)
-                  Expanded(
-                      child: ElevatedButton(
-                          onPressed:
-                              controller.enableOtpButton.value ? () {
+                          }
+                        : null,
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: primaryColor),
+                    child: Text(Strings.generateOtp,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: Strings.fontFamilyName,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        )))
+                : ElevatedButton(
+                    onPressed: controller.enableOtpButton.value
+                        ? () {
                             controller.signIn();
-
-                              } : null,
-                          style: ElevatedButton.styleFrom(
-                              minimumSize: Size(double.infinity, 55.0),
-                              backgroundColor: primaryColor),
-                          child: Text(Strings.verifyOtp,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              )))),
-              ],
-            ),
-          ),
-        ),
+                          }
+                        : null,
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: primaryColor),
+                    child: Text(Strings.verifyOtp,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: Strings.fontFamilyName,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        )))),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -86,7 +74,7 @@ class SignInPageState1 extends State<SignInPage1> {
                         color: Colors.black,
                       ),
                       onTap: () {
-                       controller.clearBackStack();
+                        controller.clearBackStack();
                       },
                     ),
                     Spacer(),
@@ -105,7 +93,7 @@ class SignInPageState1 extends State<SignInPage1> {
                   margin: EdgeInsets.symmetric(vertical: 30),
                 ),
                 if (controller.enableMobileView.value) const SignInMobileView(),
-                if (controller.enableOtpView.value)const SignInOTPView()
+                if (controller.enableOtpView.value) const SignInOTPView()
               ],
             ),
           ),
@@ -113,8 +101,4 @@ class SignInPageState1 extends State<SignInPage1> {
       ));
     });
   }
-
-
-
-  
 }
