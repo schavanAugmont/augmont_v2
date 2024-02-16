@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:augmont_v2/Models/ScreenDataModel.dart';
+import 'package:augmont_v2/Utils/session_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import '../Bindings/signin_binding.dart';
 import '../Models/allinboard_screen.dart';
 import '../Network/ErrorHandling.dart';
 import '../Network/Providers/IntroProvider.dart';
+import '../Screens/SignIn/signin_page1.dart';
 import '../Utils/colors.dart';
 import '../Utils/dialog_helper.dart';
 import '../utils/print_logs.dart';
@@ -72,4 +75,11 @@ class IntroController extends GetxController {
       ),
     );
   }
+
+  void goToNavigation(){
+    SessionManager.setIsDashSelected(true);
+    Get.off(() => SignInPage1(),binding: SignInBiding());
+  }
+
+
 }

@@ -136,7 +136,8 @@ class SessionManager {
   }
 
   static void setDate() {
-    _storage.write(StorageKey.date, DateTime.now().add(const Duration(days: 1)).day);
+    _storage.write(
+        StorageKey.date, DateTime.now().add(const Duration(days: 1)).day);
   }
 
   static int getDate() {
@@ -180,7 +181,8 @@ class SessionManager {
   }
 
   static bool needToShowForm() {
-    String data = _storage.read(StorageKey.userInformationForm) ?? DateTime.now().subtract(const Duration(hours: 4)).toString();
+    String data = _storage.read(StorageKey.userInformationForm) ??
+        DateTime.now().subtract(const Duration(hours: 4)).toString();
     final date = DateTime.parse(data);
     return DateTime.now().difference(date).inHours >= 4;
   }
@@ -209,6 +211,14 @@ class SessionManager {
   static String getProductReqMsg() {
     return _storage.read('prductRequestMsg') ?? "";
   }
+
+  static void setIsDashSelected(bool isDashSelected) {
+    _storage.write(StorageKey.isDashSelected, isDashSelected);
+  }
+
+  static bool getIsDashSelected() {
+    return _storage.read(StorageKey.isDashSelected) ?? true;
+  }
 }
 
 class StorageKey {
@@ -236,4 +246,5 @@ class StorageKey {
   static const String selectedProduct = "selectedProduct";
   static const String userInformationForm = "userInformationForm";
   static const String occupationList = "occupationList";
+  static const String isDashSelected = "isDashSelected";
 }

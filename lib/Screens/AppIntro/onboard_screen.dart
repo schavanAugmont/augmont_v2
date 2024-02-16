@@ -121,6 +121,8 @@ class _OnboardScreenState extends State<OnboardScreen> {
                                                     1) {
                                               controller.pageChanged(
                                                   controller.currentIndex + 1);
+                                            }else{
+                                              controller.goToNavigation();
                                             }
                                           },
                                           style: ElevatedButton.styleFrom(
@@ -155,7 +157,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
                                 fontSize: 15,
                               )),
                           onTap: () {
-                            Get.off(() => SignInPage1(),binding: SignInBiding());
+                            controller.goToNavigation();
                           },
                         )
                       ],

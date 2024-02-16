@@ -11,9 +11,8 @@ import 'app_exception.dart';
 enum ServerType { DigiGold, EMI }
 
 class ApiClient {
-  final String _emiBaseUrl =
-      "https://92e2-2402-a00-162-3c4-149f-f0c3-20f6-3c60.ngrok-free.app/api/";
-  final String _baseUrl = "https://a552-103-247-7-54.ngrok-free.app";
+  final String _emiBaseUrl = "https://92e2-2402-a00-162-3c4-149f-f0c3-20f6-3c60.ngrok-free.app/api/";
+  final String _baseUrl = "https://6460-103-247-7-54.ngrok-free.app";
   static bool LogEvent = false;
 
   ///Use this default timeout
