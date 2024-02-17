@@ -16,7 +16,8 @@ class CustomTheme {
         appBarTheme: appBarTheme,
         textTheme: textTheme,
         scaffoldBackgroundColor: white,
-        visualDensity: VisualDensity.adaptivePlatformDensity);
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+    );
   }
 
   static AppBarTheme get appBarTheme {
@@ -100,5 +101,13 @@ class CustomTheme {
       color: priceTextColor,
       fontWeight: FontWeight.w600,
       fontSize: 12,
-      fontFamily: Strings.fontFamilyName);
+      fontFamily: Strings.fontFamilyName,
+  );
+
+  static TextStyle style({double size=14,Color? color,FontWeight? weight}) => TextStyle(
+    color: color??priceTextColor,
+    fontWeight: weight??FontWeight.normal,
+    fontSize: size,
+    fontFamily: Strings.fontFamilyName,
+  );
 }

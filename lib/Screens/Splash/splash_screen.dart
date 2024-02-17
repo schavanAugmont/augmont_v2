@@ -75,13 +75,14 @@ class _SplashScreenState extends State<SplashScreen>
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           Future.delayed(const Duration(seconds: 2), () async {
-            var bool = await SessionManager.isLoggedIn();
-            var isDashSelect = await SessionManager.getIsDashSelected();
-            bool
-                ? Get.off(() => MainScreen(), binding: MainScreenBinding())
-                : isDashSelect
-                    ? Get.off(() => SignInPage1(), binding: SignInBiding())
-                    : Get.off(() => OnboardScreen(), binding: IntroBiding());
+            Get.off(() => MainScreen(), binding: MainScreenBinding());
+            // var bool = await SessionManager.isLoggedIn();
+            // var isDashSelect = await SessionManager.getIsDashSelected();
+            // bool
+            //     ? Get.off(() => MainScreen(), binding: MainScreenBinding())
+            //     : isDashSelect
+            //         ? Get.off(() => SignInPage1(), binding: SignInBiding())
+            //         : Get.off(() => OnboardScreen(), binding: IntroBiding());
           });
 
           //Get.off(() => DigitalInvestmentGoldScreen());
