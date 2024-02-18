@@ -40,7 +40,7 @@ class HotSellingWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4.0),
                       ),
                       alignment: Alignment.center,
-                      child: Icon(Icons.add_card,size: 18,),
+                      child: Image.asset("assets/images/pay.png",width: 20,),
                     ),
                   ),
                   Padding(

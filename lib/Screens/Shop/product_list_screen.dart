@@ -1,5 +1,7 @@
+import 'package:augmont_v2/Screens/Shop/product_detail_screen.dart';
 import 'package:augmont_v2/Utils/colors.dart';
 import 'package:augmont_v2/Utils/themes.dart';
+import 'package:augmont_v2/bindings/product_detail_binding.dart';
 import 'package:augmont_v2/bottomsheet/filter_bottomsheet.dart';
 import 'package:augmont_v2/bottomsheet/sory_by_bottomsheet.dart';
 import 'package:augmont_v2/controllers/product_controller.dart';
@@ -142,7 +144,16 @@ class ProductListScreen extends StatelessWidget {
                     ),
                     itemCount: 20,
                     itemBuilder: (context, index) {
-                      return const ProductGrid();
+                      return GestureDetector(
+                        onTap: () {
+                          Get.to(
+                            () => const ProductDetailScreen(),
+                            binding: ProductDetailBinding(),
+                            transition: Transition.rightToLeft,
+                          );
+                        },
+                        child: const ProductGrid(),
+                      );
                     },
                   ),
                 )

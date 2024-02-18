@@ -46,10 +46,10 @@ class ProductGrid extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4.0),
                         ),
                         alignment: Alignment.center,
-                        child: Icon(Icons.add_card,size: 18,),
+                        child: Image.asset("assets/images/pay.png",width: 20,),
                       ),
                       Container(
-                        margin: EdgeInsets.all(4),
+                        margin: const EdgeInsets.all(4),
                         width: 28,
                         height: 28,
                         decoration: BoxDecoration(
@@ -57,7 +57,7 @@ class ProductGrid extends StatelessWidget {
                           border: Border.all(color: grayColor,width: 0.5)
                         ),
                         alignment: Alignment.center,
-                        child: Icon(Icons.favorite_border,size: 18,),
+                        child: const Icon(Icons.favorite_border,size: 18,),
                       ),
                     ],
                   ),
@@ -90,6 +90,7 @@ class ProductGrid extends StatelessWidget {
                 allowHalfRating: true,
                 itemCount: 5,
                 itemSize: 10,
+                ignoreGestures: true,
                 itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
                 itemBuilder: (context, _) => const Icon(
                   Icons.star,
