@@ -1,5 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'package:augmont_v2/Bindings/signin_binding.dart';
+import 'package:augmont_v2/Screens/SignIn/forgotpin_page.dart';
+import 'package:augmont_v2/Screens/SignIn/signin_page1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
@@ -16,17 +20,23 @@ import '../Network/ApiMessage.dart';
 import '../Network/Providers/SignInProvider.dart';
 import '../Network/app_exception.dart';
 import '../Screens/Main/main_screen.dart';
+import '../Screens/SignIn/Components/SignInComponents.dart';
 import '../Screens/SignIn/signin_page2.dart';
 import '../Screens/SignIn/signin_page3.dart';
 import '../Utils/Validator.dart';
+import '../Utils/colors.dart';
+import '../Utils/device_util.dart';
 import '../Utils/dialog_helper.dart';
 import '../Utils/print_logs.dart';
 import '../Utils/session_manager.dart';
+import '../Utils/strings.dart';
+import '../bindings/forgotpin_binding.dart';
 import '../network/ErrorHandling.dart';
 
 class SignInController extends GetxController with StateMixin<dynamic> {
   late LocalAuthentication _localAuthentication;
 
+  static SignInController get to => Get.find();
   var canCheckBiometrics = false.obs;
   var isUserAuthenticated = false.obs;
 
@@ -34,8 +44,11 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   var isStateSelected = false.obs;
   var isCitySelected = false.obs;
-  var isCustomer = false;
+  var isCustomer = true;
   var isPinAdded = false.obs;
+  var isBiometricAdded = false.obs;
+  var isBiometricClick = false.obs;
+  var isBiometricAvl = false.obs;
 
   var selectedState = "".obs;
   var selectedCity = "".obs;
@@ -56,7 +69,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   late TextEditingController stateController;
   late TextEditingController cityController;
   late TextEditingController searchController;
-  late TextEditingController mobileTextController;
+  late TextEditingController mobileTextController = TextEditingController();
   late GlobalKey<FormState> formKey;
 
   //late OTPInteractor otpInteractor;
@@ -78,9 +91,15 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   var isStateError = false.obs;
   var isCityError = false.obs;
   var isEmailError = false.obs;
+  var isForgotPIN = false.obs;
 
   var pinError = false.obs;
   var repinError = false.obs;
+
+  Timer? _timer;
+  var timerValue = 60.obs;
+  int remainingSeconds = 1;
+  final time = '00:00'.obs;
 
   late CountdownTimerController countdownTimerController;
 
@@ -88,11 +107,17 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   SignInModel? model;
 
+  final LocalAuthentication auth = LocalAuthentication();
+  _SupportState _supportState = _SupportState.unknown;
+  bool? _canCheckBiometrics;
+  List<BiometricType>? _availableBiometrics;
+  String _authorized = 'Not Authorized';
+  bool _isAuthenticating = false;
+
   @override
   Future<void> onInit() async {
     pinTextController = TextEditingController();
     reenterpinTextController = TextEditingController();
-    mobileTextController = TextEditingController();
     otpTextController = TextEditingController();
     firstNameController = TextEditingController();
     lastNameController = TextEditingController();
@@ -103,6 +128,8 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     refernceController = TextEditingController();
     formKey = GlobalKey<FormState>();
 
+    setPinData();
+
     countdownTimerController = CountdownTimerController(
       endTime: endTime,
       onEnd: onEndTimer,
@@ -110,8 +137,15 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
     _localAuthentication = LocalAuthentication();
     checkingForBioMetrics();
+
     fetchStateList();
     super.onInit();
+  }
+
+  void cancelTimer() {
+    if (_timer != null) {
+      _timer?.cancel();
+    }
   }
 
   void setEnableOtpButton(bool boo) {
@@ -126,6 +160,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   void setPINButton(bool boo) {
     enablePINButton(boo);
+
     update();
   }
 
@@ -134,11 +169,34 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     update();
   }
 
+  void setForgotData(bool isForgot, String refCode) {
+    isForgotPIN(isForgot);
+    referenceCode = refCode;
+    update();
+  }
+
   void setMobileView() {
     enableMobileView(true);
     enableOtpView(false);
+    //mobileTextController.clear();
     otpTextController.clear();
+    firstNameController.clear();
+    lastNameController.clear();
+    stateController.clear();
+    cityController.clear();
+    emailController.clear();
+    selectedState = "".obs;
+    selectedCity = "".obs;
+    selectedStateId = "".obs;
+    selectedCityId = "".obs;
+    isLastNameError(false);
+    isFirstNameError(false);
+    isEmailError(false);
+    isStateError(false);
+    isCityError(false);
+    isCustomer = true;
     update();
+    Get.back();
   }
 
   void setOTPView() {
@@ -173,38 +231,43 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     bool canCheckBiometrics = await _localAuthentication.canCheckBiometrics;
     PrintLogs.printData(canCheckBiometrics.toString());
     this.canCheckBiometrics(canCheckBiometrics);
+    isBiometricAvl(canCheckBiometrics);
     update();
     return canCheckBiometrics;
   }
 
   void authenticateMe() async {
-    // 8. this method opens a dialog for fingerprint authentication.
-    //    we do not need to create a dialog nut it popsup from device natively.
-    var authenticated = false;
-
-    authenticated = await authenticateForSignUp();
-    isUserAuthenticated(authenticated);
-    update();
-  }
-
-  Future<bool> authenticateForSignUp() async {
-    // 8. this method opens a dialog for fingerprint authentication.
-    //    we do not need to create a dialog nut it popsup from device natively.
-    var authenticated = false;
+    bool authenticated = false;
     try {
-      authenticated = await _localAuthentication.authenticate(
-        localizedReason: "Authentication is necessary for SignIn and SignUp",
+      _isAuthenticating = true;
+      _authorized = 'Authenticating';
+      update();
+      authenticated = await auth.authenticate(
+        localizedReason:
+            'Scan your fingerprint (or face or whatever) to authenticate',
+        options: const AuthenticationOptions(
+          stickyAuth: true,
+          biometricOnly: true,
+        ),
       );
+      _isAuthenticating = false;
+      _authorized = 'Authenticating';
+      update();
     } on PlatformException catch (e) {
-      // if (e.code == auth.notAvailable) {
-      //   authenticated = true;
-      //   return authenticated;
-      // }
-      return authenticated;
-      PrintLogs.printException(e);
-    }
+      print(e);
+      _isAuthenticating = false;
+      _authorized = 'Error - ${e.message}';
 
-    return authenticated;
+      update();
+      return;
+    }
+    final String message = authenticated ? 'Authorized' : 'Not Authorized';
+    _authorized = message;
+    ErrorHandling.showToast(_authorized);
+    if (authenticated) {
+      verifyPin(false);
+    }
+    update();
   }
 
   void signIn() async {
@@ -217,13 +280,22 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       DialogHelper.dismissLoader();
       model = SignInModel.fromJson(jsonMap);
       if (model != null) {
+        cancelTimer();
+        onEndTimer();
         SessionManager.setToken(model!.token!);
         SessionManager.setMobileNumber(mobileNo);
+        SessionManager.setIsPinAdded(model!.customerDetails!.isPinAdded!);
+        SessionManager.setDeviceId(model!.customerDetails!.deviceId!);
+        SessionManager.setIsLoggedIn(true);
+        SessionManager.setIsBiometricAdded(
+            model!.customerDetails!.isBiometricEnable!);
         isPinAdded(model!.customerDetails!.isPinAdded);
         update();
         if (model!.customerDetails!.isPinAdded! && isCustomer) {
+          ErrorHandling.showToast("User logged in successfully");
           navigateToPinSetup();
         } else if (!model!.customerDetails!.isPinAdded! && isCustomer) {
+          ErrorHandling.showToast("User logged in successfully");
           navigateToPinSetup();
         } else if (!model!.customerDetails!.isPinAdded! && !isCustomer) {
           navigateToBasicDetails();
@@ -238,24 +310,58 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     });
   }
 
+  void verifyOTP() async {
+    DialogHelper.showLoading();
+    model = null;
+    var mobileNo = mobileTextController.text.toString();
+    var otp = otpTextController.text.toString();
+    SignInProvider().verifyOTPResetPin(otp, referenceCode).then((value) async {
+      var jsonMap = jsonDecode(value);
+      DialogHelper.dismissLoader();
+      cancelTimer();
+      onEndTimer();
+      ErrorHandling.showToast("OTP verified successfully");
+      navigateToPinSetup();
+    }, onError: (error) {
+      if (error is InvalidInputException) {
+        otpTextController.text = "";
+      }
+      DialogHelper.dismissLoader();
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
   void clearBackStack() {
     Get.until((route) => route.isFirst);
     Get.until((route) => route.isFirst, id: 0);
   }
 
-  void startTimer(bool isVoice, bool isOtpView) {
-    if (isOtpView) {
-      setOTPView();
-    }
+  Future<void> startTimer(bool isVoice, bool isOtpView) async {
+    print("isFo ${isForgotPIN.value}");
     otpTextController.clear();
-    sendOtp(mobileTextController.text.trim(), isVoice);
+    await sendOtp(mobileTextController.text.trim(), isVoice, isOtpView);
   }
 
-  void setstartTime() {
-    countdownTimerController.endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 60;
-    countdownTimerController.start();
+  Future<void> setstartTime() async {
+    if (mobileTextController.text.isEmpty) {
+      mobileTextController.text = await SessionManager.getMobileNumber();
+      update();
+    }
+
+    timerValue(60);
+    cancelTimer();
     isTimeOnGoing(true);
     update();
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      if (timerValue.value == 0) {
+        timer.cancel();
+        onEndTimer();
+      } else {
+        timerValue.value--;
+        update();
+        print("time $timerValue");
+      }
+    });
   }
 
   void onEndTimer() {
@@ -263,7 +369,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     update();
   }
 
-  Future<void> sendOtp(String mobileNo,bool isVoice) async {
+  Future<void> sendOtp(String mobileNo, bool isVoice, bool isOtpView) async {
     SignInProvider().generateOtp(mobileNo, isVoice).then(
       (value) {
         var jsonMap = jsonDecode(value);
@@ -273,6 +379,12 @@ class SignInController extends GetxController with StateMixin<dynamic> {
         isCustomer = model.isCustomer;
         update();
         setstartTime();
+        if (isOtpView) {
+          // setOTPView();
+          Get.to(
+            () => const SignInPage2(),
+          );
+        }
         ErrorHandling.showToast(model.message);
       },
       onError: (error) {
@@ -297,6 +409,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     //await otpTextController.stopListen();
     countdownTimerController.dispose();
     mobileTextController.dispose();
+    cancelTimer();
     //   otpTextController.dispose();
     super.dispose();
   }
@@ -307,17 +420,6 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     SessionManager.setIsGramEdited(false);
     SessionManager.setQuickValue("");
     SessionManager.setAfterSignInScreen("");
-  }
-
-  void navigateToSignUp(GenerateOtpModel model) {
-    // Get.to(
-    //   () => SignUpScreens(
-    //     mobileNo: mobileTextController.text.trim().toString(),
-    //     referenceCode: model.referenceCode,
-    //   ),
-    //   binding: SignUpBinding(),
-    //   transition: Transition.rightToLeft,
-    // );
   }
 
   bool validateBasciInformation() {
@@ -372,7 +474,8 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       pinError(false);
       repinError(true);
       isValid = false;
-    } else if (reenterpinTextController.text.trim() != pinTextController.text.trim()) {
+    } else if (reenterpinTextController.text.trim() !=
+        pinTextController.text.trim()) {
       pinError(false);
       repinError(true);
       isValid = false;
@@ -392,43 +495,106 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   void navigateToBasicDetails() {
-    Get.to(() => const SignInPage2());
+    Get.to(
+      () => const SignInPage2(),
+    );
   }
 
   void showBiomatricPopup(BuildContext context) {
-    showGeneralDialog(
-      barrierLabel: "showGeneralDialog",
-      barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.6),
-      transitionDuration: const Duration(milliseconds: 400),
+    showDialog(
       context: context,
-      pageBuilder: (context, _, __) {
-        return Align(
-          alignment: Alignment.bottomCenter,
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.only(top: 20),
-                margin: const EdgeInsets.symmetric(vertical: 30),
-                width: double.infinity,
-                child: Image.asset(
-                  'assets/images/ic_lock.png',
-                  width: 80,
-                  height: 80,
-                ),
-              ),
-            ],
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
           ),
-        );
-      },
-      transitionBuilder: (_, animation1, __, child) {
-        return SlideTransition(
-          position: Tween(
-            begin: const Offset(0, 1),
-            end: const Offset(0, 0),
-          ).animate(animation1),
-          child: child,
-        );
+          child: Container(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.only(top: 20),
+                  margin: const EdgeInsets.symmetric(vertical: 30),
+                  width: double.infinity,
+                  child: Image.asset(
+                    Platform.isAndroid
+                        ? 'assets/images/ic_fingerprint.png'
+                        : 'assets/images/ic_face_id.png',
+                    width: 80,
+                    height: 80,
+                  ),
+                ),
+                mainDescp(Platform.isAndroid
+                    ? Strings.unlockWithFinger
+                    : Strings.unlockWithFcID),
+                SizedBox(
+                  height: 5,
+                ),
+                // maintitle(Strings.keepurAssets),
+                Text(Strings.keepurAssets,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: primaryTextColor,
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    )),
+                SizedBox(
+                  height: 10,
+                ),
+                GestureDetector(
+                    onTap: () {
+                      isBiometricClick(true);
+                      update();
+                      Get.back();
+                      setPin();
+                    },
+                    child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(color: shadowColor),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        margin: EdgeInsets.only(bottom: 10, top: 10),
+                        height: 40,
+                        child: Center(
+                            child: Text('Proceed',
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontFamily: Strings.fontFamilyName,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ))))),
+                GestureDetector(
+                  onTap: () {
+                    isBiometricClick(false);
+                    update();
+                    Get.back();
+                    setPin();
+                  },
+                  child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.only(bottom: 20),
+                      height: 40,
+                      child: Center(
+                          child: Text('Not Now',
+                              style: TextStyle(
+                                color: primaryTextColor,
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              )))),
+                )
+              ],
+            ),
+          ),
+        ); // Show custom popup
       },
     );
   }
@@ -439,7 +605,8 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
       listOfStates.clear();
       var data = jsonMap["data"];
-      listOfStates = List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
+      listOfStates =
+          List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
     }, onError: (error) {
       ErrorHandling.handleErrors(error);
     });
@@ -451,7 +618,8 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
       var data = jsonMap["data"];
       listOfCities.clear;
-      listOfCities = List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
+      listOfCities =
+          List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
     }, onError: (error) {
       ErrorHandling.handleErrors(error);
     });
@@ -524,15 +692,49 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   void navigateToPinSetup() {
-    Get.to(() => const SignInPage3());
+    Get.to(() => SignInPage3(
+          isForgot: false,
+          refCode: referenceCode,
+        ));
   }
 
   void setPin() async {
-    SessionManager.setIsLoggedIn(true);
+    DialogHelper.showLoading();
     SignInProvider().setPIN(pinTextController.text.toString()).then((value) {
       try {
+        DialogHelper.dismissLoader();
         var jsonMap = jsonDecode(value);
+        SessionManager.setIsPinAdded(true);
+
+        update();
+        ErrorHandling.showToast("PIN set successfully");
         debugPrint(jsonEncode(jsonMap));
+        if (isBiometricClick.value) {
+          setBiometric();
+        } else {
+          fetchPassbookDetails();
+        }
+      } catch (e) {
+        DialogHelper.dismissLoader();
+        PrintLogs.printException(e);
+      }
+    }, onError: (error) {
+      DialogHelper.dismissLoader();
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
+  void resetPin() async {
+    DialogHelper.showLoading();
+    SignInProvider()
+        .resetPIN(pinTextController.text.toString(), referenceCode)
+        .then((value) {
+      try {
+        DialogHelper.dismissLoader();
+        var jsonMap = jsonDecode(value);
+        SessionManager.setIsPinAdded(true);
+        debugPrint(jsonEncode(jsonMap));
+        ErrorHandling.showToast("PIN reset successfully");
         fetchPassbookDetails();
       } catch (e) {
         DialogHelper.dismissLoader();
@@ -544,12 +746,18 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     });
   }
 
-  void verifyPin() async {
-    SessionManager.setIsLoggedIn(true);
-    SignInProvider().setValidatePIN(pinTextController.text.toString(), true).then((value) {
+  void verifyPin(bool isVerifyByPin) async {
+    DialogHelper.showLoading();
+    SignInProvider()
+        .setValidatePIN(pinTextController.text.toString(), isVerifyByPin)
+        .then((value) {
       try {
+        DialogHelper.dismissLoader();
         var jsonMap = jsonDecode(value);
         debugPrint(jsonEncode(jsonMap));
+        ErrorHandling.showToast(isVerifyByPin
+            ? "PIN verify successfully"
+            : "Biometric verified successfully");
         fetchPassbookDetails();
       } catch (e) {
         DialogHelper.dismissLoader();
@@ -563,7 +771,8 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   void signUp() async {
     DialogHelper.showLoading();
-    SignInProvider().signUp(
+    SignInProvider()
+        .signUp(
       firstNameController.text.toString(),
       lastNameController.text.toString(),
       mobileTextController.text.toString(),
@@ -571,12 +780,17 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       selectedStateId.toString(),
       otpTextController.text.toString(),
       referenceCode,
-    ).then((value) {
+    )
+        .then((value) {
       var jsonMap = jsonDecode(value);
 
       var model = SignInModel.fromJson(jsonMap);
       SessionManager.setToken(model!.token!);
       SessionManager.setMobileNumber(mobileTextController.text.toString());
+      SessionManager.setIsLoggedIn(true);
+      isPinAdded(false);
+      update();
+      ErrorHandling.showToast("User register successfully");
       navigateToPinSetup();
     }, onError: (error) {
       DialogHelper.dismissLoader();
@@ -586,4 +800,62 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       ErrorHandling.handleErrors(error);
     });
   }
+
+  void setPinData() {
+    var isPin = SessionManager.getIsPinAdded();
+    var isBiomatric = SessionManager.getIsBiometricAdded();
+    isPinAdded(isPin);
+    isBiometricAdded(isBiomatric);
+    update();
+  }
+
+  Future<void> enableForgotPIN() async {
+    await Get.offAll(
+      () => const ForgotPinPage(),
+      binding: ForgotpinBiding(),
+      transition: Transition.rightToLeft,
+    );
+  }
+
+  void setBiometric() {
+    DialogHelper.showLoading();
+    SignInProvider().setBioMetric(true).then((value) {
+      try {
+        DialogHelper.dismissLoader();
+        var jsonMap = jsonDecode(value);
+        SessionManager.setIsBiometricAdded(true);
+        SessionManager.setDeviceId(DeviceUtil.instance.deviceId.toString());
+        debugPrint(jsonEncode(jsonMap));
+        ErrorHandling.showToast("Biometric register successfully");
+        fetchPassbookDetails();
+      } catch (e) {
+        DialogHelper.dismissLoader();
+        PrintLogs.printException(e);
+      }
+    }, onError: (error) {
+      DialogHelper.dismissLoader();
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
+  Future<void> showAuthPopup() async {
+    var sessionDevice = await SessionManager.getDeviceId();
+    bool isValidDevice = false;
+    if (sessionDevice == DeviceUtil.instance.deviceId.toString()) {
+      isValidDevice = true;
+    }
+
+    if (SignInController.to.isBiometricAdded.value &&
+        !SignInController.to.isForgotPIN.value &&
+        SignInController.to.isBiometricAvl.value &&
+        isValidDevice) {
+      SignInController.to.authenticateMe();
+    }
+  }
+}
+
+enum _SupportState {
+  unknown,
+  supported,
+  unsupported,
 }

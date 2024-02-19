@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontSize: 12,
                                 )),
                             Spacer(),
-                            Text('\u{20B9} 6,000/gm',
+                            Text(controller.currentGoldBuyRate.value,
                                 style: TextStyle(
                                   color: primaryTextColor,
                                   fontFamily: Strings.fontFamilyName,
@@ -284,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   SizedBox(
                                     height: 8,
                                   ),
-                                  Text('\u{20B9} 6,000/gm',
+                                  Text(controller.currentGoldBuyRate.value,
                                       style: TextStyle(
                                         color: primaryTextColor,
                                         fontFamily: Strings.fontFamilyName,
@@ -471,7 +471,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SizedBox(
                                   height: 2,
                                 ),
-                                Text("\u{20B9} 72.15/gm ",
+                                Text(controller.currentSilverBuyRate.value,
                                     maxLines: 5,
                                     style: TextStyle(
                                       color: primaryTextColor,
