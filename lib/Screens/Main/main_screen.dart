@@ -1,3 +1,4 @@
+import 'package:augmont_v2/Bindings/signin_binding.dart';
 import 'package:augmont_v2/Screens/Exchange/exchange_screen.dart';
 import 'package:augmont_v2/Screens/More/more_screen.dart';
 import 'package:augmont_v2/Screens/Shop/shop_screen.dart';
@@ -10,6 +11,7 @@ import '../../Utils/print_logs.dart';
 import '../../Utils/session_manager.dart';
 import '../../Utils/strings.dart';
 import '../Home/home_screen.dart';
+import '../SignIn/signin_page3.dart';
 
 class MainScreen extends StatefulWidget {
   static String routeName = "/MainScreen";
@@ -191,11 +193,15 @@ class _MainBodyState extends State<MainScreen> with WidgetsBindingObserver {
     if (state == AppLifecycleState.inactive) {
       await saveClosingTime().then((value) {
         PrintLogs.printData("Successfully saved closing time..");
+        PrintLogs.printData("inactive");
       });
     } else if (state == AppLifecycleState.paused) {
       await saveClosingTime().then((value) {
         PrintLogs.printData("Successfully saved closing time..");
+        PrintLogs.printData("pasuse");
       });
+    }else if (state== AppLifecycleState.resumed){
+      //await _resumeScreen().then((value){});
     }
   }
 
@@ -214,4 +220,6 @@ class _MainBodyState extends State<MainScreen> with WidgetsBindingObserver {
       PrintLogs.printException(e);
     }
   }
+
+
 }

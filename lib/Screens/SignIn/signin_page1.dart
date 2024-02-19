@@ -5,10 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../../Network/ErrorHandling.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
 
 class SignInPage1 extends StatefulWidget {
+
   const SignInPage1({super.key});
 
   @override
@@ -27,8 +29,9 @@ class SignInPageState1 extends State<SignInPage1> {
             height: 55,
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             // Adjust padding as needed
-            child: controller.enableMobileView.value
-                ? ElevatedButton(
+            child:
+                // controller.enableMobileView.value ?
+                ElevatedButton(
                     onPressed: controller.enableGenrateOtpButton.value
                         ? () {
                             controller.startTimer(false, true);
@@ -43,21 +46,37 @@ class SignInPageState1 extends State<SignInPage1> {
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                         )))
-                : ElevatedButton(
-                    onPressed: controller.enableOtpButton.value
-                        ? () {
-                            controller.signIn();
-                          }
-                        : null,
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: primaryColor),
-                    child: Text(Strings.verifyOtp,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        )))),
+            // : ElevatedButton(
+            //     onPressed: () {
+            //       if (controller.isCustomer) {
+            //         if (controller.enableOtpButton.value) {
+            //           controller.signIn();
+            //         } else {
+            //           ErrorHandling.showToast(Strings.enterOtp);
+            //         }
+            //       } else {
+            //         if (controller.validateBasciInformation()) {
+            //           if (controller.enableOtpButton.value) {
+            //             controller.signUp();
+            //           } else {
+            //             ErrorHandling.showToast(Strings.enterOtp);
+            //           }
+            //         }
+            //       }
+            //     },
+            //     style:
+            //         ElevatedButton.styleFrom(backgroundColor: primaryColor),
+            //     child: Text(
+            //         controller.isCustomer
+            //             ? Strings.verifyOtp
+            //             : Strings.submit,
+            //         style: TextStyle(
+            //           color: Colors.white,
+            //           fontFamily: Strings.fontFamilyName,
+            //           fontWeight: FontWeight.w600,
+            //           fontSize: 14,
+            //         )))
+            ),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -92,8 +111,9 @@ class SignInPageState1 extends State<SignInPage1> {
                   color: Colors.grey,
                   margin: EdgeInsets.symmetric(vertical: 30),
                 ),
-                if (controller.enableMobileView.value) const SignInMobileView(),
-                if (controller.enableOtpView.value) const SignInOTPView()
+                // if (controller.enableMobileView.value) const SignInMobileView(),
+                // if (controller.enableOtpView.value) const SignInOTPView()
+                SignInMobileView()
               ],
             ),
           ),

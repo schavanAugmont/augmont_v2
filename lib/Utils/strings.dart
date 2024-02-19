@@ -705,6 +705,10 @@ class Strings {
 
   static String createProfile="Create Profile";
   static String createProfileDec="Onboard to Augmont and avail world class service";
+  static String unlockWithFinger="Unlock with Fingerprint";
+  static String unlockWithFcID="Unlock with Face ID";
+  static String keepurAssets="Keep Your assest secure with your biometric";
+
 }
 
 extension StringExtension on String {

@@ -217,8 +217,35 @@ class SessionManager {
   }
 
   static bool getIsDashSelected() {
-    return _storage.read(StorageKey.isDashSelected) ?? true;
+    return _storage.read(StorageKey.isDashSelected) ?? false;
   }
+
+  static void setIsPinAdded(bool isPinAdded) {
+    _storage.write(StorageKey.isPinAdded, isPinAdded);
+  }
+
+  static bool getIsPinAdded() {
+    return _storage.read(StorageKey.isPinAdded) ?? true;
+  }
+
+  static void setIsBiometricAdded(bool isBiometricAdded) {
+    _storage.write(StorageKey.isBiometricAdded, isBiometricAdded);
+  }
+
+  static bool getIsBiometricAdded() {
+    return _storage.read(StorageKey.isBiometricAdded) ?? true;
+  }
+
+
+  static void setDeviceId(String deviceId) {
+    _storage.write(StorageKey.deviceId, deviceId);
+  }
+
+  static String getDeviceId() {
+    return _storage.read(StorageKey.deviceId) ?? "";
+  }
+
+
 }
 
 class StorageKey {
@@ -247,4 +274,7 @@ class StorageKey {
   static const String userInformationForm = "userInformationForm";
   static const String occupationList = "occupationList";
   static const String isDashSelected = "isDashSelected";
+  static const String isPinAdded = "isPinAdded";
+  static const String isBiometricAdded = "isBiometricAdded";
+  static const String deviceId="deviceId";
 }
