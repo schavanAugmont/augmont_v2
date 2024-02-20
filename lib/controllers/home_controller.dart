@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -66,6 +67,7 @@ class HomeController extends GetxController with StateMixin<dynamic> {
   }
 
   void fetchGoldRate({var isFromTimer = false}) async {
+    if(kDebugMode) return;
     HomeProvider().getGoldRate().then((value) {
       try {
         var jsonMap = jsonDecode(value);

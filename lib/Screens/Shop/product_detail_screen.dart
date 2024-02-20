@@ -1,12 +1,18 @@
+import 'package:augmont_v2/Screens/emi/emi_landing_screen.dart';
 import 'package:augmont_v2/Screens/offer/offer_screen.dart';
+import 'package:augmont_v2/Screens/review/review_screen.dart';
 import 'package:augmont_v2/Utils/colors.dart';
 import 'package:augmont_v2/Utils/themes.dart';
 import 'package:augmont_v2/bindings/offer_binding.dart';
+import 'package:augmont_v2/bindings/review_binding.dart';
+import 'package:augmont_v2/bindings/shop_emi_binding.dart';
 import 'package:augmont_v2/bottomsheet/choose_weght_bottomsheet.dart';
 import 'package:augmont_v2/controllers/product_detail_controller.dart';
 import 'package:augmont_v2/widgets/augmont_app_bar.dart';
 import 'package:augmont_v2/widgets/offer_grid.dart';
 import 'package:augmont_v2/widgets/price_widget.dart';
+import 'package:augmont_v2/widgets/rating_bar_detail_widget.dart';
+import 'package:augmont_v2/widgets/rating_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -530,12 +536,33 @@ class ProductDetailScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  const RatingBarDetailWidget(total: 890),
+
+                  const SizedBox(height: 20),
+                  const RatingTile(
+                    images: ["1","2","3","4"],
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: (){
+                      Get.to(()=> const ReviewScreen(),binding: ReviewBinding(),transition: Transition.rightToLeft);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(14),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black87),
+                      ),
+                      child: Text("View All Reviews",style: CustomTheme.style(size: 14,weight: FontWeight.w600),),
+                    ),
+                  ),
                   const SizedBox(height: 100),
                 ],
               ),
             ),
             bottomNavigationBar: Container(
-              height: 60,
+              height: 70,
               padding: const EdgeInsets.all(10),
               decoration: const BoxDecoration(
                 color: Colors.white,
@@ -560,12 +587,17 @@ class ProductDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        border: Border.all(),
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(()=> const EmiLandingScreen(),binding: ShopEMIBinding(),transition: Transition.rightToLeft);
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(),
+                        ),
+                        child: Text("Book on EMI",style: CustomTheme.style(weight: FontWeight.bold),),
                       ),
-                      child: Text("Book on EMI",style: CustomTheme.style(weight: FontWeight.bold),),
                     ),
                   ),
                   const SizedBox(width: 10),
