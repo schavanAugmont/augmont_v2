@@ -838,18 +838,21 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     });
   }
 
-  Future<void> showAuthPopup() async {
-    var sessionDevice = await SessionManager.getDeviceId();
+  Future<void> showAuthPopup(bool isForgot) async {
+    var sessionDevice = SessionManager.getDeviceId();
+    var isBiometric=SessionManager.getIsBiometricAdded();
+    bool canCheckBiometrics = await _localAuthentication.canCheckBiometrics;
     bool isValidDevice = false;
     if (sessionDevice == DeviceUtil.instance.deviceId.toString()) {
       isValidDevice = true;
     }
 
-    if (SignInController.to.isBiometricAdded.value &&
-        !SignInController.to.isForgotPIN.value &&
-        SignInController.to.isBiometricAvl.value &&
+    print("aut data $isBiometric $isForgot $canCheckBiometrics $isValidDevice");
+
+    if (isBiometric &&
+        canCheckBiometrics &&
         isValidDevice) {
-      SignInController.to.authenticateMe();
+      authenticateMe();
     }
   }
 }

@@ -33,6 +33,8 @@ class Utils {
     return reg.hasMatch(pan);
   }
 
+
+
   bool validateIFSC(String ifsc) {
     var reg = RegExp(ifscPattern);
     return reg.hasMatch(ifsc);

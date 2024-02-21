@@ -29,7 +29,7 @@ class SignInPageState3 extends State<SignInPage3> {
       if (widget.isForgot) {
         SignInController.to.setForgotData(widget.isForgot, widget.refCode);
       } else {
-        SignInController.to.showAuthPopup();
+        SignInController.to.showAuthPopup(widget.isForgot);
       }
     }, builder: (controller) {
       return SafeArea(
