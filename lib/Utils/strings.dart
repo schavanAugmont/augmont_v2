@@ -1,3 +1,5 @@
+import 'package:augmont_v2/models/CustomerDetailsModel.dart';
+
 class Strings {
   //CHANGE ONLY IF YOU HAVE DONE SOME CHANGES TO FONTS IN PUBSPEC FILE
   static String fontFamilyName = 'Gilroy';
@@ -694,6 +696,9 @@ class Strings {
   static String enterPhoneNo="Enter Phone Number";
   static String enterPhoneNoDec="Enter your phone numer in order to begin your journey with Augmont";
   static String digitalInv="Digital Investments";
+  static String digitalGold="Digital Gold";
+  static String digitalSliver="Digital Sliver";
+
 
   static String moduleGoldLoan = "1";
   static String moduleGoldEMI = "2";
@@ -703,11 +708,27 @@ class Strings {
   static String moduleGoldFD = "6";
   static String moduleOther = "7";
 
+  static String panVerification="PAN Verification";
   static String createProfile="Create Profile";
   static String createProfileDec="Onboard to Augmont and avail world class service";
   static String unlockWithFinger="Unlock with Fingerprint";
   static String unlockWithFcID="Unlock with Face ID";
   static String keepurAssets="Keep Your assest secure with your biometric";
+  static String setPriceAlert="Set Price Alert";
+  static String enterCustomPrice="Enter Custom Price";
+  static String enterAmount="Enter Amount";
+  static String setAlert="Set Alert";
+  static String youwillNotify="You will notified through App Notification";
+  static String editPriceAlert="Edit Price Alert";
+  static String disableAlert="Disable Alert";
+  static String saveChange="Save Changes";
+  static String chooseyourInvestment="Choose your investment Growth rate";
+  static String proceedWithGoldpl="Proceed with Gold+";
+  static String continuetxt="Continue";
+  static String switchgoldmsg="Swtich to Gold+ for 16% Returns";
+  static String switchgolddscp="Increasing your earning upto 3,00,000 by swtiching on the toggle";
+  static String goldplusEnablemsg="Gold+ Enabled! Enjoy Higer Returns";
+  static String goldplusEnabledecp="Enjoy higer gains upto 3,00,000 since you are choosen 16% returns ";
 
 }
 

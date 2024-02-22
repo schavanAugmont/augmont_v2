@@ -58,13 +58,18 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
                       onTap: () {},
                     ),
                     Spacer(),
-                    Text("Skip",
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ))
+                    GestureDetector(
+                      onTap: () {
+                        controller.goToHomeScreen();
+                      },
+                      child: Text("Skip",
+                          style: TextStyle(
+                            color: primaryTextColor,
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          )),
+                    )
                   ],
                 ),
               ),
@@ -142,40 +147,24 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
                               'date'
                           ? true
                           : false),
-                Container(
-                    margin: EdgeInsets.only(top: 20),
-                    padding: EdgeInsets.all(20),
-                    color: kycProductBackgroundColor,
-                    height: MediaQuery.of(context).size.height,
-                    child: ListView.builder(
-                      //here your code
-                        scrollDirection: Axis.vertical,
-                        itemCount:5,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            margin: EdgeInsets.only(bottom: 10),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(width: 1, color: Colors.grey),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            child: Row(
-                              children: [
-                                Checkbox(value: false, onChanged: (value) {}),
-                                Flexible(
-                                    child: Text(
-                                        "dfsgfgsgsg  reghedhdh",
-                                        maxLines: 10,
-                                        style: TextStyle(
-                                          color: primaryTextColor,
-                                          fontFamily: Strings.fontFamilyName,
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 13,
-                                        ))),
-                              ],
-                            ),
-                          );
-                        }))
+                if (controller
+                        .cusomerInfoQuestion![controller.counter].option !=
+                    null)
+                  showUserInfoSingleSelectDialog(
+                      context,
+                      controller,
+                      controller
+                          .cusomerInfoQuestion![controller.counter].question!,
+                      controller.cusomerInfoQuestion![controller.counter].type!,
+                      controller
+                          .cusomerInfoQuestion![controller.counter].option!,
+                      controller.cusomerInfoQuestion![controller.counter].id!,
+                      multiple: controller
+                                  .cusomerInfoQuestion![controller.counter]
+                                  .type !=
+                              'singleSelect'
+                          ? true
+                          : false)
               ]
             ],
           ),
@@ -239,7 +228,7 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
                 }
               },
               controller: controller.commonController,
-              style:  TextStyle(
+              style: TextStyle(
                 fontFamily: Strings.fontFamilyName,
                 fontWeight: FontWeight.w500,
                 fontSize: 12,
@@ -248,10 +237,10 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
-                      borderSide:
-                          const BorderSide(color: kycProductBackgroundColor, width: 0.5)),
+                      borderSide: const BorderSide(
+                          color: kycProductBackgroundColor, width: 0.5)),
                   hintText: hint.replaceAll('Please', '').capitalize,
-                  hintStyle:  TextStyle(
+                  hintStyle: TextStyle(
                     fontFamily: Strings.fontFamilyName,
                     fontWeight: FontWeight.w500,
                     fontSize: 12,
@@ -288,5 +277,67 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
             ],
           ],
         ));
+  }
+
+  Widget showUserInfoSingleSelectDialog(
+      BuildContext context,
+      PersonalizeQuestionController controller,
+      String hint,
+      String key,
+      List<String> data,
+      int questionId,
+      {bool multiple = false}) {
+    return Container(
+        margin: EdgeInsets.only(top: 20),
+        padding: EdgeInsets.all(20),
+        color: kycProductBackgroundColor,
+        height: MediaQuery.of(context).size.height,
+        child: ListView.builder(
+            //here your code
+            scrollDirection: Axis.vertical,
+            itemCount: data.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                margin: EdgeInsets.only(bottom: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(width: 1, color: Colors.grey),
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                child: Row(
+                  children: [
+                    Checkbox(
+                        value: controller.selectedOption.contains(data[index])
+                            ? true
+                            : false,
+                        onChanged: (value) {
+                          if (multiple == false) {
+                            controller.selectedOption.clear();
+                            controller.selectedOption.add(data[index]);
+                            controller.update();
+                          } else {
+                            if (controller.selectedOption
+                                .contains(data[index])) {
+                              controller.selectedOption.remove(data[index]);
+                              controller.update();
+                            } else {
+                              controller.selectedOption.add(data[index]);
+                              controller.update();
+                            }
+                          }
+                        }),
+                    Flexible(
+                        child: Text(data[index],
+                            maxLines: 10,
+                            style: TextStyle(
+                              color: primaryTextColor,
+                              fontFamily: Strings.fontFamilyName,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 13,
+                            ))),
+                  ],
+                ),
+              );
+            }));
   }
 }
