@@ -1,4 +1,6 @@
+import 'package:augmont_v2/Screens/address/address_screen.dart';
 import 'package:augmont_v2/Utils/themes.dart';
+import 'package:augmont_v2/bindings/address_binding.dart';
 import 'package:augmont_v2/widgets/address_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,27 +30,32 @@ class EmiAddressPage extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.symmetric(vertical: 20),
                   children: const [
-                    AddressTile(),
+                    AddressTile(primary: true,),
                     SizedBox(height: 20,),
                     AddressTile(),
                   ],
                 ),
               ),
 
-              Container(
-                margin: const EdgeInsets.only(bottom: 20),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black87)
-                ),
-                alignment: Alignment.center,
-                child:  Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.add,color: Colors.black87,),
-                    const SizedBox(width: 10,),
-                    Text("Add New Address",style: CustomTheme.style(weight: FontWeight.w600),),
-                  ],
+              GestureDetector(
+                onTap: () {
+                  Get.to(()=> const AddressScreen(),binding: AddressBinding(),transition: Transition.rightToLeft);
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black87)
+                  ),
+                  alignment: Alignment.center,
+                  child:  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.add,color: Colors.black87,),
+                      const SizedBox(width: 10,),
+                      Text("Add New Address",style: CustomTheme.style(weight: FontWeight.w600),),
+                    ],
+                  ),
                 ),
               ),
               GestureDetector(

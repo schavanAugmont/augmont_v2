@@ -1,3 +1,4 @@
+import 'package:augmont_v2/widgets/payment_method_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -5,6 +6,8 @@ class EmiCheckoutController extends GetxController with StateMixin<dynamic>{
 
   late PageController pageController;
   var currentStep = 0;
+
+  PaymentMethod? paymentMethod;
 
   @override
   void onInit() {
@@ -25,7 +28,13 @@ class EmiCheckoutController extends GetxController with StateMixin<dynamic>{
   }
 
   void onPageChanges(int index){
+    currentStep = index;
     pageController.animateToPage(index, duration: const Duration(milliseconds: 400), curve: Curves.easeIn);
+    update();
+  }
+  void  onPaymentSelected(PaymentMethod method){
+    paymentMethod = method;
+    update();
   }
 
 }

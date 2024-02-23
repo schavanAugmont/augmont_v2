@@ -8,6 +8,8 @@ import '../../widgets/augmont_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'emi_detail_screen.dart';
+
 class EmiCheckoutScreen extends StatelessWidget {
   const EmiCheckoutScreen({super.key});
 
@@ -21,6 +23,37 @@ class EmiCheckoutScreen extends StatelessWidget {
             appBar: const AugmontAppbar(
               canBack: true,
               title: "Checkout",
+            ),
+            bottomNavigationBar: AnimatedContainer(
+              duration: const Duration(milliseconds: 400),
+              height: controller.currentStep==1?70:0,
+              padding: const EdgeInsets.all(10),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(color: Colors.black12, spreadRadius: 0, blurRadius: 12, offset: Offset(0, -4)),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const RichPrice(
+                    label: "Downpayment Amount",
+                    amount: "11,700",
+                    size: 20,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black87,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        )
+                    ),
+                    onPressed: () {},
+                    child: Text("Proceed to Pay",style: CustomTheme.style(weight: FontWeight.w600,color: Colors.white),),
+                  ),
+                ],
+              ),
             ),
             body: Column(
               children: [
@@ -50,7 +83,7 @@ class EmiCheckoutScreen extends StatelessWidget {
                         },
                         child: CircleAvatar(
                           maxRadius: 14,
-                          backgroundColor: primaryTextColor,
+                          backgroundColor:controller.currentStep==1? primaryTextColor : Colors.black54,
                           child: Text("2",style: CustomTheme.style(size: 12,color: Colors.white,weight: FontWeight.w600),),
                         ),
                       ),
@@ -60,12 +93,12 @@ class EmiCheckoutScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Delivery Information",style: CustomTheme.style(size: 10),),
+                    Text("Delivery Information",style: CustomTheme.style(size: 10,weight: FontWeight.w600),),
                     const SizedBox(
                       width: 80,
                       height: 1,
                     ),
-                    Text("Summary",style: CustomTheme.style(size: 10),),
+                    Text("Summary",style: CustomTheme.style(size: 10,weight: controller.currentStep==1?FontWeight.w600:FontWeight.w500),),
                     const SizedBox(width: 20,)
                   ],
                 ),
