@@ -1,3 +1,4 @@
+import 'package:augmont_v2/Screens/DigitalInvestment/goldagreement_screen.dart';
 import 'package:augmont_v2/Screens/DigitalInvestment/linechart_widget.dart';
 import 'package:augmont_v2/controllers/digitalinvestment_controller.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:get/get.dart';
 
 import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
+import '../../bindings/digitalinvestment_binding.dart';
 import '../../controllers/dgsip_controller.dart';
 import '../Home/Components/home_components.dart';
 import '../SignIn/Components/RoundedTextField.dart';
@@ -60,7 +62,11 @@ class _PanVerificationState extends State<PanVerificationScreen> {
             // Adjust padding as needed
             child: ElevatedButton(
                 onPressed: () {
-                  if (controller.validatePAn()) {}
+                  // if (controller.validatePAn()) {}
+
+                  Get.back();
+                  Get.to(() => GoldAgreementScreen(),
+                      binding: DigitalInvestmentBiding());
                 },
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 55.0),

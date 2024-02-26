@@ -708,6 +708,20 @@ class Strings {
   static String moduleGoldFD = "6";
   static String moduleOther = "7";
 
+  static String latestInvestment="Latest Investment";
+  static String trasactionHistory='Transaction History';
+  static String sipSummary="SIP Summary";
+  static String investmentType="Investment Type";
+  static String purchaseAmount="Purchase Amount";
+  static String goldQuantity="Gold Quantity";
+  static String addtionalCharges="Additional Charges";
+  static String leasingTo="Leasing To";
+  static String netPayAmt="Net Payable Amount";
+  static String totalAmtPay="Total amount to Pay";
+  static String proceedtoPay="Proceed to Pay";
+  static String termsConditions="Terms and Conditions";
+  static String readDetails="Read Details";
+  static String goldAgreement="Gold+ Agreement";
   static String panVerification="PAN Verification";
   static String createProfile="Create Profile";
   static String createProfileDec="Onboard to Augmont and avail world class service";
@@ -729,6 +743,13 @@ class Strings {
   static String switchgolddscp="Increasing your earning upto 3,00,000 by swtiching on the toggle";
   static String goldplusEnablemsg="Gold+ Enabled! Enjoy Higer Returns";
   static String goldplusEnabledecp="Enjoy higer gains upto 3,00,000 since you are choosen 16% returns ";
+
+  static String goldpartner="Gold+ Partners";
+  static String goldpartnerDetails="Gold+ Partners Details";
+  static String knowMore="Know More";
+  static String dummyText="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+
+
 
 }
 

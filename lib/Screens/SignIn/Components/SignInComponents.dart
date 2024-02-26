@@ -49,3 +49,14 @@ Widget subtitle(String value){
         ],
       ));
 }
+
+Widget subtitle1(String value){
+  return Text(value,
+      textAlign: TextAlign.start,
+      style: TextStyle(
+        fontFamily: Strings.fontFamilyName,
+        fontWeight: FontWeight.w600,
+        color: primaryTextColor,
+        fontSize: 13,
+      ));
+}

@@ -1,3 +1,5 @@
+import 'package:augmont_v2/Screens/DigitalInvestment/SIP/sip_details_screen.dart';
+import 'package:augmont_v2/Screens/DigitalInvestment/dg_sip_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -6,6 +8,7 @@ import '../Screens/SignIn/Components/SignInComponents.dart';
 import '../Utils/colors.dart';
 import '../Utils/popover.dart';
 import '../Utils/strings.dart';
+import '../bindings/digitalinvestment_binding.dart';
 
 class DigitalInvestmentController extends GetxController {
   bool isGoldSelected = true;
@@ -16,10 +19,10 @@ class DigitalInvestmentController extends GetxController {
   int radioId = 1;
   int year = 1;
   var selectedTime = '';
-  var selectedamount='';
+  var selectedamount = '';
   List<String> listTime = ['1D', '1W', '1M', '3M', '6M', '1Y', '5Y', '10Y'];
   List<String> timelineList = ['One Time', 'Daily', 'Weekly', 'Monthly'];
-  List<String> amountList=['500','1000','20000','5000','6000'];
+  List<String> amountList = ['500', '1000', '20000', '5000', '6000'];
   var timeline = 'One Time';
 
   void onViewTap(bool bool) {
@@ -27,17 +30,16 @@ class DigitalInvestmentController extends GetxController {
     update();
   }
 
-  void priceAlertsDailog(BuildContext context) {
+  Future<void> priceAlertsDailog(BuildContext context) async {
     showModalBottomSheet<int>(
       backgroundColor: Colors.transparent,
       context: context,
       builder: (context) {
         return Popover(
-          maxheight: MediaQuery.sizeOf(context).height / 2.2,
+          maxheight: MediaQuery.of(context).size.height * 0.65,
           child: Container(
             padding: EdgeInsets.all(20),
             color: Colors.white,
-            height: MediaQuery.sizeOf(context).height / 2.5,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -90,7 +92,7 @@ class DigitalInvestmentController extends GetxController {
                 ),
 
                 Container(
-                  margin: EdgeInsets.only(bottom: 40, top: 15),
+                  margin: EdgeInsets.only(bottom: 30, top: 15),
                   color: kycProductBackgroundColor,
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Column(
@@ -163,7 +165,9 @@ class DigitalInvestmentController extends GetxController {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.back();
+                          },
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(0, 40.0),
                             backgroundColor: Colors.white,
@@ -189,7 +193,9 @@ class DigitalInvestmentController extends GetxController {
                     ),
                     Expanded(
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.back();
+                          },
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(0, 40.0),
                             backgroundColor: primaryTextColor,
@@ -218,12 +224,13 @@ class DigitalInvestmentController extends GetxController {
 
   void chooseInvestGrowthDailog(BuildContext context) {
     showModalBottomSheet<int>(
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       context: context,
       builder: (context) {
         return StatefulBuilder(builder: (context, StateSetter setState) {
           return Popover(
-            maxheight: MediaQuery.sizeOf(context).height / 1.2,
+            maxheight: MediaQuery.of(context).size.height * 0.65,
             child: Container(
               padding: EdgeInsets.all(20),
               color: Colors.white,
@@ -346,8 +353,15 @@ class DigitalInvestmentController extends GetxController {
                       ],
                     ),
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.back();
+                        Get.to(() => DgSIPScreen(),
+                            binding: DigitalInvestmentBiding());
+                      },
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 40.0),
                         backgroundColor: primaryTextColor,
@@ -369,5 +383,14 @@ class DigitalInvestmentController extends GetxController {
         });
       },
     );
+  }
+
+  void onBack() {
+    Get.back();
+  }
+
+  void goToSIpDetails() {
+    Get.to(() => SIPDetailsScreen(),
+        binding: DigitalInvestmentBiding());
   }
 }

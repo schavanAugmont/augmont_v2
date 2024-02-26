@@ -1,3 +1,5 @@
+import 'package:augmont_v2/Screens/DigitalInvestment/OneTime/onetime_summary_screen.dart';
+import 'package:augmont_v2/Screens/DigitalInvestment/pan_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -8,20 +10,27 @@ import '../Utils/colors.dart';
 import '../Utils/popover.dart';
 import '../Utils/strings.dart';
 import '../Utils/utils.dart';
+import '../bindings/digitalinvestment_binding.dart';
 
 class DgSIPController extends GetxController {
   bool isGoldSelected = true;
   bool isSwitched = false;
+  var selectedPartner=0;
   late TextEditingController priceTextController = TextEditingController();
   var selectedTime = '';
   var selectedamount = '';
   List<String> amountList = ['500', '1000', '20000', '5000', '6000'];
   List<String> timelineList = ['One Time', 'Daily', 'Weekly', 'Monthly'];
+  List<String> stepupAmtList = ['20', '50', '100', '200', '500'];
+  List<String> stepupPercList = ['5%', '10%', '6%', '15%', '20%'];
+  List<String> stepupIntervalList = ['6 months', '1 year', '2 years'];
   var timeline = 'Daily';
-
 
   late TextEditingController panCardController;
   late TextEditingController dobController;
+
+  late TextEditingController investmentController;
+  late TextEditingController startDateController;
 
   var isPANError = false.obs;
   var isDOBError = false.obs;
@@ -30,9 +39,16 @@ class DgSIPController extends GetxController {
   var errorMessage = "".obs;
   var dobErrorMessage = "".obs;
 
+  var isInvestError = false.obs;
+  var isSelectDateError = false.obs;
+
   @override
   void onInit() {
     panCardController = TextEditingController();
+
+    investmentController = TextEditingController();
+    startDateController = TextEditingController();
+
     dobController = TextEditingController(text: selectedDate.value);
     currentDate = DateTime.now();
     super.onInit();
@@ -51,7 +67,7 @@ class DgSIPController extends GetxController {
       builder: (context) {
         return StatefulBuilder(builder: (context, StateSetter setState) {
           return Popover(
-            maxheight: MediaQuery.sizeOf(context).height / 2.5,
+            maxheight: MediaQuery.sizeOf(context).height * 0.40,
             child: Container(
               padding: EdgeInsets.all(20),
               color: Colors.white,
@@ -158,7 +174,9 @@ class DgSIPController extends GetxController {
                         )),
                   if (_isSwitched)
                     ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.back();
+                        },
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size(double.infinity, 40.0),
                           backgroundColor: primaryTextColor,
@@ -190,7 +208,7 @@ class DgSIPController extends GetxController {
       builder: (context) {
         return StatefulBuilder(builder: (context, StateSetter setState) {
           return Popover(
-            maxheight: MediaQuery.sizeOf(context).height / 2.8,
+            maxheight: MediaQuery.sizeOf(context).height * 0.40,
             child: Container(
               padding: EdgeInsets.all(20),
               color: Colors.white,
@@ -226,39 +244,42 @@ class DgSIPController extends GetxController {
                   const SizedBox(
                     height: 5,
                   ),
-                 TextFormField(
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      textAlign: TextAlign.start,
-                      maxLength: 10,
-                      maxLines: 1,
-                      controller: priceTextController,
-                      onChanged: (value) {
-                      },
-                      validator: (value) {
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        fillColor: kycProductBackgroundColor,
-                        filled: true,
-                        counterText: "",
-                        hintText: Strings.enterAmount,
-                      ),
-                      style: TextStyle(
-                        fontFamily: Strings.fontFamilyName,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: primaryTextColor,
-                      ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    textAlign: TextAlign.start,
+                    maxLength: 10,
+                    maxLines: 1,
+                    controller: priceTextController,
+                    onChanged: (value) {},
+                    validator: (value) {
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      fillColor: kycProductBackgroundColor,
+                      filled: true,
+                      counterText: "",
+                      hintText: Strings.enterAmount,
                     ),
-
-                  SizedBox(height: 20,),
-
+                    style: TextStyle(
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: primaryTextColor,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.back();
+                        Get.to(() => PanVerificationScreen(),
+                            binding: DigitalInvestmentBiding());
+                      },
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 40.0),
                         backgroundColor: primaryTextColor,
@@ -278,6 +299,138 @@ class DgSIPController extends GetxController {
             ),
           );
         });
+      },
+    );
+  }
+
+  void otgDailog(BuildContext context) {
+    showModalBottomSheet<int>(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, StateSetter setState) {
+          return Popover(
+            maxheight: MediaQuery.sizeOf(context).height * 0.30,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                      child: Text("Minimum amount needed!",
+                          style: TextStyle(
+                            color: primaryTextColor,
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ))),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                      child: Text(
+                          "One timebuying in growth needs a minimum amount to initiate (500) ",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: primaryTextColor,
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 12,
+                          ))),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                        Get.back();
+                        Get.to(() => OneTimeSummaryScreen(),
+                            binding: DigitalInvestmentBiding());
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 40.0),
+                        backgroundColor: primaryTextColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10), // <-- Radius
+                        ),
+                      ),
+                      child: Text(Strings.continuetxt,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ))),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  void goldAggrementDailog(BuildContext context) {
+    showModalBottomSheet<int>(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return  Popover(
+            maxheight: MediaQuery.sizeOf(context).height,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(Strings.termCondition,
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                 Expanded(child:  Text(
+                      "Please read the following terms and conditions before registering on, accessing or using the website www.augmont.com (\"this Website\") or the Augmont mobile application (“this App”) or any similar platform (hereinafter collectively called the Platform). This Website and this App are owned and operated by Augmont Goldtech Private Limited (Formerly Augmont Precious Metals Private Limited).\nWe, Augmont Goldtech Private Limited and/or our designated affiliates (jointly \"Augmont\") provide the Platform features to you, the User/Member/Registered Member/Customer subject to your acceptance of the following Terms and Conditions of Access and Use, constituting an agreement between us (\"Agreement\"). “Product/Bullion” shall mean gold/silver in the form of bars/coins/jewellery or any other form as maybe introduced by Augmont. If you continue to use the Platform or communicate with us, you will be deemed to have accepted these Terms and Conditions of Access and Use. Please read these Terms and Conditions of Access and Use carefully. In addition, when you use any current or future Augmont service or products, you will also be subject to the guidelines, terms and agreements applicable to such service or business (\"Specific Terms\"). If the Terms and Conditions of Access and Use are expressly inconsistent with such Specific Terms, the Specific Terms will prevail.\nAugmont may revise these Terms and Conditions of Access and Use and Specific Terms from time to time and at any time, without notice to you. If you do not agree to be bound by these Terms and Conditions of Access and Use, as modified from time to time, you should leave the Platform immediately. The Terms and Conditions of Access and Use and Specific Terms shall be hereinafter collectively referred to as”Terms and Conditions”.\nThe section titles in these Terms and Conditions are for convenience only and have no legal effect.",
+                      textAlign: TextAlign.start,
+                     overflow: TextOverflow.ellipsis,
+                     maxLines: 20,
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 12,
+                      ) )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                      onPressed: () {
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(double.infinity, 40.0),
+                        backgroundColor: primaryTextColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10), // <-- Radius
+                        ),
+                      ),
+                      child: Text(Strings.continuetxt,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ))),
+                ],
+              ),
+            ),
+          );
+
       },
     );
   }
@@ -343,5 +496,27 @@ class DgSIPController extends GetxController {
       }
     }
     return age;
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    DateTime initial = DateTime.now().add(const Duration(days: 5));
+
+    if ([29, 30, 31].contains(initial.day)) {
+      initial = DateTime.now().add(const Duration(days: 6));
+    }
+
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: initial,
+        firstDate: initial,
+        lastDate: DateTime.now().add(const Duration(days: 371)),
+        selectableDayPredicate: (date) {
+          return ![29, 30, 31].contains(date.day);
+        });
+    if (picked != null && picked != DateTime.now()) {
+      startDateController.text =
+          "${picked.toLocal().day}/${picked.toLocal().month}/${picked.toLocal().year}";
+      update();
+    }
   }
 }

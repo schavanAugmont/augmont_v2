@@ -327,26 +327,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                     ],
                                   ),
-                                  Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black,
-                                        border: Border.all(color: Colors.black),
-                                        borderRadius:
-                                            BorderRadius.circular(5.0),
-                                      ),
-                                      margin:
-                                          EdgeInsets.only(bottom: 10, top: 30),
-                                      height: 40,
-                                      child: Center(
-                                          child: Text('Invest to earn 16% p.a',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontFamily:
-                                                    Strings.fontFamilyName,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 14,
-                                              ))))
+                                 GestureDetector(onTap: (){
+                                   controller.goToInvestmentDashbord();
+                                 },
+                                 child:  Container(
+                                     width: MediaQuery.of(context).size.width,
+                                     decoration: BoxDecoration(
+                                       color: Colors.black,
+                                       border: Border.all(color: Colors.black),
+                                       borderRadius:
+                                       BorderRadius.circular(5.0),
+                                     ),
+                                     margin:
+                                     EdgeInsets.only(bottom: 10, top: 30),
+                                     height: 40,
+                                     child: Center(
+                                         child: Text('Invest to earn 16% p.a',
+                                             style: TextStyle(
+                                               color: Colors.white,
+                                               fontFamily:
+                                               Strings.fontFamilyName,
+                                               fontWeight: FontWeight.w600,
+                                               fontSize: 14,
+                                             )))),)
                                 ],
                               ),
                             )

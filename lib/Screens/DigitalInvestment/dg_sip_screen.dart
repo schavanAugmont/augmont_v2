@@ -1,5 +1,3 @@
-import 'package:augmont_v2/Screens/DigitalInvestment/linechart_widget.dart';
-import 'package:augmont_v2/controllers/digitalinvestment_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,8 +5,6 @@ import 'package:get/get.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
 import '../../controllers/dgsip_controller.dart';
-import '../Home/Components/home_components.dart';
-import 'barchart_widget.dart';
 import 'donutchart_widget.dart';
 
 class DgSIPScreen extends StatefulWidget {
@@ -58,7 +54,11 @@ class _DgSIPState extends State<DgSIPScreen> {
             // Adjust padding as needed
             child: ElevatedButton(
                 onPressed: () {
-                  controller.enableLeasingDailog(context);
+                  if(controller.isGoldSelected){
+                    controller.otgDailog(context);
+                  }else {
+                    controller.enableLeasingDailog(context);
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 55.0),
@@ -162,10 +162,11 @@ class _DgSIPState extends State<DgSIPScreen> {
                       child: Switch(
                         value: controller.isSwitched,
                         onChanged: (value) {
-                          setState(() {
-                            controller.isSwitched = value;
-                            print(controller.isSwitched);
-                          });
+                          // setState(() {
+                          //   controller.isSwitched = value;
+                          //   print(controller.isSwitched);
+                          // });
+                          controller.enableGoldPlusDailog(context);
                         },
                         activeTrackColor: primaryTextColor,
                         activeColor: Colors.white,
@@ -176,7 +177,7 @@ class _DgSIPState extends State<DgSIPScreen> {
             Align(
               alignment: Alignment.center,
               child: Container(
-                width: 380,
+                width: MediaQuery.sizeOf(context).width,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   color: kycProductBackgroundColor,
@@ -188,10 +189,10 @@ class _DgSIPState extends State<DgSIPScreen> {
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
+                      Expanded(child: Container(
                         height: 25,
-                        width: 160,
                         decoration: BoxDecoration(
                           color: controller.isGoldSelected
                               ? Colors.white
@@ -215,12 +216,11 @@ class _DgSIPState extends State<DgSIPScreen> {
                                 ),
                               ),
                             )),
-                      ),
+                      )),
                       SizedBox(
                         width: 10,
                       ),
-                      Container(
-                        width: 160,
+                     Expanded(child: Container(
                         height: 25,
                         decoration: BoxDecoration(
                           color: controller.isGoldSelected
@@ -245,7 +245,7 @@ class _DgSIPState extends State<DgSIPScreen> {
                             ),
                           )),
                         ),
-                      )
+                     ))
                     ],
                   ),
                 ),
@@ -254,6 +254,37 @@ class _DgSIPState extends State<DgSIPScreen> {
             SizedBox(
               height: 25,
             ),
+
+            if(controller.isGoldSelected)...[
+              Container(
+                color: kycProductBackgroundColor,
+                padding: EdgeInsets.all(15),
+                child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("Swtich to SIP for great earnings!",
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontFamily: Strings.fontFamilyName,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 11,
+                                )),
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Text("Expert suggest invest reguraly in gold help counter the fluction for better profits ",
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontFamily: Strings.fontFamilyName,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 11,
+                                )),
+                          ],
+                        )
+              ),
+            ],
+            if(!controller.isGoldSelected)...[
             Text(
               'Investment Pattern',
               style: TextStyle(
@@ -372,6 +403,7 @@ class _DgSIPState extends State<DgSIPScreen> {
                 ],
               ),
             ),
+            ],
             SizedBox(
               height: 20,
             ),

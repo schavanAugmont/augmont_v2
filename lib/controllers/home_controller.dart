@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:augmont_v2/Screens/DigitalInvestment/digiinvestment_dashborad_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -10,6 +11,7 @@ import '../Utils/colors.dart';
 import '../Utils/print_logs.dart';
 import '../Utils/session_manager.dart';
 import '../Utils/strings.dart';
+import '../bindings/digitalinvestment_binding.dart';
 import '../models/GoldRateModel.dart';
 import '../network/Providers/HomeProvider.dart';
 
@@ -110,5 +112,9 @@ class HomeController extends GetxController with StateMixin<dynamic> {
     if (timer != null) {
       timer?.cancel();
     }
+  }
+
+  void goToInvestmentDashbord(){
+    Get.to(() => DigitalInvestmentGoldScreen(),binding: DigitalInvestmentBiding());
   }
 }

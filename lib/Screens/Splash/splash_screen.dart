@@ -4,9 +4,13 @@ import 'package:augmont_v2/Bindings/signin_binding.dart';
 import 'package:augmont_v2/Controllers/main_screen_controller.dart';
 import 'package:augmont_v2/Controllers/sing_in_controller.dart';
 import 'package:augmont_v2/Screens/AppIntro/onboard_screen.dart';
+import 'package:augmont_v2/Screens/DigitalInvestment/SIP/sip_details_screen.dart';
+import 'package:augmont_v2/Screens/DigitalInvestment/SIP/sip_stepup_screen.dart';
 import 'package:augmont_v2/Screens/DigitalInvestment/dg_sip_screen.dart';
 import 'package:augmont_v2/Screens/DigitalInvestment/digiinvestment_dashborad_screen.dart';
+import 'package:augmont_v2/Screens/DigitalInvestment/goldagreement_screen.dart';
 import 'package:augmont_v2/Screens/DigitalInvestment/pan_verification_screen.dart';
+import 'package:augmont_v2/Screens/DigitalInvestment/SIP/sip_summary_screen.dart';
 import 'package:augmont_v2/Screens/SignIn/personalise_quest_page.dart';
 import 'package:augmont_v2/bindings/digitalinvestment_binding.dart';
 import 'package:augmont_v2/network/Providers/PersonalizQusProvider.dart';
@@ -102,7 +106,11 @@ class _SplashScreenState extends State<SplashScreen>
           //   }
           // });
 
-          Get.off(() => PanVerificationScreen(),binding: DigitalInvestmentBiding());
+          Get.offAll(
+                () => const MainScreen(),
+            binding: MainScreenBinding(),
+            transition: Transition.rightToLeft,
+          );
         }
       })
       ..addStatusListener((status) => print('$status'));
