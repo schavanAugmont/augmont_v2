@@ -8,6 +8,7 @@ import 'package:get/get_state_manager/src/simple/get_state.dart';
 import '../../Controllers/home_controller.dart';
 import '../../Utils/session_manager.dart';
 import '../../Utils/strings.dart';
+import '../MetalPice/metal_price_screen.dart';
 import 'Components/HeaderWalletView.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -58,39 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () {},
                         isLoggedIn: false,
                       ),
-                      Container(
-                        margin: EdgeInsets.only(bottom: 20),
-                        color: kycProductBackgroundColor,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        child: Row(
-                          children: [
-                            Text(Strings.goldPrice,
-                                style: TextStyle(
-                                  color: primaryTextColor,
-                                  fontFamily: Strings.fontFamilyName,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                )),
-                            Spacer(),
-                            Text(controller.currentGoldBuyRate.value,
-                                style: TextStyle(
-                                  color: primaryTextColor,
-                                  fontFamily: Strings.fontFamilyName,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 12,
-                                )),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            Image.asset(
-                              'assets/images/ic_increment.png',
-                              width: 10,
-                              color: Colors.green,
-                            ),
-                          ],
-                        ),
-                      ),
+                      MetalPriceScreen(),
                       Container(
                         margin:
                             EdgeInsets.only(left: 20, right: 20, bottom: 20),

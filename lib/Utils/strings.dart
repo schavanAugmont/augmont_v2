@@ -744,10 +744,36 @@ class Strings {
   static String goldplusEnablemsg="Gold+ Enabled! Enjoy Higer Returns";
   static String goldplusEnabledecp="Enjoy higer gains upto 3,00,000 since you are choosen 16% returns ";
 
+  static String contiuneEditing="Continue Editing";
+  static String proccedAnyway="Proceed Anyway";
+  static String enableStepup="Enable Step-up SIP";
+  static String pauseSIP="Pause SIP";
+  static String dontPause="Don\'t Pause";
+  static String disableStep="Disable Step-up SIP";
+  static String dontDisable="Don\'t Disable";
+  static String urinvestmentPurpose="Your Investment purpose";
   static String goldpartner="Gold+ Partners";
   static String goldpartnerDetails="Gold+ Partners Details";
   static String knowMore="Know More";
+  static String saveproceed="Save and Procced";
   static String dummyText="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+
+  static String discard="Discard";
+
+  static String interestRec="Interest Received";
+
+  static String activeFrom="Active From";
+
+  static String endson="Ends on";
+
+  static String galdvalidty="Gold+ validity";
+
+  static String goldinterestBrkdown="Gold+ interest breakdown";
+
+  static String minQuantity="Minimum Quantity";
+
+  static String waitTillplanExpire="Wait till the plan expires";
+  static String unleasetoSwtich="Umlease to swtich now";
 
 
 

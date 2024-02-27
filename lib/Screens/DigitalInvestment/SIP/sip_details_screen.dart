@@ -8,6 +8,7 @@ import '../../../Utils/colors.dart';
 import '../../../Utils/strings.dart';
 import '../../../bindings/digitalinvestment_binding.dart';
 import '../../../controllers/dgsip_controller.dart';
+import '../../MetalPice/metal_price_screen.dart';
 import '../../SignIn/Components/RoundedTextField.dart';
 import '../../SignIn/Components/SignInComponents.dart';
 import '../donutchart_widget.dart';
@@ -45,7 +46,7 @@ class _SIPDetailsState extends State<SIPDetailsScreen> {
           title: Transform(
               // you can forcefully translate values left side using Transform
               transform: Matrix4.translationValues(-15.0, 0.0, 0.0),
-              child: Text("SIP Details",
+              child: Text("SIP Name",
                   style: TextStyle(
                     color: primaryTextColor,
                     fontFamily: Strings.fontFamilyName,
@@ -56,39 +57,8 @@ class _SIPDetailsState extends State<SIPDetailsScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 10),
-                color: kycProductBackgroundColor,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Row(
-                  children: [
-                    Text(Strings.goldPrice,
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        )),
-                    Spacer(),
-                    Text('₹ 6000/gm',
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 12,
-                        )),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Image.asset(
-                      'assets/images/ic_increment.png',
-                      width: 10,
-                      color: Colors.green,
-                    ),
-                  ],
-                ),
-              ),
-              sipDetailsWidget(),
+              MetalPriceScreen(),
+              sipDetailsWidget(controller),
               partnerWidget(),
               earnWidget(),
               transactionWidget(),
@@ -99,7 +69,7 @@ class _SIPDetailsState extends State<SIPDetailsScreen> {
     });
   }
 
-  Widget sipDetailsWidget() {
+  Widget sipDetailsWidget(DgSIPController controller) {
     return Container(
       width: MediaQuery.sizeOf(context).width,
       decoration: BoxDecoration(
@@ -131,11 +101,14 @@ class _SIPDetailsState extends State<SIPDetailsScreen> {
                         Row(
                           children: [
                             Spacer(),
+                            GestureDetector(onTap: (){
+                              controller.goToEditSIP();
+                            },child:
                             Image.asset(
                               'assets/images/ic_edit.png',
                               width: 15,
                               color: primaryTextColor,
-                            ),
+                            ) ),
                           ],
                         ),
                         Text("SIP Details",
@@ -317,7 +290,7 @@ class _SIPDetailsState extends State<SIPDetailsScreen> {
 
   Widget earnWidget() {
     return GestureDetector(onTap:(){
-      Get.to(() => SIPStepupScreen(),
+      Get.to(() => SIPStepupScreen(isEditable: false,),
           binding: DigitalInvestmentBiding());
     },child:Container(
       width: MediaQuery.sizeOf(context).width,

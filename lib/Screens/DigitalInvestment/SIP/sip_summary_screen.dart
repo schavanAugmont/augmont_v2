@@ -9,6 +9,7 @@ import '../../../Utils/strings.dart';
 import '../../../bindings/digitalinvestment_binding.dart';
 import '../../../controllers/dgsip_controller.dart';
 import '../../Main/main_screen.dart';
+import '../../MetalPice/metal_price_screen.dart';
 import '../../SignIn/Components/RoundedTextField.dart';
 import '../../SignIn/Components/SignInComponents.dart';
 import '../donutchart_widget.dart';
@@ -104,38 +105,7 @@ class _SIPSummaryState extends State<SIPSummaryScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 20),
-                color: kycProductBackgroundColor,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Row(
-                  children: [
-                    Text(Strings.goldPrice,
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        )),
-                    Spacer(),
-                    Text('₹ 6000/gm',
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 12,
-                        )),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Image.asset(
-                      'assets/images/ic_increment.png',
-                      width: 10,
-                      color: Colors.green,
-                    ),
-                  ],
-                ),
-              ),
+              MetalPriceScreen(),
               sipDetailsWidget(),
               sipFieldWidget(controller)
             ],

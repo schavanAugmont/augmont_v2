@@ -1,4 +1,5 @@
 import 'package:augmont_v2/Screens/DigitalInvestment/SIP/gold_partner_screen.dart';
+import 'package:augmont_v2/Screens/MetalPice/metal_price_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -104,38 +105,7 @@ class _OneTimeSummaryState extends State<OneTimeSummaryScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 20),
-                color: kycProductBackgroundColor,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Row(
-                  children: [
-                    Text(Strings.goldPrice,
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        )),
-                    Spacer(),
-                    Text('₹ 6000/gm',
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 12,
-                        )),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Image.asset(
-                      'assets/images/ic_increment.png',
-                      width: 10,
-                      color: Colors.green,
-                    ),
-                  ],
-                ),
-              ),
+              MetalPriceScreen(),
               otgDetailsWidget(),
             ],
           ),

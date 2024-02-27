@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../Screens/MetalPice/metal_price_screen.dart';
 import '../Screens/SignIn/Components/SignInComponents.dart';
 import '../Utils/colors.dart';
 import '../Utils/popover.dart';
@@ -91,45 +92,7 @@ class DigitalInvestmentController extends GetxController {
                   ),
                 ),
 
-                Container(
-                  margin: EdgeInsets.only(bottom: 30, top: 15),
-                  color: kycProductBackgroundColor,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(Strings.goldPrice,
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: Strings.fontFamilyName,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                          )),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('₹ 6000/gm',
-                              style: TextStyle(
-                                color: primaryTextColor,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 16,
-                              )),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Image.asset(
-                            'assets/images/ic_increment.png',
-                            width: 10,
-                            color: Colors.green,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
+                MetalPriceScreen(),
                 SizedBox(
                   height: 10,
                 ),

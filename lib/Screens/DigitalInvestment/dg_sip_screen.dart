@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
 import '../../controllers/dgsip_controller.dart';
+import '../MetalPice/metal_price_screen.dart';
 import 'donutchart_widget.dart';
 
 class DgSIPScreen extends StatefulWidget {
@@ -73,38 +74,7 @@ class _DgSIPState extends State<DgSIPScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 20),
-                color: kycProductBackgroundColor,
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Row(
-                  children: [
-                    Text(Strings.goldPrice,
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 12,
-                        )),
-                    Spacer(),
-                    Text('₹ 6000/gm',
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 12,
-                        )),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Image.asset(
-                      'assets/images/ic_increment.png',
-                      width: 10,
-                      color: Colors.green,
-                    ),
-                  ],
-                ),
-              ),
+              MetalPriceScreen(),
               projectedGrowthView(context),
               growthCal(controller),
             ],

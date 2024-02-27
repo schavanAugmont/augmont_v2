@@ -658,137 +658,141 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
-                return GestureDetector(onTap: (){
-                  controller.goToSIpDetails();
-                },child: Container(
-                  margin: EdgeInsets.only( bottom: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5.0),
-                    border: Border.all(color: kycProductBackgroundColor),
-                  ),
-                  padding: EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children : [
-                          Text("Wedding Jewellery",
-                              style: TextStyle(
-                                color: primaryTextColor,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                              )),
-                          Spacer(),
-                          RichText(
-                              text: TextSpan(
-                                text: '₹2000',
+                return GestureDetector(
+                  onTap: () {
+                    controller.goToSIpDetails();
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5.0),
+                      border: Border.all(color: kycProductBackgroundColor),
+                    ),
+                    padding: EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("Wedding Jewellery",
                                 style: TextStyle(
+                                  color: primaryTextColor,
                                   fontFamily: Strings.fontFamilyName,
                                   fontWeight: FontWeight.w600,
-                                  color: primaryTextColor,
-                                  fontSize: 11,
+                                  fontSize: 12,
+                                )),
+                            Spacer(),
+                            RichText(
+                                text: TextSpan(
+                              text: '₹2000',
+                              style: TextStyle(
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.w600,
+                                color: primaryTextColor,
+                                fontSize: 11,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: '/day',
+                                  style: TextStyle(
+                                    fontFamily: Strings.fontFamilyName,
+                                    fontWeight: FontWeight.normal,
+                                    color: primaryTextColor,
+                                    fontSize: 10,
+                                  ),
                                 ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: '/day',
+                              ],
+                            ))
+                          ],
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("Daily SIP",
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontFamily: Strings.fontFamilyName,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 12,
+                                )),
+                            Spacer(),
+                            Text("Active",
+                                style: TextStyle(
+                                  color: primaryTextColor,
+                                  fontFamily: Strings.fontFamilyName,
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 11,
+                                )),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Divider(
+                          height: 0.2,
+                          color: kycProductBackgroundColor,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                                child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("Total Investment",
                                     style: TextStyle(
+                                      color: primaryTextColor,
                                       fontFamily: Strings.fontFamilyName,
                                       fontWeight: FontWeight.normal,
+                                      fontSize: 11,
+                                    )),
+                                Text("₹17,00,000",
+                                    style: TextStyle(
                                       color: primaryTextColor,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ],
-                              ))
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children : [
-                          Text("Daily SIP",
-                              style: TextStyle(
-                                color: primaryTextColor,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12,
-                              )),
-                          Spacer(),
-                          Text("Active",
-                              style: TextStyle(
-                                color: primaryTextColor,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 11,
-                              )),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Divider(
-                        height: 0.2,
-                        color: kycProductBackgroundColor,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children : [
-                              Text("Total Investment",
-                                  style: TextStyle(
-                                    color: primaryTextColor,
-                                    fontFamily: Strings.fontFamilyName,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 11,
-                                  )),
-                              Text("₹17,00,000",
-                                  style: TextStyle(
-                                    color: primaryTextColor,
-                                    fontFamily: Strings.fontFamilyName,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                  )),
-
-                            ],
-                          )),
-                          Expanded(child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children : [
-                              Text("Current Value",
-                                  style: TextStyle(
-                                    color: primaryTextColor,
-                                    fontFamily: Strings.fontFamilyName,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 11,
-                                  )),
-                              Text("₹24,00,00",
-                                  style: TextStyle(
-                                    color: primaryTextColor,
-                                    fontFamily: Strings.fontFamilyName,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                  )),
-                            ],
-                          ))
-                        ],
-                      )
-                    ],
+                                      fontFamily: Strings.fontFamilyName,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                    )),
+                              ],
+                            )),
+                            Expanded(
+                                child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("Current Value",
+                                    style: TextStyle(
+                                      color: primaryTextColor,
+                                      fontFamily: Strings.fontFamilyName,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 11,
+                                    )),
+                                Text("₹24,00,00",
+                                    style: TextStyle(
+                                      color: primaryTextColor,
+                                      fontFamily: Strings.fontFamilyName,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                    )),
+                              ],
+                            ))
+                          ],
+                        )
+                      ],
+                    ),
                   ),
-                ),);
+                );
               },
             )
           ],
@@ -879,7 +883,9 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
               ),
               margin: EdgeInsets.only(top: 10),
               height: 250,
-              child: BarchartWidegt(),
+              child: BarchartWidegt(
+                screen: 'dashboard',
+              ),
             ),
             SizedBox(
               height: 10,
