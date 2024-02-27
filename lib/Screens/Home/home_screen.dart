@@ -1,7 +1,10 @@
 import 'package:augmont_v2/Controllers/main_screen_controller.dart';
 import 'package:augmont_v2/Screens/Home/Components/home_components.dart';
 import 'package:augmont_v2/Utils/colors.dart';
+import 'package:augmont_v2/Utils/themes.dart';
+import 'package:augmont_v2/dialog/emi_due_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
@@ -59,10 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         isLoggedIn: false,
                       ),
                       Container(
-                        margin: EdgeInsets.only(bottom: 20),
+                        margin: const EdgeInsets.only(bottom: 20),
                         color: kycProductBackgroundColor,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         child: Row(
                           children: [
                             Text(Strings.goldPrice,
@@ -71,15 +73,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   fontFamily: Strings.fontFamilyName,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,
-                                )),
-                            Spacer(),
+                                ),
+                            ),
+                            const Spacer(),
                             Text(controller.currentGoldBuyRate.value,
                                 style: TextStyle(
                                   color: primaryTextColor,
                                   fontFamily: Strings.fontFamilyName,
                                   fontWeight: FontWeight.normal,
                                   fontSize: 12,
-                                )),
+                                ),
+                            ),
                             const SizedBox(
                               width: 5,
                             ),
@@ -92,23 +96,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Container(
-                        margin:
-                            EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                         decoration: BoxDecoration(
                           color: kycProductBackgroundColor,
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         child: Row(
                           children: [
                             Container(
-                                decoration: new BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: shadowColor,
                                   shape: BoxShape.circle,
                                 ),
-                                margin: EdgeInsets.only(right: 10),
-                                padding: EdgeInsets.all(15),
-                                child: ImageIcon(
+                                margin: const EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.all(15),
+                                child: const ImageIcon(
                                   AssetImage('assets/images/ic_user.png'),
                                   size: 20,
                                   color: Colors.black,
@@ -125,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontWeight: FontWeight.w600,
                                       fontSize: 13,
                                     )),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
                                 Text(Strings.createProfileDec,
@@ -138,13 +141,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     )),
                               ],
                             )),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             GestureDetector(
                                 onTap: () {
-
-
                                   MainScreenController().showSignupPopup(context);
                                 },
                                 child: Text(Strings.signUp,
@@ -163,8 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           border: Border.all(color: kycProductBackgroundColor),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        margin:
-                            EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Center(
                                     child: Container(
-                                  margin: EdgeInsets.only(top: 15),
+                                  margin: const EdgeInsets.only(top: 15),
                                   width: 220,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(40),
@@ -197,18 +197,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                       horizontal: 4.0,
                                     ),
                                     child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Container(
                                           width: 100,
                                           height: 25,
                                           decoration: BoxDecoration(
-                                            color: isGoldSelected
-                                                ? primaryTextColor
-                                                : Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(40),
+                                            color: isGoldSelected ? primaryTextColor : Colors.white,
+                                            borderRadius: BorderRadius.circular(40),
                                           ),
                                           child: GestureDetector(
                                               onTap: () {
@@ -218,29 +214,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 child: Text(
                                                   'Gold',
                                                   style: TextStyle(
-                                                    fontFamily:
-                                                        Strings.fontFamilyName,
+                                                    fontFamily: Strings.fontFamilyName,
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 13,
-                                                    color: isGoldSelected
-                                                        ? Colors.white
-                                                        : Colors.grey,
+                                                    color: isGoldSelected ? Colors.white : Colors.grey,
                                                   ),
                                                 ),
                                               )),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Container(
                                           width: 100,
                                           height: 25,
                                           decoration: BoxDecoration(
-                                            color: isGoldSelected
-                                                ? Colors.white
-                                                : primaryTextColor,
-                                            borderRadius:
-                                                BorderRadius.circular(40),
+                                            color: isGoldSelected ? Colors.white : primaryTextColor,
+                                            borderRadius: BorderRadius.circular(40),
                                           ),
                                           child: GestureDetector(
                                             onTap: () {
@@ -250,13 +240,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 child: Text(
                                               'Sliver',
                                               style: TextStyle(
-                                                fontFamily:
-                                                    Strings.fontFamilyName,
+                                                fontFamily: Strings.fontFamilyName,
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 14,
-                                                color: isGoldSelected
-                                                    ? Colors.grey
-                                                    : Colors.white,
+                                                color: isGoldSelected ? Colors.grey : Colors.white,
                                               ),
                                             )),
                                           ),
@@ -268,10 +255,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(10),
                               child: Column(
                                 children: [
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Text('Price',
@@ -281,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontWeight: FontWeight.normal,
                                         fontSize: 11,
                                       )),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 8,
                                   ),
                                   Text(controller.currentGoldBuyRate.value,
@@ -291,24 +278,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontWeight: FontWeight.normal,
                                         fontSize: 16,
                                       )),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
-                                  Text(
-                                      'Greate time to buy! lowest price of the week',
+                                  Text('Greate time to buy! lowest price of the week',
                                       style: TextStyle(
                                         color: Colors.green,
                                         fontFamily: Strings.fontFamilyName,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 12,
                                       )),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Text("More Details",
                                           maxLines: 2,
@@ -318,10 +303,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             fontWeight: FontWeight.w600,
                                             fontSize: 11,
                                           )),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 5,
                                       ),
-                                      Icon(
+                                      const Icon(
                                         Icons.arrow_forward_ios_sharp,
                                         size: 11,
                                       )
@@ -332,18 +317,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       decoration: BoxDecoration(
                                         color: Colors.black,
                                         border: Border.all(color: Colors.black),
-                                        borderRadius:
-                                            BorderRadius.circular(5.0),
+                                        borderRadius: BorderRadius.circular(5.0),
                                       ),
-                                      margin:
-                                          EdgeInsets.only(bottom: 10, top: 30),
+                                      margin: const EdgeInsets.only(bottom: 10, top: 30),
                                       height: 40,
                                       child: Center(
                                           child: Text('Invest to earn 16% p.a',
                                               style: TextStyle(
                                                 color: Colors.white,
-                                                fontFamily:
-                                                    Strings.fontFamilyName,
+                                                fontFamily: Strings.fontFamilyName,
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 14,
                                               ))))
@@ -353,35 +335,107 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      setfdView(context),
-
                       Container(
-                        margin:
-                            EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                        margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: lightColor,width: 1.0),
+                          borderRadius: BorderRadius.circular(6.0),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 90,
+                              height: 90,
+                              decoration: BoxDecoration(
+                                  color: lightColor,
+                                  borderRadius: BorderRadius.circular(6.0)
+                              ),
+                              alignment: Alignment.center,
+                              child: Image.asset("assets/images/coin.png",width: 40),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Augmont Gold Coin",
+                                    style: CustomTheme.style(size: 15, weight: FontWeight.w600),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Order ID : 3456",
+                                        style: CustomTheme.style(size: 13, weight: FontWeight.w400),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                                        width: 1,
+                                        height: 20,
+                                        color: lightColor,
+                                      ),
+                                      Text(
+                                        "Status : ",
+                                        style: CustomTheme.style(size: 13, weight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                        "Booked",
+                                        style: CustomTheme.style(size: 13, weight: FontWeight.w600,color: Colors.green),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: lightColor,
+                                      borderRadius: BorderRadius.circular(2.0),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Upcoming EMI Date : 08/03/2024",
+                                          style: CustomTheme.style(size: 10, weight: FontWeight.w500),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Get.dialog(const EmiDueDialog());
+                                          },
+                                          child: Text(
+                                            "Pay Now",
+                                            style: CustomTheme.style(size: 12, weight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      setfdView(context),
+                      Container(
+                        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Expanded(
-                                child: nudgetWid(
-                                    "Get gold loan at 6% p.a.*",
-                                    "Get Started",
-                                    "assets/images/ic_loan.png",
-                                    false)),
-                            SizedBox(
+                            Expanded(child: nudgetWid("Get gold loan at 6% p.a.*", "Get Started", "assets/images/ic_loan.png", false)),
+                            const SizedBox(
                               width: 10,
                             ),
-                            Expanded(
-                                child: nudgetWid(
-                                    "Looking to Sell your gold?",
-                                    "Get Started",
-                                    "assets/images/ic_money.png",
-                                    false))
+                            Expanded(child: nudgetWid("Looking to Sell your gold?", "Get Started", "assets/images/ic_money.png", false))
                           ],
                         ),
                       ),
                       Container(
-                          margin:
-                              EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                          margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                           child: Column(
                             children: [
                               Row(
@@ -395,7 +449,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         fontWeight: FontWeight.w600,
                                         fontSize: 12,
                                       )),
-                                  Spacer(),
+                                  const Spacer(),
                                   Text("View More",
                                       style: TextStyle(
                                         color: primaryTextColor,
@@ -405,7 +459,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )),
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               SizedBox(
@@ -415,34 +469,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                       scrollDirection: Axis.horizontal,
                                       itemCount: 5,
                                       shrinkWrap: true,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
+                                      itemBuilder: (BuildContext context, int index) {
                                         return shopListItem();
                                       }))
                             ],
                           )),
-                     setWalletView(context),
+                      setWalletView(context),
                       Container(
-                        margin:
-                            EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Expanded(
-                                child: nudgetWid(
-                                    "Gift Gold to your loved once",
-                                    "Gift Now",
-                                    "assets/images/ic_giftbox.png",
-                                    true)),
-                            SizedBox(
+                            Expanded(child: nudgetWid("Gift Gold to your loved once", "Gift Now", "assets/images/ic_giftbox.png", true)),
+                            const SizedBox(
                               width: 10,
                             ),
-                            Expanded(
-                                child: nudgetWid(
-                                    "Refer and earn gold up to 10,000",
-                                    "Get Started",
-                                    "assets/images/ic_speaker.png",
-                                    true))
+                            Expanded(child: nudgetWid("Refer and earn gold up to 10,000", "Get Started", "assets/images/ic_speaker.png", true))
                           ],
                         ),
                       ),
@@ -451,9 +493,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           border: Border.all(color: kycProductBackgroundColor),
                           borderRadius: BorderRadius.circular(10.0),
                         ),
-                        margin:
-                            EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                        padding: EdgeInsets.all(10),
+                        margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                        padding: const EdgeInsets.all(10),
                         child: Row(
                           children: [
                             Expanded(
@@ -468,7 +509,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontWeight: FontWeight.w600,
                                       fontSize: 14,
                                     )),
-                                SizedBox(
+                                const SizedBox(
                                   height: 2,
                                 ),
                                 Text(controller.currentSilverBuyRate.value,
@@ -479,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontWeight: FontWeight.normal,
                                       fontSize: 18,
                                     )),
-                                SizedBox(
+                                const SizedBox(
                                   height: 5,
                                 ),
                                 Text("Grow your wealth by 9% p.a*",
@@ -492,7 +533,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     )),
                               ],
                             )),
-                            SizedBox(
+                            const SizedBox(
                               width: 10,
                             ),
                             Text("Start Investing",
@@ -518,7 +559,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget nudgetWid(String title, String actn, String logo, bool bool) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: bool ? kycProductBackgroundColor : Colors.white,
         border: Border.all(color: kycProductBackgroundColor),
@@ -537,7 +578,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
               )),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Container(
@@ -550,7 +591,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Row(
@@ -563,10 +604,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontWeight: FontWeight.w600,
                     fontSize: 11,
                   )),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
-              Icon(
+              const Icon(
                 Icons.arrow_forward_ios_sharp,
                 size: 11,
               )
@@ -579,8 +620,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget shopListItem() {
     return Container(
-      padding: EdgeInsets.all(10),
-      margin: EdgeInsets.only(right: 10),
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
         color: kycProductBackgroundColor,
         border: Border.all(color: kycProductBackgroundColor),
@@ -592,7 +633,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
               ImageIcon(
                 AssetImage("assets/images/ic_image.png"),
@@ -605,7 +646,7 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 60,
           ),
           Text("Gold Coins",

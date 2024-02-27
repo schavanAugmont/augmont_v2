@@ -29,8 +29,7 @@ class ApiClient {
     map['isapp'] = "true";
 
     if (SessionManager.isLoggedIn()) {
-      map[HttpHeaders.authorizationHeader] =
-          "Bearer ${SessionManager.getToken()}";
+      map[HttpHeaders.authorizationHeader] = "Bearer ${SessionManager.getToken()}";
       map["signature"] = signature;
     }
 
@@ -47,8 +46,7 @@ class ApiClient {
     }
   }
 
-  Future<dynamic> getApi(String url,
-      {ServerType server = ServerType.DigiGold}) async {
+  Future<dynamic> getApi(String url, {ServerType server = ServerType.DigiGold}) async {
     var responseJson;
     try {
       var baseUrl = _uri(server, url);
@@ -57,8 +55,7 @@ class ApiClient {
 
       var sign = Utils().encryptAPIData(json.encode(jsonURL));
 
-      final response =
-          await http.get(baseUrl, headers: headers(sign)).timeout(_timeout);
+      final response = await http.get(baseUrl, headers: headers(sign)).timeout(_timeout);
 
       responseJson = _returnResponse(response);
     } catch (e) {
@@ -67,8 +64,7 @@ class ApiClient {
     return responseJson;
   }
 
-  Future<dynamic> postApi(String url, String _body,
-      {ServerType server = ServerType.DigiGold}) async {
+  Future<dynamic> postApi(String url, String _body, {ServerType server = ServerType.DigiGold}) async {
     var responseJson;
 
     try {
@@ -84,9 +80,7 @@ class ApiClient {
 
       var sign = Utils().encryptAPIData(baseData);
 
-      final response = await http
-          .post(baseUrl, headers: headers(sign), body: _body)
-          .timeout(_timeout);
+      final response = await http.post(baseUrl, headers: headers(sign), body: _body).timeout(_timeout);
 
       responseJson = _returnResponse(response);
     } catch (e) {
@@ -96,8 +90,7 @@ class ApiClient {
     return responseJson;
   }
 
-  Future<dynamic> putApi(String url, String _body,
-      {ServerType server = ServerType.DigiGold}) async {
+  Future<dynamic> putApi(String url, String _body, {ServerType server = ServerType.DigiGold}) async {
     var responseJson;
 
     try {
@@ -113,9 +106,7 @@ class ApiClient {
 
       var sign = Utils().encryptAPIData(baseData);
 
-      final response = await http
-          .put(baseUrl, headers: headers(sign), body: _body)
-          .timeout(_timeout);
+      final response = await http.put(baseUrl, headers: headers(sign), body: _body).timeout(_timeout);
 
       responseJson = _returnResponse(response);
     } catch (e) {
@@ -125,8 +116,7 @@ class ApiClient {
     return responseJson;
   }
 
-  Future<dynamic> deleteApi(String url, String _body,
-      {ServerType server = ServerType.DigiGold}) async {
+  Future<dynamic> deleteApi(String url, String _body, {ServerType server = ServerType.DigiGold}) async {
     var responseJson;
 
     try {
@@ -142,9 +132,7 @@ class ApiClient {
 
       var sign = Utils().encryptAPIData(baseData);
 
-      final response = await http
-          .delete(baseUrl, headers: headers(sign), body: _body)
-          .timeout(_timeout);
+      final response = await http.delete(baseUrl, headers: headers(sign), body: _body).timeout(_timeout);
 
       responseJson = _returnResponse(response);
     } catch (e) {
@@ -184,7 +172,7 @@ class ApiClient {
     }
   }
 
-   navigateToWebView(String url) {
+  navigateToWebView(String url) {
     PrintLogs.printData(url);
     // Get.to(
     //       () => WebViewScreen(
@@ -195,7 +183,7 @@ class ApiClient {
   }
 
 //W1WE
-   navigateToPDFView(String url) {
+  navigateToPDFView(String url) {
     // Get.to(
     //       () => PdfViewerScreen(
     //     url: _webUrl + url,

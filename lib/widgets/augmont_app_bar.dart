@@ -9,12 +9,14 @@ class AugmontAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool canBack;
   final List<Widget> actions;
+  final Widget? bottom;
 
-  const AugmontAppbar({super.key, this.title = '', this.canBack = true, this.actions = const []});
+  const AugmontAppbar({super.key, this.title = '', this.canBack = true, this.actions = const [],this.bottom});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      key: UniqueKey(),
       padding: EdgeInsets.zero,
       height: preferredSize.height,
       width: double.maxFinite,
@@ -29,26 +31,36 @@ class AugmontAppbar extends StatelessWidget implements PreferredSizeWidget {
           )
         ],
       ),
-      child: Row(
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          if (canBack)
-            IconButton(
-              onPressed: Get.back,
-              icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
-            ),
-          if (!canBack)
-            const SizedBox(width: 16,),
-          Text(
-            title,
-            style: TextStyle(color: priceTextColor, fontWeight: FontWeight.w600, fontSize: 15, fontFamily: Strings.fontFamilyName),
+          Row(
+            children: [
+              if (canBack)
+                IconButton(
+                  onPressed: Get.back,
+                  icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87, size: 20),
+                ),
+              if (!canBack)
+                const SizedBox(width: 16,),
+              Text(
+                title,
+                style: TextStyle(color: priceTextColor, fontWeight: FontWeight.w600, fontSize: 15, fontFamily: Strings.fontFamilyName),
+              ),
+              const Spacer(),
+              ...actions,
+            ],
           ),
-          const Spacer(),
-          ...actions,
+          if(bottom!=null)...[
+            const Spacer(),
+            bottom!,
+          ]
         ],
       ),
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight+(bottom==null?0:24));
 }
