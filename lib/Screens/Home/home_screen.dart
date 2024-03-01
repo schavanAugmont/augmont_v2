@@ -338,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     "Get gold loan at 6% p.a.*",
                                     "Get Started",
                                     "assets/images/ic_loan.png",
-                                    false)),
+                                    false,controller,context)),
                             SizedBox(
                               width: 10,
                             ),
@@ -347,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     "Looking to Sell your gold?",
                                     "Get Started",
                                     "assets/images/ic_money.png",
-                                    false))
+                                    false,controller,context))
                           ],
                         ),
                       ),
@@ -405,7 +405,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     "Gift Gold to your loved once",
                                     "Gift Now",
                                     "assets/images/ic_giftbox.png",
-                                    true)),
+                                    true,controller,context)),
                             SizedBox(
                               width: 10,
                             ),
@@ -414,7 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     "Refer and earn gold up to 10,000",
                                     "Get Started",
                                     "assets/images/ic_speaker.png",
-                                    true))
+                                    true,controller,context))
                           ],
                         ),
                       ),
@@ -488,7 +488,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget nudgetWid(String title, String actn, String logo, bool bool) {
+  Widget nudgetWid(String title, String actn, String logo, bool bool,HomeController controller, BuildContext context ) {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -497,7 +497,11 @@ class _HomeScreenState extends State<HomeScreen> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       height: 170,
-      child: Column(
+      child: GestureDetector(onTap: (){
+        if(actn=="Gift Now"){
+          controller.sendGiftDailog(context);
+        }
+      },child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
@@ -545,7 +549,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           )
         ],
-      ),
+      ),)
     );
   }
 

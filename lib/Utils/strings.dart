@@ -774,6 +774,9 @@ class Strings {
 
   static String waitTillplanExpire="Wait till the plan expires";
   static String unleasetoSwtich="Umlease to swtich now";
+  static String proccedGift="Proceed to Gift";
+
+  static String giftGold="Gift Gold";
 
 
 
