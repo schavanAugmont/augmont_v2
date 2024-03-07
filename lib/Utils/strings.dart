@@ -80,7 +80,7 @@ class Strings {
   static String debitCard = "DEBIT CARD";
   static String upi = "UPI";
   static String wallet = "WALLET";
-  static String payNow = "PAY NOW";
+  static String payNow = "Pay Now";
   static String thankYou = "THANK YOU";
   static String thankYouForPlacingOrder = "THANK YOU FOR PLACING ORDER";
   static String buy = "BUY";
@@ -296,7 +296,7 @@ class Strings {
 
   static String myTransaction = "MY TRANSACTION";
   static String deposit = "Deposit";
-  static String withdraw = "WITHDRAW";
+  static String withdraw = "Withdraw";
 
   static String viewDepositList = " VIEW DEPOSIT LIST";
   static String viewWithdrawList = "VIEW WITHDRAWAL LIST";
@@ -776,7 +776,77 @@ class Strings {
   static String unleasetoSwtich="Umlease to swtich now";
   static String proccedGift="Proceed to Gift";
 
-  static String giftGold="Gift Gold";
+  static String giftGold="Gold Gifting";
+  static String giftCartThemes="Gift Card Themes";
+  static String entergiftDEtails="Enter Gift Details";
+  static String enterQuantity="Enter Quantity";
+  static String writeMessage="Write a Message";
+  static String changeGiftCard="Change Gift Card Template";
+  static String accessContact="Access Contacts";
+  static String accessContactDescp="Augmont would like to access your contact to share the gift card";
+  static String enterManually="Enter Manually";
+  static String allow="Allow";
+  static String summary="Summary";
+
+  static String giftingto="Gifting To";
+
+
+  static String viewProfile="View Profile";
+  static String walletBalance="Wallet Balance";
+  static String totalInvestValue="Total Investment \nValue";
+  static String augmont="Augmont";
+  static String otherMerchant="Other Merchant";
+  static String upcomingPayment="Upcoming Payments";
+  static String pendingPayment="Pending Payments";
+  static String activeLoan="Active Loans";
+  static String totalsoldGold="Total Gold Sold";
+  static String paybyAugmont="Pay By Augmont";
+  static String requestDel="Request Delivery";
+  static String profileSetting="Profile Settings";
+  static String nomineeDetails="Nominee Details";
+  static String kycVerification="KYC Verification";
+  static String referalProgram="Referral Program";
+  static String wishlist="Wishlist";
+  static String myorders="My Ordes";
+  static String myLoans="My Loans";
+  static String sgGold="S+G (old)";
+  static String settings="Settings";
+  static String securitySetting="Security Settings";
+  static String financeSetting="Finance Settings";
+  static String reports="Reports";
+  static String insights="Insights";
+  static String faq="FAQ's";
+  static String assetValue="Asset Value";
+  static String getIntouch="Get In Touch";
+  static String myAgent="My Agent";
+  static String policies="Policies";
+
+  static String wallets='Wallet';
+  static String profile="Profile";
+  static String addmoreFund="Add More Funds";
+  static String walletAmtAvlb="Wallet amount available";
+
+  static String topup="Top-up";
+  static String merchantHolding="Merchant Holdings";
+  static String nomineeName="Nominee Name";
+  static String addnomineeDetails="Add Nominee Details";
+  static String relationship="Relationship";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

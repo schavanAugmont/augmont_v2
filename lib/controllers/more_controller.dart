@@ -1,4 +1,10 @@
 import 'dart:convert';
+import 'package:augmont_v2/Screens/More/edit_profile_screen.dart';
+import 'package:augmont_v2/Screens/More/merchant_holding_screen.dart';
+import 'package:augmont_v2/Screens/More/nominee_details_screen.dart';
+import 'package:augmont_v2/Screens/More/pending_upcoming_payment_screen.dart';
+import 'package:augmont_v2/Screens/More/wallet_screen.dart';
+import 'package:augmont_v2/bindings/more_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -18,16 +24,36 @@ class MoreController extends GetxController with StateMixin<dynamic> {
 
   var isLoggedIn = false.obs;
   late ScrollController scrollController;
-  var currentAppVersion="".obs;
+  var currentAppVersion = "".obs;
 
-  var aboutUsUrl="about-us?webView=true";
-  var privacyPolicyUrl="privacy-policy?webView=true";
-  var disclaimerUrl="disclaimer?webView=true";
-  var faqsUrl="faq?webView=true";
-  var contactUsUrl="contact-us?webView=true";
-  var termUrl="terms-conditions?webView=true";
-  var gerpolicyURL="/assets/media/pdf/Augmont-Goldtech-Grievance-Document.pdf";
-  var leadingProviderURL="/assets/media/pdf/Augmont-GoldTech.pdf";
+  List<String> profileList = [
+    Strings.nomineeDetails,
+    Strings.kycVerification,
+    Strings.referalProgram
+  ];
+  List<String> shopList = [Strings.myorders, Strings.wishlist];
+  List<String> exchangeList = [Strings.myLoans, Strings.sgGold];
+  List<String> settingList = [Strings.securitySetting, Strings.financeSetting];
+  List<String> otherList = [
+    Strings.reports,
+    Strings.insights,
+    Strings.faqs,
+    Strings.assetValue,
+    Strings.getIntouch,
+    Strings.myAgent,
+    Strings.policies
+  ];
+
+  var aboutUsUrl = "about-us?webView=true";
+  var privacyPolicyUrl = "privacy-policy?webView=true";
+  var disclaimerUrl = "disclaimer?webView=true";
+  var faqsUrl = "faq?webView=true";
+  var contactUsUrl = "contact-us?webView=true";
+  var termUrl = "terms-conditions?webView=true";
+  var gerpolicyURL =
+      "/assets/media/pdf/Augmont-Goldtech-Grievance-Document.pdf";
+  var leadingProviderURL = "/assets/media/pdf/Augmont-GoldTech.pdf";
+
   @override
   void onInit() {
     scrollController = ScrollController();
@@ -110,9 +136,9 @@ class MoreController extends GetxController with StateMixin<dynamic> {
       DialogHelper.dismissLoader();
       var jsonMap = jsonDecode(value);
       var details = TrusteeModel.fromJson(jsonMap);
-      if(details.data!.url!=null && details.data!.url!.isNotEmpty) {
+      if (details.data!.url != null && details.data!.url!.isNotEmpty) {
         navigateToFullScreenPdf(details.data!.url!);
-      }else{
+      } else {
         ErrorHandling.showToast("Trustee Certificate not available ");
       }
     }, onError: (error) {
@@ -120,7 +146,6 @@ class MoreController extends GetxController with StateMixin<dynamic> {
       ErrorHandling.handleErrors(error);
     });
   }
-
 
   void navigateToFullScreenPdf(String image) {
     // Get.to(
@@ -131,13 +156,32 @@ class MoreController extends GetxController with StateMixin<dynamic> {
     // );
   }
 
+  void setVersion() {
+    PackageInfo.fromPlatform().then((PackageInfo packageInfo) async {
+      currentAppVersion("V" + packageInfo.version);
+      update();
+    });
+  }
 
-  void setVersion(){
-    PackageInfo.fromPlatform().then(
-            (PackageInfo packageInfo) async {
-              currentAppVersion("V"+packageInfo.version);
-              update();
-            }
-    );
+  void goToEditProfile(){
+    Get.to(()=>EditProfileScreen(),binding: MoreBinding());
+  }
+
+  void goToWallet(){
+    Get.to(()=>WalletScreen(),binding: MoreBinding());
+  }
+
+  void goToPaymentPage(){
+    Get.to(()=>PendingUpcomingPaymentScreen(),binding: MoreBinding());
+  }
+
+  void goToMerchantPage(){
+    Get.to(()=>MerchantHoldingScreen(),binding: MoreBinding());
+  }
+
+  void navtigatTo(String listDetail) {
+    if(listDetail==Strings.nomineeDetails){
+      Get.to(()=>NomineeDetailsScreen(),binding: MoreBinding());
+    }
   }
 }

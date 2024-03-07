@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:augmont_v2/Screens/DigitalInvestment/digiinvestment_dashborad_screen.dart';
+import 'package:augmont_v2/Screens/GoldGift/gold_gift_screen.dart';
+import 'package:augmont_v2/bindings/gifting_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -162,6 +164,7 @@ class HomeController extends GetxController with StateMixin<dynamic> {
                   ElevatedButton(
                       onPressed: () {
                         Get.back();
+                        Get.to(()=>GoldGiftScreen(),binding: GiftingBinding());
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 40.0),
