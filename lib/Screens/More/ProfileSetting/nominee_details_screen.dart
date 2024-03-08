@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../Utils/colors.dart';
-import '../../Utils/strings.dart';
-import '../../controllers/editprofile_controller.dart';
-import '../../widgets/text_component.dart';
-import '../SignIn/Components/RoundedTextField.dart';
-import '../SignIn/Components/SignInComponents.dart';
-import '../SignIn/Components/TextFieldContainer.dart';
+import '../../../Utils/colors.dart';
+import '../../../Utils/strings.dart';
+import '../../../controllers/editprofile_controller.dart';
+import '../../../widgets/text_component.dart';
+import '../../SignIn/Components/RoundedTextField.dart';
+import '../../SignIn/Components/SignInComponents.dart';
+import '../../SignIn/Components/TextFieldContainer.dart';
 
 class NomineeDetailsScreen extends StatefulWidget {
   const NomineeDetailsScreen({super.key});

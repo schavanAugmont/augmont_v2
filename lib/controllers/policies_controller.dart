@@ -1,21 +1,23 @@
 import 'dart:convert';
+import 'package:augmont_v2/Network/api_client.dart';
 import 'package:get/get.dart';
 import '../Utils/strings.dart';
 import '../models/TrusteeModel.dart';
 import '../network/ErrorHandling.dart';
 import '../network/Providers/MoreProvider.dart';
+import '../pdf/PdfViewerScreen.dart';
 import '../utils/dialog_helper.dart';
 
 class PoliciesController extends GetxController with StateMixin<dynamic> {
-   List<String> policyList = [
+  List<String> policyList = [
     Strings.grievancePolicy,
     Strings.trusteeCertificate,
     Strings.termsConditions,
-     Strings.privacyPolicy,
-     Strings.disclaimer
+    Strings.privacyPolicy,
+    Strings.disclaimer
   ];
 
-
+  var trusteeCert="";
   var aboutUsUrl = "about-us?webView=true";
   var privacyPolicyUrl = "privacy-policy?webView=true";
   var disclaimerUrl = "disclaimer?webView=true";
@@ -28,9 +30,9 @@ class PoliciesController extends GetxController with StateMixin<dynamic> {
 
   @override
   void onInit() {
+
     super.onInit();
   }
-
 
   void fetchTrusteeCert() async {
     DialogHelper.showLoading();
@@ -39,7 +41,8 @@ class PoliciesController extends GetxController with StateMixin<dynamic> {
       var jsonMap = jsonDecode(value);
       var details = TrusteeModel.fromJson(jsonMap);
       if (details.data!.url != null && details.data!.url!.isNotEmpty) {
-        navigateToFullScreenPdf(details.data!.url!);
+        //navigateToFullScreenPdf(details.data!.url!);
+        trusteeCert=details.data!.url!;
       } else {
         ErrorHandling.showToast("Trustee Certificate not available ");
       }
@@ -49,16 +52,25 @@ class PoliciesController extends GetxController with StateMixin<dynamic> {
     });
   }
 
-  void navigateToFullScreenPdf(String image) {
-    // Get.to(
-    //       () => PdfViewerScreen(
-    //     url: image,
-    //   ),
-    //   transition: Transition.rightToLeft,
-    // );
+  void navigateToFullScreenPdf(String route) {
+    var image = "";
+    if (route == Strings.grievancePolicy) {
+      image = gerpolicyURL;
+    }
+    if (route == Strings.termsConditions) {
+      image = termUrl;
+    }
+    if (route == Strings.privacyPolicy) {
+      image = privacyPolicyUrl;
+    }
+    if (route == Strings.disclaimer) {
+      image = disclaimerUrl;
+    }
+
+    ApiClient().navigateToPDFView(image,route);
   }
 
-
-
-
+  void onBack() {
+    Get.back();
+  }
 }

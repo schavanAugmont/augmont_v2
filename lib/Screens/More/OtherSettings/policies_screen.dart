@@ -1,12 +1,11 @@
-import 'package:augmont_v2/controllers/wallet_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../Utils/colors.dart';
-import '../../Utils/strings.dart';
-import '../../controllers/policies_controller.dart';
-import '../../widgets/text_component.dart';
+import '../../../Utils/colors.dart';
+import '../../../Utils/strings.dart';
+import '../../../controllers/policies_controller.dart';
+import '../../../widgets/text_component.dart';
 
 class PoliciesScreen extends StatefulWidget {
   const PoliciesScreen({super.key});
@@ -64,13 +63,13 @@ class _PoliciesState extends State<PoliciesScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ListView.builder(
-                          itemCount: listDetails.length,
+                          itemCount: controller.policyList.length,
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           scrollDirection: Axis.vertical,
                           itemBuilder: (context, index) {
                             return GestureDetector(onTap: (){
-                              controller.navtigatTo(listDetails[index]);
+                                controller.navigateToFullScreenPdf(controller.policyList[index]);
                             },child: Container(
                               decoration: BoxDecoration(
                                 color: kycProductBackgroundColor,
@@ -83,7 +82,7 @@ class _PoliciesState extends State<PoliciesScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  if (title.isNotEmpty) ...[
+
                                     Container(
                                       width: 20,
                                       height: 20,
@@ -93,8 +92,8 @@ class _PoliciesState extends State<PoliciesScreen> {
                                     SizedBox(
                                       width: 8,
                                     ),
-                                  ],
-                                  textComponent(listDetails[index], 12, FontWeight.normal),
+
+                                  textComponent(controller.policyList[index], 12, FontWeight.normal),
                                   Spacer(),
                                   Icon(
                                     Icons.arrow_forward_ios_sharp,

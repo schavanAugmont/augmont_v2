@@ -2,10 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import '../Utils/print_logs.dart';
 import '../Utils/session_manager.dart';
 import '../Utils/utils.dart';
+import '../pdf/PdfViewerScreen.dart';
 import 'app_exception.dart';
 
 enum ServerType { DigiGold, EMI }
@@ -13,6 +16,7 @@ enum ServerType { DigiGold, EMI }
 class ApiClient {
   final String _emiBaseUrl = "https://92e2-2402-a00-162-3c4-149f-f0c3-20f6-3c60.ngrok-free.app/api/";
   final String _baseUrl = "https://0a03-122-169-55-112.ngrok-free.app";
+  final String _webUrl = "https://www.augmont.com/";
   static bool LogEvent = false;
 
   ///Use this default timeout
@@ -195,13 +199,14 @@ class ApiClient {
   }
 
 //W1WE
-   navigateToPDFView(String url) {
-    // Get.to(
-    //       () => PdfViewerScreen(
-    //     url: _webUrl + url,
-    //     showDownloadButton: false,
-    //   ),
-    //   transition: Transition.rightToLeft,
-    // );
+   navigateToPDFView(String url, String route) {
+    Get.to(
+          () => PdfViewerScreen(
+            title: route,
+        url: _webUrl + url,
+        showDownloadButton: false,
+      ),
+      transition: Transition.rightToLeft,
+    );
   }
 }

@@ -1,8 +1,16 @@
 import 'dart:convert';
+import 'package:augmont_v2/Screens/More/ExchangeSetting/myLoan_screen.dart';
+import 'package:augmont_v2/Screens/More/ExchangeSetting/soglisting_screen.dart';
+import 'package:augmont_v2/Screens/More/OtherSettings/faq_screen.dart';
+import 'package:augmont_v2/Screens/More/OtherSettings/payment_setting_screen.dart';
+import 'package:augmont_v2/Screens/More/OtherSettings/security_setting_screen.dart';
+import 'package:augmont_v2/Screens/More/ProfileSetting/kyc_verification_screen.dart';
+import 'package:augmont_v2/Screens/More/ProfileSetting/refferal_details_screen.dart';
 import 'package:augmont_v2/Screens/More/edit_profile_screen.dart';
 import 'package:augmont_v2/Screens/More/merchant_holding_screen.dart';
-import 'package:augmont_v2/Screens/More/nominee_details_screen.dart';
+import 'package:augmont_v2/Screens/More/ProfileSetting/nominee_details_screen.dart';
 import 'package:augmont_v2/Screens/More/pending_upcoming_payment_screen.dart';
+import 'package:augmont_v2/Screens/More/OtherSettings/policies_screen.dart';
 import 'package:augmont_v2/Screens/More/wallet_screen.dart';
 import 'package:augmont_v2/bindings/more_binding.dart';
 import 'package:flutter/material.dart';
@@ -183,5 +191,36 @@ class MoreController extends GetxController with StateMixin<dynamic> {
     if(listDetail==Strings.nomineeDetails){
       Get.to(()=>NomineeDetailsScreen(),binding: MoreBinding());
     }
+    if(listDetail==Strings.policies){
+      Get.to(()=>PoliciesScreen(),binding: MoreBinding());
+    }
+    if(listDetail==Strings.kycVerification){
+      Get.to(()=>KYCVerifictionScreen(),binding: MoreBinding());
+    }
+
+    if(listDetail==Strings.referalProgram){
+      Get.to(()=>ReferralDetailScreen(),binding: MoreBinding());
+    }
+
+    if(listDetail==Strings.faqs){
+      Get.to(()=>FAQScreen(),binding: MoreBinding());
+    }
+
+    if(listDetail==Strings.myLoans){
+      Get.to(()=>MyLoanScreen(),binding: MoreBinding());
+    }
+
+    if(listDetail==Strings.sgGold){
+      Get.to(()=>SOGListingScreen(),binding: MoreBinding());
+    }
+    if(listDetail==Strings.securitySetting){
+      Get.to(()=>SecuritySettingScreen(),binding: MoreBinding());
+    }
+
+    if(listDetail==Strings.financeSetting){
+      Get.to(()=>PaymentSettingScreen(),binding: MoreBinding());
+    }
+
   }
+
 }

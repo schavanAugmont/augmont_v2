@@ -1,30 +1,27 @@
-import 'package:augmont_v2/Screens/More/ProfileSetting/add_nominee_details_screen.dart';
-import 'package:augmont_v2/bindings/more_binding.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class NomineeController extends GetxController with StateMixin<dynamic> {
+class EditNomineeController extends GetxController with StateMixin<dynamic> {
   late TextEditingController firstNameController = TextEditingController();
   late TextEditingController dobController = TextEditingController();
-  String gendervalue = 'Male';
+  String gendervalue = 'Father';
 
   var genderList = [
-    'Male',
-    'Female',
-    'Other'
+    'Father',
+    'Mother',
+    'Son',
+    'Daughter',
+    'Wife'
   ];
 
   var isFirstNameError = false.obs;
-  var isLastNameError = false.obs;
-  var isEmailError = false.obs;
   var isDOBError = false.obs;
   late DateTime currentDate;
   var selectedDate = "".obs;
   var errorMessage = "".obs;
   var dobErrorMessage = "".obs;
   var isPANError = false.obs;
-  var isNomineeAdded=false.obs;
 
   @override
   void onInit() {
@@ -51,11 +48,5 @@ class NomineeController extends GetxController with StateMixin<dynamic> {
       dobController.text = selectedDate.value;
       update();
     }
-  }
-
-  void updateNominee() {
-    Get.to(()=>EditNomineeScreen(),binding: MoreBinding());
-    isNomineeAdded(true);
-    update();
   }
 }

@@ -812,6 +812,7 @@ class Strings {
   static String sgGold="S+G (old)";
   static String settings="Settings";
   static String securitySetting="Security Settings";
+  static String paymentSetting="Payment Settings";
   static String financeSetting="Finance Settings";
   static String reports="Reports";
   static String insights="Insights";
@@ -831,24 +832,29 @@ class Strings {
   static String nomineeName="Nominee Name";
   static String addnomineeDetails="Add Nominee Details";
   static String relationship="Relationship";
+  static String pancardDetails="Pan Card Details";
+  static String aadharDetails="Aadhar Card Details";
+  static String referralProgram="Referral Program";
+  static String shareRefferal="Share Referral";
+  static String frequentlyAskedQuestion="Frequently Asked Question";
 
+  static String sellingDetails="Selling Details";
+  static String noOrnamentsSold="Number of Ornaments Sold";
+  static String purityofOrnaments="Purity of Ornaments";
+  static String totalGoldSold="Total Gold Sold";
+  static String amountReceived="Amount Received";
+  static String sellingDate="Selling Date";
+  static String jewellerDetails="Jeweller Details";
 
+  static String biometricUnlock="Biometric Unlock";
+  static String enabled="Enabled";
+  static String changePIN="Change PIN";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  static String uPISettings="UPI Settings";
+  static String sIPAutoPaySettings="SIP AutoPay Settings";
+  static String roundOff="Round - Off";
+  static String autolease="Auto - lease";
+  static String paymentReminder="Payment Reminder";
 
 }
 
