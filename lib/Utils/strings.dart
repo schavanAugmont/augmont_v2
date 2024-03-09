@@ -855,6 +855,8 @@ class Strings {
   static String roundOff="Round - Off";
   static String autolease="Auto - lease";
   static String paymentReminder="Payment Reminder";
+  static String myagent="My Agent";
+  static String unassignAgent="Un-assign Agent";
 
 }
 
