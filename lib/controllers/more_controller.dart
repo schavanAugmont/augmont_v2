@@ -1,11 +1,17 @@
 import 'dart:convert';
 import 'package:augmont_v2/Screens/More/ExchangeSetting/myLoan_screen.dart';
 import 'package:augmont_v2/Screens/More/ExchangeSetting/soglisting_screen.dart';
+import 'package:augmont_v2/Screens/More/OtherSettings/asstes_screen.dart';
 import 'package:augmont_v2/Screens/More/OtherSettings/faq_screen.dart';
+import 'package:augmont_v2/Screens/More/OtherSettings/insights_screen.dart';
+import 'package:augmont_v2/Screens/More/OtherSettings/myagent_screen.dart';
 import 'package:augmont_v2/Screens/More/OtherSettings/payment_setting_screen.dart';
 import 'package:augmont_v2/Screens/More/OtherSettings/security_setting_screen.dart';
+import 'package:augmont_v2/Screens/More/OtherSettings/support_screen.dart';
 import 'package:augmont_v2/Screens/More/ProfileSetting/kyc_verification_screen.dart';
 import 'package:augmont_v2/Screens/More/ProfileSetting/refferal_details_screen.dart';
+import 'package:augmont_v2/Screens/More/ShopSetting/my_orders_screen.dart';
+import 'package:augmont_v2/Screens/More/ShopSetting/wishlist_list_screen.dart';
 import 'package:augmont_v2/Screens/More/edit_profile_screen.dart';
 import 'package:augmont_v2/Screens/More/merchant_holding_screen.dart';
 import 'package:augmont_v2/Screens/More/ProfileSetting/nominee_details_screen.dart';
@@ -19,12 +25,14 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../Bindings/signin_binding.dart';
 import '../Screens/SignIn/signin_page1.dart';
 import '../Utils/colors.dart';
+import '../Utils/popover.dart';
 import '../Utils/session_manager.dart';
 import '../Utils/strings.dart';
 import '../models/TrusteeModel.dart';
 import '../network/ErrorHandling.dart';
 import '../network/Providers/MoreProvider.dart';
 import '../utils/dialog_helper.dart';
+import '../widgets/text_component.dart';
 import 'main_screen_controller.dart';
 
 class MoreController extends GetxController with StateMixin<dynamic> {
@@ -221,6 +229,114 @@ class MoreController extends GetxController with StateMixin<dynamic> {
       Get.to(()=>PaymentSettingScreen(),binding: MoreBinding());
     }
 
+    if(listDetail==Strings.myagent){
+      Get.to(()=>MyAgentScreen(),binding: MoreBinding());
+    }
+
+    if(listDetail==Strings.getIntouch){
+      Get.to(()=>SupportScreen(),binding: MoreBinding());
+    }
+
+    if(listDetail==Strings.assetValue){
+      Get.to(()=>AssetValueScreen(),binding: MoreBinding());
+    }
+
+    if(listDetail==Strings.wishlist){
+      Get.to(()=>WishListScreen(),binding: MoreBinding());
+    }
+
+
+    if(listDetail==Strings.insights){
+      Get.to(()=>InsightScreen(),binding: MoreBinding());
+    }
+
+    if(listDetail==Strings.myorders){
+      Get.to(()=>MyOrdersScreen(),binding: MoreBinding());
+    }
+  }
+
+
+  void logoutDailog(BuildContext context) {
+    showModalBottomSheet<int>(
+      backgroundColor: Colors.transparent,
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(builder: (context, StateSetter setState) {
+          return Popover(
+            maxheight: MediaQuery.sizeOf(context).height * 0.35,
+            child: Container(
+              padding: EdgeInsets.all(20),
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.logout,size: 50,),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  textComponent('Are you sure?', 11, FontWeight.normal),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  textComponent('Are you sure want to Log-out?', 13, FontWeight.w600),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+
+                     Expanded(child:  Container(
+                         child: OutlinedButton(
+                           style: OutlinedButton.styleFrom(
+                             shape: RoundedRectangleBorder(
+                               borderRadius: BorderRadius.circular(10.0),
+                             ),
+                             side: const BorderSide(
+                               width: 1.0,
+                               color: primaryTextColor,
+                             ),
+                           ),
+                           onPressed: () {
+                             Get.back();
+                           },
+                           child: Text('Log-out',
+                               style: TextStyle(
+                                 color: primaryTextColor,
+                                 fontFamily: Strings.fontFamilyName,
+                                 fontWeight: FontWeight.w600,
+                                 fontSize: 14,
+                               )),
+                         )),),
+                      SizedBox(width: 10,),
+                      Expanded(child: ElevatedButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(double.infinity, 40.0),
+                            backgroundColor: primaryTextColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                              BorderRadius.circular(10), // <-- Radius
+                            ),
+                          ),
+                          child: Text('Stay Logged In',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              )))),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
   }
 
 }

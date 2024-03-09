@@ -152,7 +152,7 @@ class ProductListScreen extends StatelessWidget {
                             transition: Transition.rightToLeft,
                           );
                         },
-                        child: const ProductGrid(),
+                        child: const ProductGrid(isWishlist: false,),
                       );
                     },
                   ),

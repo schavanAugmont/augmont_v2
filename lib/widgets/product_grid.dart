@@ -9,7 +9,8 @@ import '../Utils/colors.dart';
 import '../Utils/themes.dart';
 
 class ProductGrid extends StatelessWidget {
-  const ProductGrid({super.key});
+  final  bool isWishlist;
+  const ProductGrid({super.key,  required this.isWishlist});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,7 @@ class ProductGrid extends StatelessWidget {
                           border: Border.all(color: grayColor,width: 0.5)
                         ),
                         alignment: Alignment.center,
-                        child: const Icon(Icons.favorite_border,size: 18,),
+                        child:  isWishlist? Icon(Icons.close,size: 18,):Icon(Icons.favorite_border,size: 18,),
                       ),
                     ],
                   ),

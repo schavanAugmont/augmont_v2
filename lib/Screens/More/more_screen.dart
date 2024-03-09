@@ -351,7 +351,9 @@ class MoreScreen extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          Container(
+          GestureDetector(onTap: (){
+            controller.logoutDailog(context);
+          },child: Container(
             decoration: BoxDecoration(
               border: Border.all(color: primaryTextColor, width: 1),
               borderRadius: BorderRadius.circular(5.0),
@@ -373,7 +375,7 @@ class MoreScreen extends StatelessWidget {
                 )
               ],
             ),
-          )
+          ),)
         ],
       ),
     );

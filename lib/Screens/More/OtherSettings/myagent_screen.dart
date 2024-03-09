@@ -74,9 +74,9 @@ class _MyAgentState extends State<MyAgentScreen> {
                             ),
                           ),
                           onPressed: () {
-                            Get.back();
+                            controller.unassignAgentDailog(context);
                           },
-                          child: Text(Strings.withdraw,
+                          child: Text(Strings.unassignAgent,
                               style: TextStyle(
                                 color: primaryTextColor,
                                 fontFamily: Strings.fontFamilyName,
@@ -93,12 +93,12 @@ class _MyAgentState extends State<MyAgentScreen> {
                   children: [
                     Container(
                       width: MediaQuery.sizeOf(context).width,
-                      height: 55,
+                      height: 40,
                       color: Colors.white,
                       padding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       child: textComponent(
-                          Strings.jewellerDetails, 14, FontWeight.w600),
+                          Strings.myAgent, 14, FontWeight.w600),
                     ),
                     Container(
                       color: kycProductBackgroundColor,

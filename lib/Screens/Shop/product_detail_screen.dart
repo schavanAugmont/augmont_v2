@@ -437,7 +437,7 @@ class ProductDetailScreen extends StatelessWidget {
                     ),
                     itemCount: 2,
                     itemBuilder: (context, index) {
-                      return const ProductGrid();
+                      return const ProductGrid(isWishlist: false,);
                     },
                   ),
                   const SizedBox(height: 20),
@@ -454,7 +454,7 @@ class ProductDetailScreen extends StatelessWidget {
                     ),
                     itemCount: 2,
                     itemBuilder: (context, index) {
-                      return const ProductGrid();
+                      return const ProductGrid(isWishlist: false,);
                     },
                   ),
                   const SizedBox(height: 20),

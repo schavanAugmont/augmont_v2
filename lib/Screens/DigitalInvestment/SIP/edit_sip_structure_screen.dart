@@ -28,41 +28,42 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
     return GetBuilder<DgSIPController>(builder: (controller) {
       return SafeArea(
           child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              centerTitle: false,
-              titleSpacing: 0.0,
-              leading: IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.black,
-                  size: 16,
-                ),
-                //replace with our own icon data.
-              ),
-              title: Transform(
-                // you can forcefully translate values left side using Transform
-                  transform: Matrix4.translationValues(-15.0, 0.0, 0.0),
-                  child: Text("Edit SIP",
-                      style: TextStyle(
-                        color: primaryTextColor,
-                        fontFamily: Strings.fontFamilyName,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ))),
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          centerTitle: false,
+          titleSpacing: 0.0,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+              size: 16,
             ),
-
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  MetalPriceScreen(),
-                  projectedGrowthView(context),
-                  growthCal(controller),
-
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),child: Column(children: [
+            //replace with our own icon data.
+          ),
+          title: Transform(
+              // you can forcefully translate values left side using Transform
+              transform: Matrix4.translationValues(-15.0, 0.0, 0.0),
+              child: Text("Edit SIP",
+                  style: TextStyle(
+                    color: primaryTextColor,
+                    fontFamily: Strings.fontFamilyName,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ))),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              MetalPriceScreen(),
+              projectedGrowthView(context),
+              growthCal(controller),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
+                  children: [
                     ElevatedButton(
                         onPressed: () {
                           Get.back();
@@ -72,7 +73,8 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
                           minimumSize: Size(double.infinity, 40.0),
                           backgroundColor: primaryTextColor,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10), // <-- Radius
+                            borderRadius:
+                                BorderRadius.circular(10), // <-- Radius
                           ),
                         ),
                         child: Text(Strings.saveChange,
@@ -83,7 +85,6 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
                               fontSize: 14,
                             ))),
                     Container(
-
                         width: double.infinity,
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
@@ -106,12 +107,13 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
                                 fontSize: 14,
                               )),
                         )),
-                  ],),)
-
-                ],
-              ),
-            ),
-          ));
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ));
     });
   }
 
@@ -124,8 +126,9 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
       margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
       child: Column(
         children: [
-          Padding(padding: EdgeInsets.all(20),
-              child:Column(
+          Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(
                 children: [
                   Center(
                       child: Text("Projected Growth",
@@ -135,30 +138,33 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ))),
-                  Container(height: 200,child:  DonutChartWidget(),),
+                  Container(
+                    height: 200,
+                    child: DonutChartWidget(),
+                  ),
                   Center(
                     child: RichText(
                         text: TextSpan(
-                          text: "Total Returns: ",
+                      text: "Total Returns: ",
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                      children: <InlineSpan>[
+                        TextSpan(
+                          text: '₹ 5,60,000',
                           style: TextStyle(
                             color: primaryTextColor,
                             fontFamily: Strings.fontFamilyName,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.normal,
                             fontSize: 12,
                           ),
-                          children: <InlineSpan>[
-                            TextSpan(
-                              text: '₹ 5,60,000',
-                              style: TextStyle(
-                                color: primaryTextColor,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.normal,
-                                fontSize: 12,
-                              ),
-                            ),
-
-                          ],
-                        )),)
+                        ),
+                      ],
+                    )),
+                  )
                 ],
               )),
           Container(
@@ -168,26 +174,26 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
               child: Center(
                 child: RichText(
                     text: TextSpan(
-                      text: "Saving with Augmont: ",
+                  text: "Saving with Augmont: ",
+                  style: TextStyle(
+                    color: primaryTextColor,
+                    fontFamily: Strings.fontFamilyName,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 12,
+                  ),
+                  children: <InlineSpan>[
+                    TextSpan(
+                      text: '₹ 1450* annually',
                       style: TextStyle(
                         color: primaryTextColor,
                         fontFamily: Strings.fontFamilyName,
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.w600,
                         fontSize: 12,
                       ),
-                      children: <InlineSpan>[
-                        TextSpan(
-                          text: '₹ 1450* annually',
-                          style: TextStyle(
-                            color: primaryTextColor,
-                            fontFamily: Strings.fontFamilyName,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                          ),
-                        ),
-
-                      ],
-                    )),))
+                    ),
+                  ],
+                )),
+              ))
         ],
       ),
     );
@@ -201,125 +207,124 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-              Text(
-                'Investment Pattern',
-                style: TextStyle(
-                  fontFamily: Strings.fontFamilyName,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                  color: primaryTextColor,
-                ),
+            Text(
+              'Investment Pattern',
+              style: TextStyle(
+                fontFamily: Strings.fontFamilyName,
+                fontWeight: FontWeight.w600,
+                fontSize: 12,
+                color: primaryTextColor,
               ),
-              SizedBox(
-                height: 10,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              padding: EdgeInsets.all(5),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              controller.timeline = controller.timelineList[1];
+                            });
+                          },
+                          child: Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    width: 1.0,
+                                    color: controller.timeline ==
+                                            controller.timelineList[1]
+                                        ? primaryTextColor
+                                        : kycProductBackgroundColor),
+                              ),
+                              child: Center(
+                                  child: Text(controller.timelineList[1],
+                                      style: TextStyle(
+                                        color: controller.timeline ==
+                                                controller.timelineList[1]
+                                            ? primaryTextColor
+                                            : shadowColor,
+                                        fontFamily: Strings.fontFamilyName,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12,
+                                      )))))),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              controller.timeline = controller.timelineList[2];
+                            });
+                          },
+                          child: Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    width: 1.0,
+                                    color: controller.timeline ==
+                                            controller.timelineList[2]
+                                        ? primaryTextColor
+                                        : kycProductBackgroundColor),
+                              ),
+                              child: Center(
+                                  child: Text(controller.timelineList[2],
+                                      style: TextStyle(
+                                        color: controller.timeline ==
+                                                controller.timelineList[2]
+                                            ? primaryTextColor
+                                            : shadowColor,
+                                        fontFamily: Strings.fontFamilyName,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12,
+                                      )))))),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                      flex: 2,
+                      child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              controller.timeline = controller.timelineList[3];
+                            });
+                          },
+                          child: Container(
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    width: 1.0,
+                                    color: controller.timeline ==
+                                            controller.timelineList[3]
+                                        ? primaryTextColor
+                                        : kycProductBackgroundColor),
+                              ),
+                              child: Center(
+                                  child: Text(controller.timelineList[3],
+                                      style: TextStyle(
+                                        color: controller.timeline ==
+                                                controller.timelineList[3]
+                                            ? primaryTextColor
+                                            : shadowColor,
+                                        fontFamily: Strings.fontFamilyName,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 12,
+                                      )))))),
+                ],
               ),
-              Container(
-                padding: EdgeInsets.all(5),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                        flex: 2,
-                        child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                controller.timeline = controller.timelineList[1];
-                              });
-                            },
-                            child: Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(
-                                      width: 1.0,
-                                      color: controller.timeline ==
-                                          controller.timelineList[1]
-                                          ? primaryTextColor
-                                          : kycProductBackgroundColor),
-                                ),
-                                child: Center(
-                                    child: Text(controller.timelineList[1],
-                                        style: TextStyle(
-                                          color: controller.timeline ==
-                                              controller.timelineList[1]
-                                              ? primaryTextColor
-                                              : shadowColor,
-                                          fontFamily: Strings.fontFamilyName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                        )))))),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                        flex: 2,
-                        child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                controller.timeline = controller.timelineList[2];
-                              });
-                            },
-                            child: Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(
-                                      width: 1.0,
-                                      color: controller.timeline ==
-                                          controller.timelineList[2]
-                                          ? primaryTextColor
-                                          : kycProductBackgroundColor),
-                                ),
-                                child: Center(
-                                    child: Text(controller.timelineList[2],
-                                        style: TextStyle(
-                                          color: controller.timeline ==
-                                              controller.timelineList[2]
-                                              ? primaryTextColor
-                                              : shadowColor,
-                                          fontFamily: Strings.fontFamilyName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                        )))))),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                        flex: 2,
-                        child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                controller.timeline = controller.timelineList[3];
-                              });
-                            },
-                            child: Container(
-                                height: 30,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(
-                                      width: 1.0,
-                                      color: controller.timeline ==
-                                          controller.timelineList[3]
-                                          ? primaryTextColor
-                                          : kycProductBackgroundColor),
-                                ),
-                                child: Center(
-                                    child: Text(controller.timelineList[3],
-                                        style: TextStyle(
-                                          color: controller.timeline ==
-                                              controller.timelineList[3]
-                                              ? primaryTextColor
-                                              : shadowColor,
-                                          fontFamily: Strings.fontFamilyName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 12,
-                                        )))))),
-                  ],
-                ),
-              ),
-
+            ),
             SizedBox(
               height: 20,
             ),
@@ -376,7 +381,7 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
                         onTap: () {
                           setState(() {
                             controller.selectedamount =
-                            controller.amountList[index];
+                                controller.amountList[index];
                             controller.priceTextController.text =
                                 controller.selectedamount;
                           });
@@ -389,14 +394,14 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
                               borderRadius: BorderRadius.circular(5.0),
                               border: Border.all(
                                   color: controller.selectedamount ==
-                                      controller.amountList[index]
+                                          controller.amountList[index]
                                       ? primaryTextColor
                                       : Colors.grey),
                             ),
                             child: Text("₹ ${controller.amountList[index]}",
                                 style: TextStyle(
                                   color: controller.selectedamount ==
-                                      controller.amountList[index]
+                                          controller.amountList[index]
                                       ? primaryTextColor
                                       : Colors.grey,
                                   fontFamily: Strings.fontFamilyName,
@@ -409,4 +414,3 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
         ));
   }
 }
-
