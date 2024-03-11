@@ -1,10 +1,18 @@
+import 'package:augmont_v2/Screens/loan/component/loan_summary_page.dart';
+import 'package:augmont_v2/Screens/loan/component/location_page.dart';
+import 'package:augmont_v2/Screens/loan/component/personal_address_detail_page.dart';
+import 'package:augmont_v2/Screens/loan/component/service_type_page.dart';
 import 'package:augmont_v2/Utils/colors.dart';
+import 'package:augmont_v2/Utils/extension_util.dart';
 import 'package:augmont_v2/Utils/themes.dart';
+import 'package:augmont_v2/bottomsheet/service_not_available_bottomsheet.dart';
 import 'package:augmont_v2/controllers/loan_process_controller.dart';
 import 'package:augmont_v2/widgets/augmont_app_bar.dart';
 import 'package:augmont_v2/widgets/dotted_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../bottomsheet/loan_request_success_bottomsheet.dart';
 
 class LoanProcessScreen extends StatelessWidget {
   const LoanProcessScreen({super.key});
@@ -14,9 +22,10 @@ class LoanProcessScreen extends StatelessWidget {
     return GetBuilder<LoanProcessController>(builder: (controller) {
       return SafeArea(
         child: Scaffold(
-          appBar: const AugmontAppbar(
+          backgroundColor: Colors.white,
+          appBar: AugmontAppbar(
             canBack: true,
-            title: "Loan",
+            title: controller.list[controller.currentIndex].$2.replaceAll("\n", ''),
           ),
           bottomNavigationBar: Container(
             height: 70,
@@ -41,27 +50,34 @@ class LoanProcessScreen extends StatelessWidget {
                 ),
                 fixedSize: const Size(double.maxFinite, 48),
               ),
-              onPressed: () {},
-              child: const Text("Proceed"),
+              onPressed: () {
+                if(controller.currentIndex ==3){
+                  Get.bottomSheet(const LoanRequestSuccessBottomSheet());
+                }else{
+                  controller.onPageChanges(controller.currentIndex+=1);
+                }
+
+                // Get.bottomSheet(const ServiceNotAvailableBottomSheet());
+              },
+              child: Text(controller.currentIndex==3?"Register Request":"Proceed"),
             ),
           ),
           body: Column(
             children: [
               Container(
-                // height: 70,
                 width: double.maxFinite,
                 padding: const EdgeInsets.all(10.0),
                 child: Stack(
                   children: [
                     Positioned(
                       top: 12,
-                      left: 0,
-                      right: 0,
+                      left: 10,
+                      right: 12,
                       child: LinearProgressIndicator(
                         minHeight: 2,
                         backgroundColor: Colors.black12,
                         color: Colors.black87,
-                        value: (controller.currentIndex/(controller.list.length-1))-0.29,
+                        value: (controller.currentIndex/(controller.list.length-1)),
                       ),
                     ),
                     Row(
@@ -74,23 +90,37 @@ class LoanProcessScreen extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: (){
-                                controller.currentIndex = e.$1;
-                                controller.update();
+                                controller.onPageChanges(e.$1);
                               },
                               child: CircleAvatar(
-                                maxRadius: 14,
-                                backgroundColor: Colors.black,
-                                child: Text('${e.$1}',style: CustomTheme.style(color: Colors.white,size: 10,weight: FontWeight.w600),),
+                                maxRadius: 12,
+                                backgroundColor: controller.currentIndex>=e.$1?Colors.black:secondaryTextColor,
+                                child: Text('${e.$1+1}',style: CustomTheme.style(color: Colors.white,size: 10,weight: FontWeight.w600),),
                               ),
                             ),
-                            Text('',style: CustomTheme.style(color: Colors.black87,size: 10,weight: FontWeight.w600),textAlign: TextAlign.center,),
+                            4.h,
+                            Text(e.$2,style: CustomTheme.style(color: Colors.black87,size: 10,weight: FontWeight.w600),textAlign: TextAlign.center,),
                           ],
                         );
                       }).toList(),
                     )
                   ],
                 )
-              )
+              ),
+              Expanded(
+                child: PageView(
+                  scrollDirection: Axis.horizontal,
+                  allowImplicitScrolling: false,
+                  controller: controller.pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: const [
+                    PersonalAddressDetailPage(),
+                    ServiceTypePage(),
+                    LocationPage(),
+                    LoanSummaryPage()
+                  ],
+                ),
+              ),
             ],
           ),
         ),
