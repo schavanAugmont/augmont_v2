@@ -45,7 +45,7 @@ class EditText extends StatelessWidget {
          Row(
            mainAxisAlignment: MainAxisAlignment.start,
            children: [
-             Text(label,style: CustomTheme.style(weight: FontWeight.w500)),
+             Text(label,style: CustomTheme.style(weight: FontWeight.w600,size: 13)),
              const SizedBox(width: 2),
              if(isRequired)Text("*",style: CustomTheme.style(size: 16,color: Colors.red,weight: FontWeight.w600),)
            ],

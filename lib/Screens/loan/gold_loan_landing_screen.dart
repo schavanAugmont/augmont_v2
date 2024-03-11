@@ -121,7 +121,7 @@ class GoldLoanLandingScreen extends StatelessWidget {
                                 ),
                                 Visibility(
                                   visible: instruction.indexOf(model)!=2,
-                                  child:const  DottedLine(axis: Axis.vertical, dotCount: 6),
+                                  child:const  DottedLine(axis: Axis.vertical, dotCount: 5),
                                 ),
                               ],
                             ),

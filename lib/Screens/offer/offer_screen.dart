@@ -1,5 +1,5 @@
 import 'package:augmont_v2/Utils/colors.dart';
-import 'package:augmont_v2/bottomsheet/offer_controller.dart';
+import 'package:augmont_v2/controllers/offer_controller.dart';
 import 'package:augmont_v2/widgets/augmont_app_bar.dart';
 import 'package:augmont_v2/widgets/offer_tile.dart';
 import 'package:flutter/material.dart';

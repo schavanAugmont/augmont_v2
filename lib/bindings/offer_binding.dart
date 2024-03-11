@@ -1,4 +1,4 @@
-import 'package:augmont_v2/bottomsheet/offer_controller.dart';
+import 'package:augmont_v2/controllers/offer_controller.dart';
 import 'package:get/get.dart';
 
 class OfferBinding extends Bindings {
