@@ -57,7 +57,8 @@ class EmiCheckoutScreen extends StatelessWidget {
             ),
             body: Column(
               children: [
-                Padding(
+                Container(
+                  color: Colors.white,
                   padding: const EdgeInsets.all(12.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -90,17 +91,20 @@ class EmiCheckoutScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Delivery Information",style: CustomTheme.style(size: 10,weight: FontWeight.w600),),
-                    const SizedBox(
-                      width: 80,
-                      height: 1,
-                    ),
-                    Text("Summary",style: CustomTheme.style(size: 10,weight: controller.currentStep==1?FontWeight.w600:FontWeight.w500),),
-                    const SizedBox(width: 20,)
-                  ],
+                Container(
+                  color: Colors.white,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Delivery Information",style: CustomTheme.style(size: 10,weight: FontWeight.w600),),
+                      const SizedBox(
+                        width: 80,
+                        height: 1,
+                      ),
+                      Text("Summary",style: CustomTheme.style(size: 10,weight: controller.currentStep==1?FontWeight.w600:FontWeight.w500),),
+                      const SizedBox(width: 20,)
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: PageView(

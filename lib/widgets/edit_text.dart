@@ -16,6 +16,7 @@ class EditText extends StatelessWidget {
   final VoidCallback? onTap;
   final List<TextInputFormatter> formatter;
   final int? maxLength;
+  final int? maxLines;
 
   const EditText({
     super.key,
@@ -31,6 +32,7 @@ class EditText extends StatelessWidget {
     this.formatter = const [],
     this.onTap,
     this.maxLength,
+    this.maxLines,
   });
 
   @override
@@ -70,6 +72,8 @@ class EditText extends StatelessWidget {
                     inputFormatters: formatter,
                     onChanged: onChanged,
                     maxLength: maxLength,
+                    minLines: 1,
+                    maxLines: maxLines,
                     style: CustomTheme.style(size: 14,weight: FontWeight.w600),
                     decoration: InputDecoration(
                       border: InputBorder.none,
