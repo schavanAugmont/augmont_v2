@@ -1,29 +1,10 @@
-import 'package:augmont_v2/Bindings/intro_binding.dart';
 import 'package:augmont_v2/Bindings/main_screen_binding.dart';
-import 'package:augmont_v2/Bindings/signin_binding.dart';
-import 'package:augmont_v2/Controllers/main_screen_controller.dart';
-import 'package:augmont_v2/Controllers/sing_in_controller.dart';
-import 'package:augmont_v2/Screens/AppIntro/onboard_screen.dart';
-import 'package:augmont_v2/Screens/DigitalInvestment/SIP/sip_details_screen.dart';
-import 'package:augmont_v2/Screens/DigitalInvestment/SIP/sip_stepup_screen.dart';
-import 'package:augmont_v2/Screens/DigitalInvestment/dg_sip_screen.dart';
-import 'package:augmont_v2/Screens/DigitalInvestment/digiinvestment_dashborad_screen.dart';
-import 'package:augmont_v2/Screens/DigitalInvestment/goldagreement_screen.dart';
-import 'package:augmont_v2/Screens/DigitalInvestment/pan_verification_screen.dart';
-import 'package:augmont_v2/Screens/DigitalInvestment/SIP/sip_summary_screen.dart';
-import 'package:augmont_v2/Screens/SignIn/personalise_quest_page.dart';
-import 'package:augmont_v2/bindings/digitalinvestment_binding.dart';
-import 'package:augmont_v2/network/Providers/PersonalizQusProvider.dart';
+import 'package:augmont_v2/Utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
 import '../../Utils/session_manager.dart';
-import '../../bindings/personalizedqus_binding.dart';
 import '../Main/main_screen.dart';
-import '../SignIn/signin_page1.dart';
-import '../SignIn/signin_page2.dart';
-import '../SignIn/signin_page3.dart';
 
 class SplashScreen extends StatefulWidget {
   static String routeName = "/SplashScreen";
@@ -65,18 +46,34 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: FadeTransition(
-          opacity: _animation,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/images/new_logo.png'),
-            ],
+      backgroundColor: Colors.transparent,
+      extendBody: true,
+      body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                primaryColor,
+                Colors.white,
+                Colors.white,
+                Colors.white,
+                Colors.white,
+                Colors.white,
+                Colors.white
+              ])),
+          child: Center(
+              child: FadeTransition(
+                opacity: _animation,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/images/new_logo.png'),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
     );
   }
 
@@ -106,11 +103,11 @@ class _SplashScreenState extends State<SplashScreen>
           //   }
           // });
 
-          Get.offAll(
-                () => const MainScreen(),
-            binding: MainScreenBinding(),
-            transition: Transition.rightToLeft,
-          );
+          // Get.offAll(
+          //       () => const MainScreen(),
+          //   binding: MainScreenBinding(),
+          //   transition: Transition.rightToLeft,
+          // );
         }
       })
       ..addStatusListener((status) => print('$status'));
