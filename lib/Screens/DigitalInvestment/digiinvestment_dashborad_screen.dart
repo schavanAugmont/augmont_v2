@@ -1,4 +1,7 @@
 import 'package:augmont_v2/Screens/DigitalInvestment/linechart_widget.dart';
+import 'package:augmont_v2/Screens/withdrawal/withdrawal_landing_screen.dart';
+import 'package:augmont_v2/Utils/extension_util.dart';
+import 'package:augmont_v2/Utils/themes.dart';
 import 'package:augmont_v2/controllers/digitalinvestment_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -162,6 +165,97 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
                           ],
                         ),
                       ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      border: Border.all(color: lightColor)
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: lightColor),
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(8.0),
+                            )
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: lightColor,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text("Gold Portfolio",style: CustomTheme.style(weight: FontWeight.bold,color: secondaryTextColor,size: 18),),
+                                    6.h,
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text("₹1,22,000",style: CustomTheme.style(weight: FontWeight.w600),),
+                                        Icon(Icons.arrow_upward_rounded,color: Colors.green),
+                                        Text("(12%)",style: CustomTheme.style(weight: FontWeight.w600,color: Colors.green),),
+                                      ],
+                                    ),
+                                    6.h,
+                                    Text("Total Investment: ₹7,35,000 ",style: CustomTheme.style(color: secondaryTextColor),),
+                                  ],
+                                ),
+                              ),
+                              10.h,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("Total Gold (g):",style: CustomTheme.style(weight: FontWeight.w600),),
+                                  Text("42.80g",style: CustomTheme.style(),),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.black,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                )
+                              ),
+                              onPressed: () {
+                                Get.to(()=> WithdrawalLandingScreen());
+                              },
+                              child: Text("Withdraw Investment",style: CustomTheme.style(weight: FontWeight.w600),),
+                            ),
+                            Container(
+                              width: 1,
+                              height: 24,
+                              color: lightColor,
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                  foregroundColor: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  )
+                              ),
+                              onPressed: () {},
+                              child: Text("Transaction History",style: CustomTheme.style(weight: FontWeight.w600)),
+                            ),
+                          ],
+                        )
+                      ],
                     ),
                   ),
                   Container(

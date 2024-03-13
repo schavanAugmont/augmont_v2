@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 enum PaymentMethod{paypal,razorpay}
-enum RefundMode{augmontWallet,bank}
+enum RefundMode{augmontWallet,bank,upi}
 
 class PaymentMethodWidget extends StatelessWidget {
   final PaymentMethod? paymentMethod;
@@ -71,10 +71,12 @@ class RefundMethodWidget extends StatelessWidget {
           itemBuilder: (context, index) {
             final e = RefundMode.values[index];
             return RadioListTile(
-              title: Text(e.name.capitalize??"",style: CustomTheme.style(weight: FontWeight.w600),),
+              title: Text(methodName(e),style: CustomTheme.style(weight: FontWeight.w600),),
               tileColor: lightColor,
               value: e,
+              dense: true,
               groupValue: refundMode,
+              visualDensity: VisualDensity.comfortable,
               activeColor: primaryTextColor,
               onChanged: (value) {
                 onChange?.call(e);
@@ -88,5 +90,16 @@ class RefundMethodWidget extends StatelessWidget {
         )
       ],
     );
+  }
+
+  String methodName(RefundMode mode) {
+    switch (mode) {
+      case RefundMode.augmontWallet:
+        return "Augmont Wallet";
+      case RefundMode.bank:
+        return "Bank Account";
+      case RefundMode.upi:
+        return "via UPI ID";
+    }
   }
 }

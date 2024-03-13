@@ -2,12 +2,15 @@ import 'package:augmont_v2/Controllers/main_screen_controller.dart';
 import 'package:augmont_v2/Screens/Home/Components/home_components.dart';
 import 'package:augmont_v2/Utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 import '../../Controllers/home_controller.dart';
 import '../../Utils/session_manager.dart';
 import '../../Utils/strings.dart';
+import '../../Utils/themes.dart';
+import '../../dialog/emi_due_dialog.dart';
 import '../MetalPice/metal_price_screen.dart';
 import 'Components/HeaderWalletView.dart';
 
@@ -322,6 +325,91 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ],
                               ),
                             )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                        padding: const EdgeInsets.all(10.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: lightColor,width: 1.0),
+                          borderRadius: BorderRadius.circular(6.0),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 90,
+                              height: 90,
+                              decoration: BoxDecoration(
+                                  color: lightColor,
+                                  borderRadius: BorderRadius.circular(6.0)
+                              ),
+                              alignment: Alignment.center,
+                              child: Image.asset("assets/images/coin.png",width: 40),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Augmont Gold Coin",
+                                    style: CustomTheme.style(size: 15, weight: FontWeight.w600),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Order ID : 3456",
+                                        style: CustomTheme.style(size: 13, weight: FontWeight.w400),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                                        width: 1,
+                                        height: 20,
+                                        color: lightColor,
+                                      ),
+                                      Text(
+                                        "Status : ",
+                                        style: CustomTheme.style(size: 13, weight: FontWeight.w600),
+                                      ),
+                                      Text(
+                                        "Booked",
+                                        style: CustomTheme.style(size: 13, weight: FontWeight.w600,color: Colors.green),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: lightColor,
+                                      borderRadius: BorderRadius.circular(2.0),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Upcoming EMI Date : 08/03/2024",
+                                          style: CustomTheme.style(size: 10, weight: FontWeight.w500),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Get.dialog(const EmiDueDialog());
+                                          },
+                                          child: Text(
+                                            "Pay Now",
+                                            style: CustomTheme.style(size: 12, weight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),

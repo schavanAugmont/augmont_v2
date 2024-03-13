@@ -1,6 +1,7 @@
 import 'package:augmont_v2/Utils/colors.dart';
 import 'package:augmont_v2/Utils/extension_util.dart';
 import 'package:augmont_v2/Utils/themes.dart';
+import 'package:augmont_v2/widgets/augmont_bottom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -55,20 +56,7 @@ class LoanRequestSuccessBottomSheet extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            height: 70,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  spreadRadius: 0,
-                  blurRadius: 12,
-                  offset: Offset(0, -4),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          AugmontBottomAppBar(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
