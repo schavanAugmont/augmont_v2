@@ -103,11 +103,11 @@ class _SplashScreenState extends State<SplashScreen>
           //   }
           // });
 
-          // Get.offAll(
-          //       () => const MainScreen(),
-          //   binding: MainScreenBinding(),
-          //   transition: Transition.rightToLeft,
-          // );
+          Get.offAll(
+                () => const MainScreen(),
+            binding: MainScreenBinding(),
+            transition: Transition.rightToLeft,
+          );
         }
       })
       ..addStatusListener((status) => print('$status'));
