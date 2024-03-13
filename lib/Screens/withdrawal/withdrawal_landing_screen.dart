@@ -172,7 +172,7 @@ class WithdrawalLandingScreen extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(4.0),
                       child: Image.network(
-                        "https://img.freepik.com/free-vector/buy-sell-arrows-stock-market-trading_1017-13717.jpg",
+                        "https://img.freepik.com/free-vector/consumer-demand-abstract-illustration_335657-5095.jpg",
                         height: 400,
                       ),
                     ),
