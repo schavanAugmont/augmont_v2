@@ -15,6 +15,18 @@ Widget maintitle(String value){
       ));
 }
 
+
+Widget maintitleCabin(String value){
+  return Text(value,
+      textAlign: TextAlign.start,
+      style: TextStyle(
+        color: primaryTextColor,
+        fontFamily: Strings.fontfamilyCabinetGrotesk,
+        fontWeight: FontWeight.w700,
+        fontSize: 30,
+      ));
+}
+
 Widget mainDescp(String value){
   return Text(value,
       textAlign: TextAlign.start,
@@ -22,7 +34,7 @@ Widget mainDescp(String value){
         color: primaryTextColor,
         fontFamily: Strings.fontFamilyName,
         fontWeight: FontWeight.normal,
-        fontSize: 13,
+        fontSize: 14,
       ));
 }
 

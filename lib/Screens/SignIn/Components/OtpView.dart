@@ -11,6 +11,7 @@ class OtpView extends StatelessWidget {
   final TextInputType keyboardType;
   final FormFieldValidator validator;
   final TextEditingController controller;
+  final bool isError;
 
   const OtpView({
     Key? key,
@@ -19,7 +20,7 @@ class OtpView extends StatelessWidget {
     required this.isobscureText,
     required this.onChanged,
     required this.keyboardType,
-    required this.validator,
+    required this.validator, required this.isError,
   }) : super(key: key);
 
   @override
@@ -90,29 +91,22 @@ class OtpView extends StatelessWidget {
             color: primaryTextColor,
           ),
           pinTheme: PinTheme(
-            shape: PinCodeFieldShape.box,
-            borderRadius: BorderRadius.circular(5),
+            shape: PinCodeFieldShape.underline,
             fieldHeight: 50,
             fieldWidth: 40,
-            activeFillColor: white,
-            activeColor: divider,
-            inactiveColor: kycProductBackgroundColor,
-            inactiveFillColor: kycProductBackgroundColor,
+            activeFillColor: Colors.white,
+            activeColor: Colors.black,
+            inactiveColor: Colors.black,
+            inactiveFillColor: Colors.white,
             selectedColor: divider,
-            selectedFillColor: white,
+            selectedFillColor: Colors.white,
           ),
           cursorColor: Colors.black,
           animationDuration: const Duration(milliseconds: 300),
           // errorAnimationController: errorController,
           controller: controller,
           keyboardType: TextInputType.number,
-          boxShadows: const [
-            BoxShadow(
-              offset: Offset(0, 1),
-              color: Colors.black12,
-              blurRadius: 10,
-            )
-          ],
+
           onChanged:onChanged,
         );
   }

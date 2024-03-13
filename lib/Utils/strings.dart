@@ -3,6 +3,7 @@ import 'package:augmont_v2/models/CustomerDetailsModel.dart';
 class Strings {
   //CHANGE ONLY IF YOU HAVE DONE SOME CHANGES TO FONTS IN PUBSPEC FILE
   static String fontFamilyName = 'Gilroy';
+  static String fontfamilyCabinetGrotesk='CabinetGrotesk';
 
   static String goldForAll = 'Gold For All';
   static String home = 'HOME';
@@ -231,12 +232,12 @@ class Strings {
   static String paymentMethod = "Payment Method";
   static String orderDate = "Order Date";
   static String personalDetails = "PERSONAL DETAILS";
-  static String personalInformation='Personal Information';
+  static String personalInformation='Personal \nInformation';
   static String enterPIn="Enter PIN";
   static String reenterPIN="Re-enter PIN";
-  static String pinTitle='Set your security PIN';
+  static String pinTitle='Set your \nSecurity PIN';
   static String pinDescp="Set a 6 digit pin for easy access to Augmont";
-  static String pinTitle1='Enter your security PIN';
+  static String pinTitle1='Enter your \nSecurity PIN';
   static String pinDescp1="Enter a 6 digit pin for easy access to Augmont";
   static String personalInformationDesc='Enter your personal information to proceed forward';
   static String otherDetails = "OTHER DETAILS";
@@ -727,7 +728,7 @@ class Strings {
   static String createProfileDec="Onboard to Augmont and avail world class service";
   static String unlockWithFinger="Unlock with Fingerprint";
   static String unlockWithFcID="Unlock with Face ID";
-  static String keepurAssets="Keep Your assest secure with your biometric";
+  static String keepurAssets="Keep Your assest secure \nwith your biometric";
   static String setPriceAlert="Set Price Alert";
   static String enterCustomPrice="Enter Custom Price";
   static String enterAmount="Enter Amount";
@@ -857,6 +858,8 @@ class Strings {
   static String paymentReminder="Payment Reminder";
   static String myagent="My Agent";
   static String unassignAgent="Un-assign Agent";
+
+  static String back="Back";
 
 }
 

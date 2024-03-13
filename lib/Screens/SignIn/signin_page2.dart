@@ -1,5 +1,5 @@
 import 'package:augmont_v2/Controllers/sing_in_controller.dart';
-import 'package:augmont_v2/Screens/SignIn/Components/SignInComponents.dart';
+import 'package:augmont_v2/Utils/scaffold_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,10 +9,8 @@ import '../../Network/ErrorHandling.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/print_logs.dart';
 import '../../Utils/strings.dart';
-import 'Components/RoundedTextField.dart';
-import 'Components/TextFieldContainer.dart';
+import '../../widgets/animated_dot.dart';
 import 'Components/signIn_otpview.dart';
-import 'Components/signup_personalview.dart';
 
 class SignInPage2 extends StatefulWidget {
   const SignInPage2({super.key});
@@ -27,85 +25,200 @@ class SignInPageState2 extends State<SignInPage2> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SignInController>(builder: (controller) {
-      return WillPopScope(
-          onWillPop: () async => false,
-          child: SafeArea(
-              child: Scaffold(
-            bottomNavigationBar: Container(
-              height: 55,
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              // Adjust padding as needed
-              child: ElevatedButton(
-                  onPressed: () {
-                    if (controller.isCustomer) {
-                      if (controller.enableOtpButton.value) {
-                          controller.signIn();
-                      } else {
-                        ErrorHandling.showToast(Strings.enterOtp);
-                      }
-                    } else {
-                      if (controller.validateBasciInformation()) {
-                        if (controller.enableOtpButton.value) {
-                          controller.signUp();
-                        } else {
-                          ErrorHandling.showToast(Strings.enterOtp);
-                        }
-                      }
-                    }
-                  },
-                  style:
-                      ElevatedButton.styleFrom(backgroundColor: primaryColor),
-                  child: Text(
-                      controller.isCustomer
-                          ? Strings.verifyOtp
-                          : Strings.submit,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: Strings.fontFamilyName,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ))),
-            ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
+      return ScaffoldView(
+          child: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    height: 50,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GestureDetector(
-                          child: const Icon(
-                            size: 15,
-                            Icons.arrow_back_ios,
-                            color: Colors.black,
+                          child: Icon(
+                            size: 24,
+                            Icons.arrow_back_outlined,
+                            color: bottomNavigationColor,
                           ),
                           onTap: () {
-                            controller.onBackPress();
+                            controller.clearBackStack();
                           },
                         ),
-                        Spacer(),
-                        Text("Step 2 0f 3",
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(Strings.back,
                             style: TextStyle(
-                              color: primaryTextColor,
+                              decoration: TextDecoration.underline,
+                              color: bottomNavigationColor,
                               fontFamily: Strings.fontFamilyName,
                               fontWeight: FontWeight.w600,
-                              fontSize: 13,
-                            ))
+                              fontSize: 14,
+                            )),
+                        Spacer(),
+                        Row(
+                          children: List.generate(
+                            3,
+                                (index) => buildDot(index: index, 1),
+                          ),
+                        ),
                       ],
                     ),
-                    Container(
-                      height: 200,
-                      color: Colors.grey,
-                      margin: EdgeInsets.symmetric(vertical: 30),
-                    ),
-                    SignInOTPView()
-                  ],
-                ),
+                  ),
+                  SignInOTPView(),
+
+                ],
               ),
             ),
-          )));
+          ),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                  height: 55,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  // Adjust padding as needed
+                  child:
+                      // controller.enableMobileView.value ?
+                      ElevatedButton(
+                          onPressed: () {
+                            controller.pinTextController.clear();
+                            controller.reenterpinTextController.clear();
+                            if (controller.isCustomer) {
+                              if (controller.enableOtpButton.value) {
+                                controller.signIn();
+                              } else {
+                                ErrorHandling.showToast(Strings.enterOtp);
+                              }
+                            } else {
+                              if (controller.validateBasciInformation()) {
+                                if (controller.enableOtpButton.value) {
+                                  controller.signUp();
+                                } else {
+                                  ErrorHandling.showToast(Strings.enterOtp);
+                                }
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: deliveryDescTextColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5.0),
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                  controller.isCustomer
+                                      ? Strings.verifyOtp
+                                      : Strings.submit,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: Strings.fontFamilyName,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  )),
+                              Image.asset(
+                                "assets/images/arrow_right.png",
+                                height: 20,
+                              )
+                            ],
+                          ))))
+        ],
+      ));
+
+      // WillPopScope(
+      //   onWillPop: () async => false,
+      //   child: SafeArea(
+      //       child: Scaffold(
+      //     bottomNavigationBar: Container(
+      //       height: 55,
+      //       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      //       // Adjust padding as needed
+      //       child: ElevatedButton(
+      //           onPressed: () {
+      //             if (controller.isCustomer) {
+      //               if (controller.enableOtpButton.value) {
+      //                   controller.signIn();
+      //               } else {
+      //                 ErrorHandling.showToast(Strings.enterOtp);
+      //               }
+      //             } else {
+      //               if (controller.validateBasciInformation()) {
+      //                 if (controller.enableOtpButton.value) {
+      //                   controller.signUp();
+      //                 } else {
+      //                   ErrorHandling.showToast(Strings.enterOtp);
+      //                 }
+      //               }
+      //             }
+      //           },
+      //           style:
+      //               ElevatedButton.styleFrom(backgroundColor: primaryColor),
+      //           child: Text(
+      //               controller.isCustomer
+      //                   ? Strings.verifyOtp
+      //                   : Strings.submit,
+      //               style: TextStyle(
+      //                 color: Colors.white,
+      //                 fontFamily: Strings.fontFamilyName,
+      //                 fontWeight: FontWeight.w600,
+      //                 fontSize: 14,
+      //               ))),
+      //     ),
+      //     body: SingleChildScrollView(
+      //       child: Padding(
+      //         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      //         child: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           mainAxisAlignment: MainAxisAlignment.start,
+      //           children: [
+      //             Row(
+      //               children: [
+      //                 GestureDetector(
+      //                   child: const Icon(
+      //                     size: 15,
+      //                     Icons.arrow_back_ios,
+      //                     color: Colors.black,
+      //                   ),
+      //                   onTap: () {
+      //                     controller.onBackPress();
+      //                   },
+      //                 ),
+      //                 Spacer(),
+      //                 Text("Step 2 0f 3",
+      //                     style: TextStyle(
+      //                       color: primaryTextColor,
+      //                       fontFamily: Strings.fontFamilyName,
+      //                       fontWeight: FontWeight.w600,
+      //                       fontSize: 13,
+      //                     ))
+      //               ],
+      //             ),
+      //             Container(
+      //               height: 200,
+      //               color: Colors.grey,
+      //               margin: EdgeInsets.symmetric(vertical: 30),
+      //             ),
+      //             SignInOTPView()
+      //           ],
+      //         ),
+      //       ),
+      //     ),
+      //   )));
     });
   }
 

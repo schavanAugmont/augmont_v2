@@ -1,10 +1,16 @@
 import 'package:augmont_v2/Bindings/main_screen_binding.dart';
+import 'package:augmont_v2/Screens/AppIntro/onboard_screen.dart';
 import 'package:augmont_v2/Utils/colors.dart';
+import 'package:augmont_v2/Utils/scaffold_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import '../../Utils/session_manager.dart';
+import '../../bindings/intro_binding.dart';
+import '../../bindings/personalizedqus_binding.dart';
 import '../Main/main_screen.dart';
+import '../SignIn/personalise_quest_page.dart';
 
 class SplashScreen extends StatefulWidget {
   static String routeName = "/SplashScreen";
@@ -26,13 +32,18 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.dark,
+      statusBarColor: Colors.transparent,
+    ));
+
     sessionManager = SessionManager();
     _controller = AnimationController(
       duration: const Duration(seconds: 5),
       vsync: this,
     );
 
-//_animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+_animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
     animateSplash();
   }
@@ -45,36 +56,17 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      extendBody: true,
-      body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                primaryColor,
-                Colors.white,
-                Colors.white,
-                Colors.white,
-                Colors.white,
-                Colors.white,
-                Colors.white
-              ])),
-          child: Center(
-              child: FadeTransition(
-                opacity: _animation,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset('assets/images/new_logo.png'),
-                  ],
-                ),
-              ),
-            ),
-          ),
-    );
+    return ScaffoldView(child: Center(
+      child: FadeTransition(
+        opacity: _animation,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('assets/images/new_logo.png'),
+          ],
+        ),
+      ),
+    ));
   }
 
   void animateSplash() {
@@ -104,11 +96,14 @@ class _SplashScreenState extends State<SplashScreen>
           // });
 
           // Get.offAll(
-          //       () => const MainScreen(),
-          //   binding: MainScreenBinding(),
+          //       () => const OnboardScreen(),
+          //   binding: IntroBiding(),
           //   transition: Transition.rightToLeft,
           // );
+
+          Get.to(PersonalizeQuestionScreen(),binding: PersonalizedQuesBiding());
         }
+
       })
       ..addStatusListener((status) => print('$status'));
 

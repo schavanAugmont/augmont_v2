@@ -26,7 +26,10 @@ class _SignInMobileViewState extends State<SignInMobileView>{
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        maintitle(Strings.enterPhoneNo),
+        SizedBox(height: 100,),
+        maintitleCabin(
+           "Enter Phone \nNumber"
+        ),
         const SizedBox(
           height: 5,
         ),
@@ -39,6 +42,8 @@ class _SignInMobileViewState extends State<SignInMobileView>{
           height: 10,
         ),
         Container(
+          decoration: const BoxDecoration(
+              border: Border(bottom: BorderSide(width: 0.5,color: primaryColor))),
           padding: const EdgeInsets.symmetric(
             horizontal: 10,
           ),
@@ -48,7 +53,6 @@ class _SignInMobileViewState extends State<SignInMobileView>{
               Container(
                 height: 50,
                 width: 60,
-                color: kycProductBackgroundColor,
                 child: Center(
                     child: Text(
                   "\u{1F1EE}\u{1F1F3} ${Strings.countryCode}",
@@ -60,8 +64,11 @@ class _SignInMobileViewState extends State<SignInMobileView>{
                   ),
                 )),
               ),
-              const SizedBox(
-                width: 10,
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                height: 25,
+                width: 1,
+                color: shadowColor,
               ),
               Expanded(
                 child: TextFormField(
@@ -87,14 +94,14 @@ class _SignInMobileViewState extends State<SignInMobileView>{
                   },
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    fillColor: kycProductBackgroundColor,
+                    fillColor: Colors.white,
                     filled: true,
                     counterText: "",
                     hintText: Strings.enterMobileNumber,
                   ),
                   style: TextStyle(
                     fontFamily: Strings.fontFamilyName,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     fontSize: 14,
                     color: primaryTextColor,
                   ),

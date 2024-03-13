@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:augmont_v2/Bindings/signin_binding.dart';
 import 'package:augmont_v2/Screens/SignIn/forgotpin_page.dart';
+import 'package:augmont_v2/Screens/SignIn/personalise_quest_page.dart';
 import 'package:augmont_v2/Screens/SignIn/signin_page1.dart';
+import 'package:augmont_v2/Utils/scaffold_view.dart';
+import 'package:augmont_v2/bindings/personalizedqus_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
@@ -54,6 +57,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   var selectedCity = "".obs;
   var selectedStateId = "".obs;
   var selectedCityId = "".obs;
+  var isOTPError = false.obs;
 
   List<StateModel> listOfStates = [];
 
@@ -285,7 +289,9 @@ class SignInController extends GetxController with StateMixin<dynamic> {
         SessionManager.setToken(model!.token!);
         SessionManager.setMobileNumber(mobileNo);
         SessionManager.setIsPinAdded(model!.customerDetails!.isPinAdded!);
-        SessionManager.setDeviceId(model!.customerDetails!.deviceId!);
+        if (model!.customerDetails!.deviceId != null) {
+          SessionManager.setDeviceId(model!.customerDetails!.deviceId!);
+        }
         SessionManager.setIsLoggedIn(true);
         SessionManager.setIsBiometricAdded(
             model!.customerDetails!.isBiometricEnable!);
@@ -432,11 +438,11 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       isFirstNameError(false);
       isLastNameError(true);
       isValid = false;
-    } else if (!Validator.validateEmailAddress(emailController.text.trim())) {
-      isLastNameError(false);
-      isFirstNameError(false);
-      isEmailError(true);
-      isValid = false;
+    // } else if (!Validator.validateEmailAddress(emailController.text.trim())) {
+    //   isLastNameError(false);
+    //   isFirstNameError(false);
+    //   isEmailError(true);
+    //   isValid = false;
     } else if (selectedState.trim().isEmpty) {
       isLastNameError(false);
       isFirstNameError(false);
@@ -501,100 +507,287 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   void showBiomatricPopup(BuildContext context) {
-    showDialog(
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return Dialog(
+    //       backgroundColor: Colors.white,
+    //       surfaceTintColor: Colors.transparent,
+    //       shape: RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.circular(10.0),
+    //       ),
+    //       child: Container(
+    //         padding: const EdgeInsets.all(10.0),
+    //         child: Column(
+    //           mainAxisSize: MainAxisSize.min,
+    //           mainAxisAlignment: MainAxisAlignment.center,
+    //           crossAxisAlignment: CrossAxisAlignment.center,
+    //           children: [
+    //             Container(
+    //               padding: const EdgeInsets.only(top: 20),
+    //               margin: const EdgeInsets.symmetric(vertical: 30),
+    //               width: double.infinity,
+    //               child: Image.asset(
+    //                 Platform.isAndroid
+    //                     ? 'assets/images/ic_fingerprint.png'
+    //                     : 'assets/images/ic_face_id.png',
+    //                 width: 80,
+    //                 height: 80,
+    //               ),
+    //             ),
+    //             mainDescp(Platform.isAndroid
+    //                 ? Strings.unlockWithFinger
+    //                 : Strings.unlockWithFcID),
+    //             SizedBox(
+    //               height: 5,
+    //             ),
+    //             // maintitle(Strings.keepurAssets),
+    //             Text(Strings.keepurAssets,
+    //                 textAlign: TextAlign.center,
+    //                 style: TextStyle(
+    //                   color: primaryTextColor,
+    //                   fontFamily: Strings.fontFamilyName,
+    //                   fontWeight: FontWeight.w600,
+    //                   fontSize: 14,
+    //                 )),
+    //             SizedBox(
+    //               height: 10,
+    //             ),
+    //             GestureDetector(
+    //                 onTap: () {
+    //                   isBiometricClick(true);
+    //                   update();
+    //                   Get.back();
+    //                   setPin();
+    //                 },
+    //                 child: Container(
+    //                     width: MediaQuery.of(context).size.width,
+    //                     decoration: BoxDecoration(
+    //                       color: Colors.white,
+    //                       border: Border.all(color: shadowColor),
+    //                       borderRadius: BorderRadius.circular(5.0),
+    //                     ),
+    //                     margin: EdgeInsets.only(bottom: 10, top: 10),
+    //                     height: 40,
+    //                     child: Center(
+    //                         child: Text('Proceed',
+    //                             style: TextStyle(
+    //                               color: primaryTextColor,
+    //                               fontFamily: Strings.fontFamilyName,
+    //                               fontWeight: FontWeight.w600,
+    //                               fontSize: 14,
+    //                             ))))),
+    //             GestureDetector(
+    //               onTap: () {
+    //                 isBiometricClick(false);
+    //                 update();
+    //                 Get.back();
+    //                 setPin();
+    //               },
+    //               child: Container(
+    //                   width: MediaQuery.of(context).size.width,
+    //                   margin: EdgeInsets.only(bottom: 20),
+    //                   height: 40,
+    //                   child: Center(
+    //                       child: Text('Not Now',
+    //                           style: TextStyle(
+    //                             color: primaryTextColor,
+    //                             fontFamily: Strings.fontFamilyName,
+    //                             fontWeight: FontWeight.w600,
+    //                             fontSize: 14,
+    //                           )))),
+    //             )
+    //           ],
+    //         ),
+    //       ),
+    //     ); // Show custom popup
+    //   },
+    // );
+
+    showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-          ),
+      builder: (context) {
+        //3
+        return Container(
+          height: MediaQuery.sizeOf(context).height * 0.58,
+          color: Colors.transparent,
           child: Container(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 20),
-                  margin: const EdgeInsets.symmetric(vertical: 30),
-                  width: double.infinity,
-                  child: Image.asset(
-                    Platform.isAndroid
-                        ? 'assets/images/ic_fingerprint.png'
-                        : 'assets/images/ic_face_id.png',
-                    width: 80,
-                    height: 80,
-                  ),
-                ),
-                mainDescp(Platform.isAndroid
-                    ? Strings.unlockWithFinger
-                    : Strings.unlockWithFcID),
-                SizedBox(
-                  height: 5,
-                ),
-                // maintitle(Strings.keepurAssets),
-                Text(Strings.keepurAssets,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: primaryTextColor,
-                      fontFamily: Strings.fontFamilyName,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    )),
-                SizedBox(
-                  height: 10,
-                ),
-                GestureDetector(
-                    onTap: () {
-                      isBiometricClick(true);
-                      update();
-                      Get.back();
-                      setPin();
-                    },
-                    child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(color: shadowColor),
-                          borderRadius: BorderRadius.circular(5.0),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15.0),
+                topRight: Radius.circular(15.0),
+              ),
+            ),
+            child: DraggableScrollableSheet(
+              expand: true,
+              initialChildSize: 1.0,
+              builder:
+                  (BuildContext context, ScrollController scrollController) {
+                return StatefulBuilder(
+                  builder: (BuildContext context, StateSetter setState) {
+                    return Stack(
+                      children: [
+                        Positioned(
+                          top: -24,
+                          left: 0,
+                          right: 0,
+                          bottom: 0,
+                          child: Container(
+                            width: context.width,
+                            height: context.height,
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topRight,
+                                colors: [
+                                  Colors.amber.withOpacity(0.2),
+                                  Colors.amber.withOpacity(0.1),
+                                  Colors.amber.withOpacity(0.05),
+                                  Colors.amber.withOpacity(0.0),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
-                        margin: EdgeInsets.only(bottom: 10, top: 10),
-                        height: 40,
-                        child: Center(
-                            child: Text('Proceed',
-                                style: TextStyle(
-                                  color: primaryTextColor,
-                                  fontFamily: Strings.fontFamilyName,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ))))),
-                GestureDetector(
-                  onTap: () {
-                    isBiometricClick(false);
-                    update();
-                    Get.back();
-                    setPin();
+                        Container(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Get.back();
+                                    },
+                                    child: Icon(
+                                      Icons.close,
+                                      color: bottomNavigationColor,
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              // maintitle(Strings.keepurAssets),
+                              Text(Strings.keepurAssets,
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    color: primaryTextColor,
+                                    fontFamily:
+                                        Strings.fontfamilyCabinetGrotesk,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 22,
+                                  )),
+                              Container(
+                                padding: const EdgeInsets.only(top: 20),
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 30),
+                                width: double.infinity,
+                                child: Image.asset(
+                                  color: primaryColor,
+                                  Platform.isAndroid
+                                      ? 'assets/images/ic_fingerprint.png'
+                                      : 'assets/images/ic_face_id.png',
+                                  width: 100,
+                                  height: 80,
+                                ),
+                              ),
+                              Center(
+                                child: mainDescp(Platform.isAndroid
+                                    ? Strings.unlockWithFinger
+                                    : Strings.unlockWithFcID),
+                              ),
+
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Container(
+                                  height: 40,
+
+                                  // Adjust padding as needed
+                                  child:
+                                      // controller.enableMobileView.value ?
+                                      ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                deliveryDescTextColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(5.0),
+                                              ),
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            Get.back();
+                                            isBiometricClick(true);
+                                            update();
+                                            setPin();
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                  Strings.proceed.toTitleCase(),
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontFamily:
+                                                        Strings.fontFamilyName,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 14,
+                                                  )),
+                                              Image.asset(
+                                                "assets/images/arrow_right.png",
+                                                height: 20,
+                                              )
+                                            ],
+                                          ))),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Get.back();
+                                  isBiometricClick(false);
+                                  update();
+                                  setPin();
+                                },
+                                child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: EdgeInsets.only(bottom: 20),
+                                    height: 40,
+                                    child: Center(
+                                        child: Text('Not Now',
+                                            style: TextStyle(
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              color: bottomNavigationColor,
+                                              fontFamily:
+                                                  Strings.fontFamilyName,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 14,
+                                            )))),
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    );
                   },
-                  child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.only(bottom: 20),
-                      height: 40,
-                      child: Center(
-                          child: Text('Not Now',
-                              style: TextStyle(
-                                color: primaryTextColor,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              )))),
-                )
-              ],
+                );
+              },
             ),
           ),
-        ); // Show custom popup
+        );
       },
     );
   }
@@ -638,25 +831,28 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   void fetchPassbookDetails() async {
-    SignInProvider().getPassbookDetails().then((value) {
-      try {
-        var jsonMap = jsonDecode(value);
+    // SignInProvider().getPassbookDetails().then((value) {
+    //   try {
+    //     var jsonMap = jsonDecode(value);
+    //
+    //     var details = PassbookDetailsModel.fromJson(jsonMap);
+    //     fetchPersonalDetails();
+    //     fetchCustomerDetails();
+    //   } catch (e) {
+    //     DialogHelper.dismissLoader();
+    //     PrintLogs.printException(e);
+    //   }
+    // }, onError: (error) {
+    //   DialogHelper.dismissLoader();
+    //   if (error is UnProcessableEntity) {
+    //     existentCustomer();
+    //   } else {
+    //     ErrorHandling.handleErrors(error);
+    //   }
+    // });
 
-        var details = PassbookDetailsModel.fromJson(jsonMap);
-        fetchPersonalDetails();
-        fetchCustomerDetails();
-      } catch (e) {
-        DialogHelper.dismissLoader();
-        PrintLogs.printException(e);
-      }
-    }, onError: (error) {
-      DialogHelper.dismissLoader();
-      if (error is UnProcessableEntity) {
-        existentCustomer();
-      } else {
-        ErrorHandling.handleErrors(error);
-      }
-    });
+
+
   }
 
   void existentCustomer() async {
@@ -771,6 +967,8 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   void signUp() async {
     DialogHelper.showLoading();
+    isOTPError(false);
+    update();
     SignInProvider()
         .signUp(
       firstNameController.text.toString(),
@@ -797,7 +995,21 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       if (error is InvalidInputException) {
         otpTextController.text = "";
       }
-      ErrorHandling.handleErrors(error);
+      if (error is UnAuthorisedException ||
+          error is SocketException ||
+          error is UnProcessableEntity) {
+        ErrorHandling.handleErrors(error);
+      } else {
+        try {
+          isOTPError(true);
+          update();
+          var jsonMap = jsonDecode(error.toString());
+          var msg = ApiMessage.fromJson(jsonMap);
+          ErrorHandling.showToast(msg.message);
+        } catch (e) {
+          ErrorHandling.showToast(Strings.somethingWentWrong);
+        }
+      }
     });
   }
 
@@ -840,7 +1052,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   Future<void> showAuthPopup(bool isForgot) async {
     var sessionDevice = SessionManager.getDeviceId();
-    var isBiometric=SessionManager.getIsBiometricAdded();
+    var isBiometric = SessionManager.getIsBiometricAdded();
     bool canCheckBiometrics = await _localAuthentication.canCheckBiometrics;
     bool isValidDevice = false;
     if (sessionDevice == DeviceUtil.instance.deviceId.toString()) {
@@ -849,9 +1061,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
     print("aut data $isBiometric $isForgot $canCheckBiometrics $isValidDevice");
 
-    if (isBiometric &&
-        canCheckBiometrics &&
-        isValidDevice) {
+    if (isBiometric && canCheckBiometrics && isValidDevice) {
       authenticateMe();
     }
   }

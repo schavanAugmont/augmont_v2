@@ -45,7 +45,8 @@ class RoundedTextField extends StatefulWidget {
 class _RoundedTextFieldState extends State<RoundedTextField> {
   @override
   Widget build(BuildContext context) {
-    return TextFieldContainer(
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
       child: TextFormField(
        //
         // enableInteractiveSelection: widget.isEnabled,
@@ -62,14 +63,25 @@ class _RoundedTextFieldState extends State<RoundedTextField> {
         validator: widget.validator,
         textCapitalization: widget.textCapitalization,
         decoration: InputDecoration(
-          border: InputBorder.none,
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              width: 0.5, //<-- SEE HERE
+              color: primaryColor,
+            ),
+          ),
           counterText: "",
           hintText: widget.hint,
           suffix: widget.suffix,
+          hintStyle: TextStyle(
+            fontFamily: Strings.fontFamilyName,
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
+            color: primaryTextColor,
+          )
         ),
         style: TextStyle(
           fontFamily: Strings.fontFamilyName,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w600,
           fontSize: 14,
           color: primaryTextColor,
         ),

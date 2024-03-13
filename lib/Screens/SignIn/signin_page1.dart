@@ -7,10 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../Network/ErrorHandling.dart';
 import '../../Utils/colors.dart';
+import '../../Utils/scaffold_view.dart';
 import '../../Utils/strings.dart';
+import '../../widgets/animated_dot.dart';
 
 class SignInPage1 extends StatefulWidget {
-
   const SignInPage1({super.key});
 
   @override
@@ -23,101 +24,190 @@ class SignInPageState1 extends State<SignInPage1> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SignInController>(builder: (controller) {
-      return SafeArea(
-          child: Scaffold(
-        bottomNavigationBar: Container(
-            height: 55,
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            // Adjust padding as needed
-            child:
-                // controller.enableMobileView.value ?
-                ElevatedButton(
-                    onPressed: controller.enableGenrateOtpButton.value
-                        ? () {
-                            controller.startTimer(false, true);
-                          }
-                        : null,
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: primaryColor),
-                    child: Text(Strings.generateOtp,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        )))
-            // : ElevatedButton(
-            //     onPressed: () {
-            //       if (controller.isCustomer) {
-            //         if (controller.enableOtpButton.value) {
-            //           controller.signIn();
-            //         } else {
-            //           ErrorHandling.showToast(Strings.enterOtp);
-            //         }
-            //       } else {
-            //         if (controller.validateBasciInformation()) {
-            //           if (controller.enableOtpButton.value) {
-            //             controller.signUp();
-            //           } else {
-            //             ErrorHandling.showToast(Strings.enterOtp);
-            //           }
-            //         }
-            //       }
-            //     },
-            //     style:
-            //         ElevatedButton.styleFrom(backgroundColor: primaryColor),
-            //     child: Text(
-            //         controller.isCustomer
-            //             ? Strings.verifyOtp
-            //             : Strings.submit,
-            //         style: TextStyle(
-            //           color: Colors.white,
-            //           fontFamily: Strings.fontFamilyName,
-            //           fontWeight: FontWeight.w600,
-            //           fontSize: 14,
-            //         )))
-            ),
-        body: SingleChildScrollView(
-          child: Padding(
+      return ScaffoldView(
+          child:
+              //     Scaffold(
+              //   bottomNavigationBar: Container(
+              //       height: 55,
+              //       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              //       // Adjust padding as needed
+              //       child:
+              //           // controller.enableMobileView.value ?
+              //           ElevatedButton(
+              //               onPressed: controller.enableGenrateOtpButton.value
+              //                   ? () {
+              //                       controller.startTimer(false, true);
+              //                     }
+              //                   : null,
+              //               style: ElevatedButton.styleFrom(
+              //                 backgroundColor: deliveryDescTextColor,
+              //                 shape: RoundedRectangleBorder(
+              //                   borderRadius: BorderRadius.all(
+              //                     Radius.circular(5.0),
+              //                   ),
+              //                 ),
+              //               ),
+              //               child: Row(
+              //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                 children: [
+              //                   Text(Strings.generateOtp,
+              //                       style: TextStyle(
+              //                         color: Colors.white,
+              //                         fontFamily: Strings.fontFamilyName,
+              //                         fontWeight: FontWeight.w600,
+              //                         fontSize: 14,
+              //                       )),
+              //                   Image.asset(
+              //                     "assets/images/arrow_right.png",
+              //                     height: 20,
+              //                   )
+              //                 ],
+              //               ))),
+              //   body: SingleChildScrollView(
+              //     child: Padding(
+              //       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              //       child: Column(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         mainAxisAlignment: MainAxisAlignment.start,
+              //         children: [
+              //           SizedBox(
+              //             height: 40,
+              //           ),
+              //           Row(
+              //             children: [
+              //               GestureDetector(
+              //                 child: Icon(
+              //                   size: 15,
+              //                   Icons.arrow_back_ios,
+              //                   color: Colors.black,
+              //                 ),
+              //                 onTap: () {
+              //                   controller.clearBackStack();
+              //                 },
+              //               ),
+              //               Spacer(),
+              //               Row(
+              //                 children: List.generate(
+              //                   3,
+              //                   (index) => buildDot(index: index, 0),
+              //                 ),
+              //               ),
+              //             ],
+              //           ),
+              //           // Container(
+              //           //   height: 200,
+              //           //   color: Colors.grey,
+              //           //   margin: EdgeInsets.symmetric(vertical: 30),
+              //           // ),
+              //           // if (controller.enableMobileView.value) const SignInMobileView(),
+              //           // if (controller.enableOtpView.value) const SignInOTPView()
+              //           SignInMobileView(),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // )
+
+              Stack(
+        children: [
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      child: Icon(
-                        size: 15,
-                        Icons.arrow_back_ios,
-                        color: Colors.black,
-                      ),
-                      onTap: () {
-                        controller.clearBackStack();
-                      },
-                    ),
-                    Spacer(),
-                    Text("Step 1 0f 3",
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ))
-                  ],
+                SizedBox(
+                  height: 30,
                 ),
                 Container(
-                  height: 200,
-                  color: Colors.grey,
-                  margin: EdgeInsets.symmetric(vertical: 30),
+                  height: 50,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        child: Icon(
+                          size: 24,
+                          Icons.arrow_back_outlined,
+                          color: bottomNavigationColor,
+                        ),
+                        onTap: () {
+                          controller.clearBackStack();
+                        },
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(Strings.back,
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: bottomNavigationColor,
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          )),
+                      Spacer(),
+                      Row(
+                        children: List.generate(
+                          3,
+                          (index) => buildDot(index: index, 0),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+                // Container(
+                //   height: 200,
+                //   color: Colors.grey,
+                //   margin: EdgeInsets.symmetric(vertical: 30),
+                // ),
                 // if (controller.enableMobileView.value) const SignInMobileView(),
                 // if (controller.enableOtpView.value) const SignInOTPView()
-                SignInMobileView()
+                SignInMobileView(),
               ],
             ),
           ),
-        ),
+        Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                      height: 55,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      // Adjust padding as needed
+                      child:
+                          // controller.enableMobileView.value ?
+                          ElevatedButton(
+                              onPressed: controller.enableGenrateOtpButton.value
+                                  ? () {
+                                      controller.startTimer(false, true);
+                                    }
+                                  : null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: deliveryDescTextColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(5.0),
+                                  ),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(Strings.generateOtp,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: Strings.fontFamilyName,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14,
+                                      )),
+                                  Image.asset(
+                                    "assets/images/arrow_right.png",
+                                    height: 20,
+                                  )
+                                ],
+                              ))))
+        ],
       ));
     });
   }

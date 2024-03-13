@@ -1,5 +1,6 @@
 import 'package:augmont_v2/Controllers/intro_controller.dart';
 import 'package:augmont_v2/Screens/SignIn/signin_page1.dart';
+import 'package:augmont_v2/Utils/scaffold_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,154 +19,117 @@ class _OnboardScreenState extends State<OnboardScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<IntroController>(builder: (controller) {
-      return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: Colors.white,
-        ),
-        backgroundColor: Colors.white,
-        body: controller.allinonboardlist.isEmpty
-            ? Container()
-            : Column(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height / 1.4,
-                    child: PageView.builder(
-                        controller: controller.pageController,
-                        onPageChanged: (value) {
-                          setState(() {
-                            controller.currentIndex = value;
-                          });
-                        },
-                        itemCount: controller.allinonboardlist.length,
-                        itemBuilder: (context, index) {
-                          return PageBuilderWidget(
-                              title: controller.allinonboardlist[index].title
-                                  .toString(),
-                              description: controller
-                                  .allinonboardlist[index].description
-                                  .toString(),
-                              imgurl: controller.allinonboardlist[index].url
-                                  .toString());
-                        }),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      controller.allinonboardlist.length,
-                      (index) => controller.buildDot(index: index),
+      return ScaffoldView(
+          child: controller.allinonboardlist.isEmpty
+              ? Container()
+              : Column(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 60, right: 10, bottom: 20),
+                      padding: EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Row(
+                            children: List.generate(
+                              controller.allinonboardlist.length,
+                              (index) => controller.buildDot(index: index),
+                            ),
+                          ),
+
+                          Spacer(),
+                          GestureDetector(
+                            child: Text("Skip",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: primaryTextColor,
+                                  fontFamily: Strings.fontFamilyName,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                )),
+                            onTap: () {
+                              controller.goToNavigation();
+                            },
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                    child: Column(
-                      children: [
-                        if (controller.currentIndex == 0)
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.65,
+                      child: PageView.builder(
+                          controller: controller.pageController,
+                          onPageChanged: (value) {
+                            setState(() {
+                              controller.currentIndex = value;
+                            });
+                          },
+                          itemCount: controller.allinonboardlist.length,
+                          itemBuilder: (context, index) {
+                            return PageBuilderWidget(
+                                title: controller.allinonboardlist[index].title
+                                    .toString(),
+                                description: controller
+                                    .allinonboardlist[index].description
+                                    .toString(),
+                                imgurl: controller.allinonboardlist[index].image
+                                    .toString());
+                          }),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                      child: Column(
+                        children: [
                           SizedBox(
                               height: 40,
                               width: double.maxFinite, // set width to maxFinite
                               child: ElevatedButton(
                                   onPressed: () {
-                                    controller.pageChanged(
-                                        controller.currentIndex + 1);
+                                    if (controller.currentIndex !=
+                                        controller.allinonboardlist.length -
+                                            1) {
+                                      controller.pageChanged(
+                                          controller.currentIndex + 1);
+                                    } else {
+                                      controller.goToNavigation();
+                                    }
                                   },
                                   style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0),
+                                        ),
+                                      ),
                                       primary: lightgreenshede1,
-                                      backgroundColor: primaryColor),
-                                  child: Text(Strings.next,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: Strings.fontFamilyName,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      )))),
-                        if (controller.currentIndex != 0)
-                          Row(
-                            children: [
-                              Expanded(
-                                  flex: 1, // set width to maxFinite
-                                  child: SizedBox(
-                                      height: 40,
-                                      child: ElevatedButton(
-                                          onPressed: () {
-                                            controller.pageChanged(
-                                                controller.currentIndex - 1);
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.white,
-                                              side: const BorderSide(
-                                                  width: 2, // the thickness
-                                                  color:
-                                                      primaryColor // the color of the border
-                                                  )),
-                                          child: Text(Strings.previous,
-                                              style: TextStyle(
-                                                color: primaryColor,
-                                                fontFamily:
-                                                    Strings.fontFamilyName,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16,
-                                              ))))),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Expanded(
-                                  flex: 1, // set width to maxFinite
-                                  child: SizedBox(
-                                      height: 40,
-                                      child: ElevatedButton(
-                                          onPressed: () {
-                                            if (controller.currentIndex !=
-                                                controller.allinonboardlist
-                                                        .length -
-                                                    1) {
-                                              controller.pageChanged(
-                                                  controller.currentIndex + 1);
-                                            }else{
-                                              controller.goToNavigation();
-                                            }
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: primaryColor),
-                                          child: Text(
-                                              controller.currentIndex !=
-                                                      controller
-                                                              .allinonboardlist
-                                                              .length -
-                                                          1
-                                                  ? Strings.next
-                                                  : Strings.getStarted,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontFamily:
-                                                    Strings.fontFamilyName,
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 16,
-                                              ))))),
-                            ],
-                          ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        GestureDetector(
-                          child: Text("Skip to Login",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: primaryTextColor,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 15,
-                              )),
-                          onTap: () {
-                            controller.goToNavigation();
-                          },
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-      );
+                                      backgroundColor: deliveryDescTextColor),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                          controller.currentIndex !=
+                                                  controller.allinonboardlist
+                                                          .length -
+                                                      1
+                                              ? Strings.next
+                                              : Strings.getStarted,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: Strings.fontFamilyName,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14,
+                                          )),
+                                      Image.asset(
+                                        "assets/images/arrow_right.png",
+                                        height: 20,
+                                      )
+                                    ],
+                                  ))),
+                        ],
+                      ),
+                    )
+                  ],
+                ));
     });
   }
 }
@@ -187,40 +151,81 @@ class PageBuilderWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
+          Center(
+              child: Container(
             margin: const EdgeInsets.only(top: 20),
-             child: Image.asset("assets/images/designf.jpg"),
+            child: Image.asset(imgurl),
             // child: FadeInImage.assetNetwork(
             //     placeholder: 'assets/images/designf.jpg', image: imgurl),
-          ),
+          )),
           const SizedBox(
             height: 20,
           ),
           //Tite Text
-          Text(title,
-              style: TextStyle(
-                color: primaryTextColor,
-                fontFamily: Strings.fontFamilyName,
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-              )),
+          // Text(title,
+          //     style: TextStyle(
+          //       color: primaryTextColor,
+          //       fontFamily: Strings.fontfamilyCabinetGrotesk,
+          //       fontWeight: FontWeight.w700,
+          //       fontSize: 30,
+          //     )),
+          RichText(
+          text: TextSpan(
+          children: getStyledTextSpan(title, "Gold"),
+          )),
           const SizedBox(
             height: 10,
           ),
           //discription
           Text(description,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
               style: TextStyle(
-                color: primaryTextColor,
+                color: Colors.black,
                 fontFamily: Strings.fontFamilyName,
-                fontWeight: FontWeight.normal,
+                fontWeight: FontWeight.w400,
                 fontSize: 14,
               ))
         ],
       ),
     );
+  }
+
+  List<InlineSpan> getStyledTextSpan(String sentence, String dynamicWord) {
+    List<InlineSpan> spans = [];
+    List<String> words = sentence.split(" ");
+
+    for (String word in words) {
+      if (word == dynamicWord ||  word == "\n$dynamicWord") {
+        // Change the style for the dynamic word
+        spans.add(
+          TextSpan(
+            text: word + " ",
+            style: TextStyle(
+                    color: primaryColor,
+                    fontFamily: Strings.fontfamilyCabinetGrotesk,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 30,
+                  ),
+          ),
+        );
+      } else {
+        spans.add(
+          TextSpan(
+            text: word + " ",
+             style: TextStyle(
+                  color: primaryTextColor,
+                  fontFamily: Strings.fontfamilyCabinetGrotesk,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 30,
+                ),
+          ),
+        );
+      }
+    }
+
+    return spans;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:augmont_v2/Utils/scaffold_view.dart';
 import 'package:augmont_v2/controllers/personalizeQuestion_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,155 +22,352 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PersonalizeQuestionController>(builder: (controller) {
-      return SafeArea(
-          child: Scaffold(
-        bottomNavigationBar: Container(
-          height: 55,
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-          // Adjust padding as needed
-          child: ElevatedButton(
-              onPressed: controller.incrementCounter,
-              style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 55.0),
-                  backgroundColor: primaryColor),
-              child: Text(Strings.next,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: Strings.fontFamilyName,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ))),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      child: const Icon(
-                        size: 15,
-                        Icons.arrow_back_ios,
-                        color: Colors.black,
-                      ),
-                      onTap: () {},
-                    ),
-                    Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        controller.goToHomeScreen();
-                      },
-                      child: Text("Skip",
-                          style: TextStyle(
-                            color: primaryTextColor,
-                            fontFamily: Strings.fontFamilyName,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 13,
-                          )),
-                    )
-                  ],
+      return  ScaffoldView(child: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 30,
                 ),
-              ),
-              if (controller.cusomerInfoQuestion!.isNotEmpty) ...[
                 Container(
-                  margin: EdgeInsets.only(top: 40, left: 20, right: 20),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          width: 2, color: kycProductBackgroundColor)),
-                  child: Column(
+                  height: 50,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        children: [
-                          Text("Personalisation Questions",
-                              style: TextStyle(
-                                color: primaryTextColor,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 12,
-                              )),
-                          Spacer(),
-                          Text(
-                              "${controller.counter + 1}/${controller.maxCount}",
-                              style: TextStyle(
-                                color: primaryTextColor,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                              )),
-                        ],
+                      GestureDetector(
+                        child: Icon(
+                          size: 24,
+                          Icons.arrow_back_outlined,
+                          color: bottomNavigationColor,
+                        ),
+                        onTap: () {
+
+                        },
                       ),
                       SizedBox(
-                        height: 10,
+                        width: 5,
                       ),
-                      LinearProgressIndicator(
-                        value: (controller.counter + 1) / controller.maxCount,
-                        backgroundColor: Colors.grey,
-                        minHeight: 5.0,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(primaryTextColor),
-                      ),
+                      Text(Strings.back,
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: bottomNavigationColor,
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          )),
+                      Spacer(),
+                      GestureDetector(
+                        onTap: () {
+                          controller.goToHomeScreen();
+                        },
+                        child: Text("Skip",
+                            style: TextStyle(
+                              color: primaryTextColor,
+                              fontFamily: Strings.fontFamilyName,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            )),
+                      )
                     ],
                   ),
                 ),
-                Container(
-                  width: MediaQuery.sizeOf(context).width,
-                  margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          width: 2, color: kycProductBackgroundColor)),
-                  child: Text(
-                      controller
-                          .cusomerInfoQuestion![controller.counter].question!,
-                      style: TextStyle(
-                        color: primaryTextColor,
-                        fontFamily: Strings.fontFamilyName,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      )),
-                ),
-                if (controller
-                        .cusomerInfoQuestion![controller.counter].option ==
-                    null)
-                  showUserInfoDialog(
-                      context,
-                      controller,
-                      controller
-                          .cusomerInfoQuestion![controller.counter].question!,
-                      controller.cusomerInfoQuestion![controller.counter].type!,
-                      controller.cusomerInfoQuestion![controller.counter].id!,
-                      controller.cusomerInfoQuestion![controller.counter]
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      if (controller.cusomerInfoQuestion!.isNotEmpty) ...[
+                        Container(
+                          margin: EdgeInsets.only(top: 20,),
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Color(0xFFF0F7FA),
+                            borderRadius: BorderRadius.circular(10)),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text("Personalisation Questions",
+                                      style: TextStyle(
+                                        color: primaryTextColor,
+                                        fontFamily: Strings.fontfamilyCabinetGrotesk,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      )),
+                                  // Spacer(),
+                                  // Text(
+                                  //     "${controller.counter + 1}/${controller.maxCount}",
+                                  //     style: TextStyle(
+                                  //       color: primaryTextColor,
+                                  //       fontFamily: Strings.fontFamilyName,
+                                  //       fontWeight: FontWeight.w500,
+                                  //       fontSize: 12,
+                                  //     )),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              LinearProgressIndicator(
+                                value: (controller.counter + 1) / controller.maxCount,
+                                backgroundColor: Colors.grey,
+                                minHeight: 5.0,
+                                valueColor:
+                                AlwaysStoppedAnimation<Color>(primaryTextColor),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.sizeOf(context).width,
+                          margin: EdgeInsets.only(top: 10),
+                          padding: EdgeInsets.all(10),
+
+                          child: Text(
+                              controller
+                                  .cusomerInfoQuestion![controller.counter].question!,
+                              style: TextStyle(
+                                color: primaryTextColor,
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.w800,
+                                fontSize: 14,
+                              )),
+                        ),
+                        if (controller
+                            .cusomerInfoQuestion![controller.counter].option ==
+                            null)
+                          showUserInfoDialog(
+                              context,
+                              controller,
+                              controller
+                                  .cusomerInfoQuestion![controller.counter].question!,
+                              controller.cusomerInfoQuestion![controller.counter].type!,
+                              controller.cusomerInfoQuestion![controller.counter].id!,
+                              controller.cusomerInfoQuestion![controller.counter]
                                   .type ==
-                              'date'
-                          ? true
-                          : false),
-                if (controller
-                        .cusomerInfoQuestion![controller.counter].option !=
-                    null)
-                  showUserInfoSingleSelectDialog(
-                      context,
-                      controller,
-                      controller
-                          .cusomerInfoQuestion![controller.counter].question!,
-                      controller.cusomerInfoQuestion![controller.counter].type!,
-                      controller
-                          .cusomerInfoQuestion![controller.counter].option!,
-                      controller.cusomerInfoQuestion![controller.counter].id!,
-                      multiple: controller
+                                  'date'
+                                  ? true
+                                  : false),
+                        if (controller
+                            .cusomerInfoQuestion![controller.counter].option !=
+                            null)
+                          showUserInfoSingleSelectDialog(
+                              context,
+                              controller,
+                              controller
+                                  .cusomerInfoQuestion![controller.counter].question!,
+                              controller.cusomerInfoQuestion![controller.counter].type!,
+                              controller
+                                  .cusomerInfoQuestion![controller.counter].option!,
+                              controller.cusomerInfoQuestion![controller.counter].id!,
+                              multiple: controller
                                   .cusomerInfoQuestion![controller.counter]
                                   .type !=
-                              'singleSelect'
-                          ? true
-                          : false)
-              ]
-            ],
+                                  'singleSelect'
+                                  ? true
+                                  : false)
+                      ]
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                  height: 55,
+                  padding:
+                  EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  // Adjust padding as needed
+                  child:
+                  // controller.enableMobileView.value ?
+                  ElevatedButton(
+                      onPressed: controller.incrementCounter,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: deliveryDescTextColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(Strings.next,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              )),
+                          Image.asset(
+                            "assets/images/arrow_right.png",
+                            height: 20,
+                          )
+                        ],
+                      ))))
+        ],
       ));
+      //   SafeArea(
+      //     child: Scaffold(
+      //   bottomNavigationBar: Container(
+      //     height: 55,
+      //     padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      //     // Adjust padding as needed
+      //     child: ElevatedButton(
+      //         onPressed: controller.incrementCounter,
+      //         style: ElevatedButton.styleFrom(
+      //             minimumSize: Size(double.infinity, 55.0),
+      //             backgroundColor: primaryColor),
+      //         child: Text(Strings.next,
+      //             style: TextStyle(
+      //               color: Colors.white,
+      //               fontFamily: Strings.fontFamilyName,
+      //               fontWeight: FontWeight.w600,
+      //               fontSize: 14,
+      //             ))),
+      //   ),
+      //   body: SingleChildScrollView(
+      //     child: Column(
+      //       crossAxisAlignment: CrossAxisAlignment.start,
+      //       mainAxisAlignment: MainAxisAlignment.start,
+      //       children: [
+      //         Padding(
+      //           padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+      //           child: Row(
+      //             children: [
+      //               GestureDetector(
+      //                 child: const Icon(
+      //                   size: 15,
+      //                   Icons.arrow_back_ios,
+      //                   color: Colors.black,
+      //                 ),
+      //                 onTap: () {},
+      //               ),
+      //               Spacer(),
+      //               GestureDetector(
+      //                 onTap: () {
+      //                   controller.goToHomeScreen();
+      //                 },
+      //                 child: Text("Skip",
+      //                     style: TextStyle(
+      //                       color: primaryTextColor,
+      //                       fontFamily: Strings.fontFamilyName,
+      //                       fontWeight: FontWeight.w600,
+      //                       fontSize: 13,
+      //                     )),
+      //               )
+      //             ],
+      //           ),
+      //         ),
+      //         if (controller.cusomerInfoQuestion!.isNotEmpty) ...[
+      //           Container(
+      //             margin: EdgeInsets.only(top: 40, left: 20, right: 20),
+      //             padding: EdgeInsets.all(10),
+      //             decoration: BoxDecoration(
+      //                 border: Border.all(
+      //                     width: 2, color: kycProductBackgroundColor)),
+      //             child: Column(
+      //               children: [
+      //                 Row(
+      //                   children: [
+      //                     Text("Personalisation Questions",
+      //                         style: TextStyle(
+      //                           color: primaryTextColor,
+      //                           fontFamily: Strings.fontfamilyCabinetGrotesk,
+      //                           fontWeight: FontWeight.w600,
+      //                           fontSize: 16,
+      //                         )),
+      //                     // Spacer(),
+      //                     // Text(
+      //                     //     "${controller.counter + 1}/${controller.maxCount}",
+      //                     //     style: TextStyle(
+      //                     //       color: primaryTextColor,
+      //                     //       fontFamily: Strings.fontFamilyName,
+      //                     //       fontWeight: FontWeight.w500,
+      //                     //       fontSize: 12,
+      //                     //     )),
+      //                   ],
+      //                 ),
+      //                 SizedBox(
+      //                   height: 10,
+      //                 ),
+      //                 LinearProgressIndicator(
+      //                   value: (controller.counter + 1) / controller.maxCount,
+      //                   backgroundColor: Colors.grey,
+      //                   minHeight: 5.0,
+      //                   valueColor:
+      //                       AlwaysStoppedAnimation<Color>(primaryTextColor),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //           Container(
+      //             width: MediaQuery.sizeOf(context).width,
+      //             margin: EdgeInsets.only(top: 10, left: 20, right: 20),
+      //             padding: EdgeInsets.all(10),
+      //             decoration: BoxDecoration(
+      //                 border: Border.all(
+      //                     width: 2, color: kycProductBackgroundColor)),
+      //             child: Text(
+      //                 controller
+      //                     .cusomerInfoQuestion![controller.counter].question!,
+      //                 style: TextStyle(
+      //                   color: primaryTextColor,
+      //                   fontFamily: Strings.fontFamilyName,
+      //                   fontWeight: FontWeight.w800,
+      //                   fontSize: 14,
+      //                 )),
+      //           ),
+      //           if (controller
+      //                   .cusomerInfoQuestion![controller.counter].option ==
+      //               null)
+      //             showUserInfoDialog(
+      //                 context,
+      //                 controller,
+      //                 controller
+      //                     .cusomerInfoQuestion![controller.counter].question!,
+      //                 controller.cusomerInfoQuestion![controller.counter].type!,
+      //                 controller.cusomerInfoQuestion![controller.counter].id!,
+      //                 controller.cusomerInfoQuestion![controller.counter]
+      //                             .type ==
+      //                         'date'
+      //                     ? true
+      //                     : false),
+      //           if (controller
+      //                   .cusomerInfoQuestion![controller.counter].option !=
+      //               null)
+      //             showUserInfoSingleSelectDialog(
+      //                 context,
+      //                 controller,
+      //                 controller
+      //                     .cusomerInfoQuestion![controller.counter].question!,
+      //                 controller.cusomerInfoQuestion![controller.counter].type!,
+      //                 controller
+      //                     .cusomerInfoQuestion![controller.counter].option!,
+      //                 controller.cusomerInfoQuestion![controller.counter].id!,
+      //                 multiple: controller
+      //                             .cusomerInfoQuestion![controller.counter]
+      //                             .type !=
+      //                         'singleSelect'
+      //                     ? true
+      //                     : false)
+      //         ]
+      //       ],
+      //     ),
+      //   ),
+      // ));
     });
   }
 
@@ -288,10 +486,8 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
       int questionId,
       {bool multiple = false}) {
     return Container(
-        margin: EdgeInsets.only(top: 20),
-        padding: EdgeInsets.all(20),
-        color: kycProductBackgroundColor,
-        height: MediaQuery.of(context).size.height,
+        padding: EdgeInsets.all(10),
+        height: MediaQuery.of(context).size.height*0.55,
         child: ListView.builder(
             //here your code
             scrollDirection: Axis.vertical,

@@ -15,18 +15,10 @@ class TextFieldContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.only(bottom: 10),
       width: double.infinity,
-      decoration: BoxDecoration(
-        /*boxShadow: const [
-          BoxShadow(
-            offset: Offset(0, 1),
-            color: Colors.black12,
-            blurRadius: 1,
-          )
-        ],*/
-        color: kycProductBackgroundColor,
-        borderRadius: BorderRadius.circular(5.0),
+      decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(width: 0.5,color: primaryColor)),
       ),
       child: child,
     );

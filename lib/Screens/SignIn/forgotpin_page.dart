@@ -1,4 +1,5 @@
 import 'package:augmont_v2/Controllers/sing_in_controller.dart';
+import 'package:augmont_v2/Utils/scaffold_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +10,11 @@ import '../../Utils/Validator.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
 import '../../controllers/forgotpin_controller.dart';
+import '../../widgets/animated_dot.dart';
 import 'Components/OtpView.dart';
 import 'Components/SignInComponents.dart';
 
 class ForgotPinPage extends StatefulWidget {
-
   const ForgotPinPage({super.key});
 
   @override
@@ -26,81 +27,58 @@ class ForgotPinPageState extends State<ForgotPinPage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ForgotPinController>(builder: (controller) {
-      return SafeArea(
-          child: Scaffold(
-        bottomNavigationBar: Container(
-            height: 55,
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            // Adjust padding as needed
-            child: controller.enableMobileView.value
-                ? ElevatedButton(
-                    onPressed: controller.enableGenrateOtpButton.value
-                        ? () {
-                            controller.startTimer(false, true);
-                          }
-                        : null,
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: primaryColor),
-                    child: Text(Strings.generateOtp,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        )))
-                : ElevatedButton(
-                    onPressed: () {
-                      if (controller.enableOtpButton.value) {
-                        controller.verifyOTP();
-                      } else {
-                        ErrorHandling.showToast(Strings.enterOtp);
-                      }
-                    },
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: primaryColor),
-                    child: Text(Strings.verifyOtp,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        )))),
-        body: SingleChildScrollView(
-          child: Padding(
+      return ScaffoldView(child: Stack(
+        children: [
+          Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      child: Icon(
-                        size: 15,
-                        Icons.arrow_back_ios,
-                        color: Colors.black,
-                      ),
-                      onTap: () {
-                        controller.clearBackStack();
-                      },
-                    ),
-                    Spacer(),
-                    Text(
-                        controller.enableMobileView.value
-                            ? "Step 1 0f 3"
-                            : "Step 2 0f 3",
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ))
-                  ],
+                SizedBox(
+                  height: 30,
                 ),
                 Container(
-                  height: 200,
-                  color: Colors.grey,
-                  margin: EdgeInsets.symmetric(vertical: 30),
+                  height: 50,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        child: Icon(
+                          size: 24,
+                          Icons.arrow_back_outlined,
+                          color: bottomNavigationColor,
+                        ),
+                        onTap: () {
+                          controller.clearBackStack();
+                        },
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(Strings.back,
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: bottomNavigationColor,
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          )),
+                      Spacer(),
+                      Row(
+                        children: List.generate(
+                          3,
+                              (index) => buildDot(
+                              index: index,
+                              controller.enableMobileView.value ? 0 : 1),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 100,
                 ),
                 if (controller.enableMobileView.value)
                   ForgotMobileView(controller),
@@ -108,9 +86,194 @@ class ForgotPinPageState extends State<ForgotPinPage> {
               ],
             ),
           ),
-        ),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                  height: 55,
+                  padding:
+                  EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  // Adjust padding as needed
+                  child: controller.enableMobileView.value
+                      ? ElevatedButton(
+                      onPressed: controller.enableGenrateOtpButton.value
+                          ? () {
+                        controller.startTimer(false, true);
+                      }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: deliveryDescTextColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(Strings.generateOtp,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              )),
+                          Image.asset(
+                            "assets/images/arrow_right.png",
+                            height: 20,
+                          )
+                        ],
+                      ))
+                      : ElevatedButton(
+                      onPressed: () {
+                        if (controller.enableOtpButton.value) {
+                          controller.verifyOTP();
+                        } else {
+                          ErrorHandling.showToast(Strings.enterOtp);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: deliveryDescTextColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(Strings.verifyOtp,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              )),
+                          Image.asset(
+                            "assets/images/arrow_right.png",
+                            height: 20,
+                          )
+                        ],
+                      ))
+
+                // ElevatedButton(
+                //     onPressed: controller.enableGenrateOtpButton.value
+                //         ? () {
+                //       controller.startTimer(false, true);
+                //     }
+                //         : null,
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: deliveryDescTextColor,
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.all(
+                //           Radius.circular(5.0),
+                //         ),
+                //       ),
+                //     ),
+                //     child: Row(
+                //       mainAxisAlignment:
+                //       MainAxisAlignment.spaceBetween,
+                //       children: [
+                //         Text(Strings.generateOtp,
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontFamily: Strings.fontFamilyName,
+                //               fontWeight: FontWeight.w600,
+                //               fontSize: 14,
+                //             )),
+                //         Image.asset(
+                //           "assets/images/arrow_right.png",
+                //           height: 20,
+                //         )
+                //       ],
+                //     ))
+              ))
+        ],
       ));
     });
+
+    //     SafeArea(
+    //       child: Scaffold(
+    //     bottomNavigationBar: Container(
+    //         height: 55,
+    //         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+    //         // Adjust padding as needed
+    //         child: controller.enableMobileView.value
+    //             ? ElevatedButton(
+    //                 onPressed: controller.enableGenrateOtpButton.value
+    //                     ? () {
+    //                         controller.startTimer(false, true);
+    //                       }
+    //                     : null,
+    //                 style:
+    //                     ElevatedButton.styleFrom(backgroundColor: primaryColor),
+    //                 child: Text(Strings.generateOtp,
+    //                     style: TextStyle(
+    //                       color: Colors.white,
+    //                       fontFamily: Strings.fontFamilyName,
+    //                       fontWeight: FontWeight.w600,
+    //                       fontSize: 14,
+    //                     )))
+    //             : ElevatedButton(
+    //                 onPressed: () {
+    //                   if (controller.enableOtpButton.value) {
+    //                     controller.verifyOTP();
+    //                   } else {
+    //                     ErrorHandling.showToast(Strings.enterOtp);
+    //                   }
+    //                 },
+    //                 style:
+    //                     ElevatedButton.styleFrom(backgroundColor: primaryColor),
+    //                 child: Text(Strings.verifyOtp,
+    //                     style: TextStyle(
+    //                       color: Colors.white,
+    //                       fontFamily: Strings.fontFamilyName,
+    //                       fontWeight: FontWeight.w600,
+    //                       fontSize: 14,
+    //                     )))),
+    //     body: SingleChildScrollView(
+    //       child: Padding(
+    //         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+    //         child: Column(
+    //           crossAxisAlignment: CrossAxisAlignment.start,
+    //           mainAxisAlignment: MainAxisAlignment.start,
+    //           children: [
+    //             Row(
+    //               children: [
+    //                 GestureDetector(
+    //                   child: Icon(
+    //                     size: 15,
+    //                     Icons.arrow_back_ios,
+    //                     color: Colors.black,
+    //                   ),
+    //                   onTap: () {
+    //                     controller.clearBackStack();
+    //                   },
+    //                 ),
+    //                 Spacer(),
+    //                 Text(
+    //                     controller.enableMobileView.value
+    //                         ? "Step 1 0f 3"
+    //                         : "Step 2 0f 3",
+    //                     style: TextStyle(
+    //                       color: primaryTextColor,
+    //                       fontFamily: Strings.fontFamilyName,
+    //                       fontWeight: FontWeight.w600,
+    //                       fontSize: 13,
+    //                     ))
+    //               ],
+    //             ),
+    //             SizedBox(height: 100,),
+    //             if (controller.enableMobileView.value)
+    //               ForgotMobileView(controller),
+    //             if (controller.enableOtpView.value) ForgotOtpView(controller)
+    //           ],
+    //         ),
+    //       ),
+    //     ),
+    //   ));
+    // });
   }
 
   Widget ForgotMobileView(ForgotPinController controller) {
@@ -118,7 +281,7 @@ class ForgotPinPageState extends State<ForgotPinPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        maintitle(Strings.enterPhoneNo),
+        maintitleCabin("Enter Phone \nNumber"),
         const SizedBox(
           height: 5,
         ),
@@ -131,6 +294,9 @@ class ForgotPinPageState extends State<ForgotPinPage> {
           height: 10,
         ),
         Container(
+          decoration: const BoxDecoration(
+              border:
+                  Border(bottom: BorderSide(width: 0.5, color: primaryColor))),
           padding: const EdgeInsets.symmetric(
             horizontal: 10,
           ),
@@ -140,7 +306,6 @@ class ForgotPinPageState extends State<ForgotPinPage> {
               Container(
                 height: 50,
                 width: 60,
-                color: kycProductBackgroundColor,
                 child: Center(
                     child: Text(
                   "\u{1F1EE}\u{1F1F3} ${Strings.countryCode}",
@@ -152,12 +317,15 @@ class ForgotPinPageState extends State<ForgotPinPage> {
                   ),
                 )),
               ),
-              const SizedBox(
-                width: 10,
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 5),
+                height: 25,
+                width: 1,
+                color: shadowColor,
               ),
               Expanded(
                 child: TextFormField(
-                  enabled: false,
+                  enabled:false,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
@@ -178,14 +346,14 @@ class ForgotPinPageState extends State<ForgotPinPage> {
                   },
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    fillColor: kycProductBackgroundColor,
+                    fillColor: Colors.white,
                     filled: true,
                     counterText: "",
                     hintText: Strings.enterMobileNumber,
                   ),
                   style: TextStyle(
                     fontFamily: Strings.fontFamilyName,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     fontSize: 14,
                     color: primaryTextColor,
                   ),
@@ -203,7 +371,7 @@ class ForgotPinPageState extends State<ForgotPinPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        if (controller.isCustomer) maintitle(Strings.otpVerification),
+        if (controller.isCustomer) maintitleCabin("OTP \nVerification"),
         SizedBox(
           height: 5,
         ),
@@ -223,7 +391,7 @@ class ForgotPinPageState extends State<ForgotPinPage> {
                 decoration: TextDecoration.underline,
                 color: primaryTextColor,
                 fontFamily: Strings.fontFamilyName,
-                fontWeight: FontWeight.normal,
+                fontWeight: FontWeight.w600,
                 fontSize: 13,
               ),
             ),
@@ -249,6 +417,7 @@ class ForgotPinPageState extends State<ForgotPinPage> {
         OtpView(
           controller: controller.otpTextController,
           otpLength: 6,
+          isError: false,
           isobscureText: false,
           onChanged: (pin) async {
             if (Validator.validateOtp(pin)) {

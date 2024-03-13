@@ -34,9 +34,12 @@ class _SignInOtpViewState extends State<SignInOTPView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          if (controller.isCustomer) maintitle(Strings.otpVerification),
+          SizedBox(
+            height: 100,
+          ),
+          if (controller.isCustomer) maintitleCabin("OTP \nVerification"),
           if (!controller.isCustomer) ...[
-            maintitle(Strings.personalInformation),
+            maintitleCabin(Strings.personalInformation),
             SizedBox(
               height: 5,
             ),
@@ -117,42 +120,42 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                   fontFamily: Strings.fontFamilyName,
                 ),
               ),
-            const SizedBox(
-              height: 10,
-            ),
-            subtitle(Strings.emailId),
-            const SizedBox(
-              height: 10,
-            ),
-            RoundedTextField(
-              onChanged: (value) {
-                // controller.isFirstNameError(value.isEmpty);
-                // controller.update();
-              },
-              keyboardType: TextInputType.emailAddress,
-              validator: (value) {
-                return null;
-              },
-              controller: controller.emailController,
-              inputFormatters: <TextInputFormatter>[],
-              isEnabled: true,
-              hint: Strings.enterEmailId,
-              textInputAction: TextInputAction.next,
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            if (controller.isEmailError.value)
-              Text(
-                Strings.emailInvalid,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                  fontFamily: Strings.fontFamilyName,
-                ),
-              ),
+            // const SizedBox(
+            //   height: 10,
+            // ),
+            // subtitle(Strings.emailId),
+            // const SizedBox(
+            //   height: 10,
+            // ),
+            // RoundedTextField(
+            //   onChanged: (value) {
+            //     // controller.isFirstNameError(value.isEmpty);
+            //     // controller.update();
+            //   },
+            //   keyboardType: TextInputType.emailAddress,
+            //   validator: (value) {
+            //     return null;
+            //   },
+            //   controller: controller.emailController,
+            //   inputFormatters: <TextInputFormatter>[],
+            //   isEnabled: true,
+            //   hint: Strings.enterEmailId,
+            //   textInputAction: TextInputAction.next,
+            // ),
+            // const SizedBox(
+            //   height: 5,
+            // ),
+            // if (controller.isEmailError.value)
+            //   Text(
+            //     Strings.emailInvalid,
+            //     textAlign: TextAlign.start,
+            //     style: TextStyle(
+            //       color: Colors.red,
+            //       fontWeight: FontWeight.w600,
+            //       fontSize: 12,
+            //       fontFamily: Strings.fontFamilyName,
+            //     ),
+            //   ),
             SizedBox(
               height: 10,
             ),
@@ -161,7 +164,7 @@ class _SignInOtpViewState extends State<SignInOTPView> {
               height: 10,
             ),
             SizedBox(
-              height: 50,
+              height: 40,
               child: GestureDetector(
                 onTap: () {
                   _showDropDownBottomSheet(context, true, controller,
@@ -177,7 +180,9 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                             : Strings.selectState,
                         style: TextStyle(
                           fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: controller.isStateSelected.value
+                              ? FontWeight.w600
+                              : FontWeight.w500,
                           fontSize: 14,
                           color: controller.isStateSelected.value
                               ? primaryTextColor
@@ -216,7 +221,7 @@ class _SignInOtpViewState extends State<SignInOTPView> {
               height: 10,
             ),
             SizedBox(
-              height: 50,
+              height: 40,
               child: GestureDetector(
                 onTap: () {
                   if (controller.isStateSelected.value) {
@@ -240,7 +245,9 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                             : Strings.selectCity,
                         style: TextStyle(
                           fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: controller.isCitySelected.value
+                              ? FontWeight.w600
+                              : FontWeight.w500,
                           fontSize: 14,
                           color: controller.isCitySelected.value
                               ? primaryTextColor
@@ -271,30 +278,30 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                   fontFamily: Strings.fontFamilyName,
                 ),
               ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(Strings.reference),
-            const SizedBox(
-              height: 10,
-            ),
-            RoundedTextField(
-              onChanged: (value) {
-                // controller.isFirstNameError(value.isEmpty);
-                // controller.update();
-              },
-              keyboardType: TextInputType.text,
-              validator: (value) {
-                return null;
-              },
-              controller: controller.refernceController,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z]")),
-              ],
-              isEnabled: true,
-              hint: Strings.referencedesc,
-              textInputAction: TextInputAction.next,
-            ),
+            // const SizedBox(
+            //   height: 10,
+            // ),
+            // Text(Strings.reference),
+            // const SizedBox(
+            //   height: 10,
+            // ),
+            // RoundedTextField(
+            //   onChanged: (value) {
+            //     // controller.isFirstNameError(value.isEmpty);
+            //     // controller.update();
+            //   },
+            //   keyboardType: TextInputType.text,
+            //   validator: (value) {
+            //     return null;
+            //   },
+            //   controller: controller.refernceController,
+            //   inputFormatters: <TextInputFormatter>[
+            //     FilteringTextInputFormatter.allow(RegExp(r"[a-zA-Z]")),
+            //   ],
+            //   isEnabled: true,
+            //   hint: Strings.referencedesc,
+            //   textInputAction: TextInputAction.next,
+            // ),
             SizedBox(
               height: 20,
             )
@@ -318,7 +325,7 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                   decoration: TextDecoration.underline,
                   color: primaryTextColor,
                   fontFamily: Strings.fontFamilyName,
-                  fontWeight: FontWeight.normal,
+                  fontWeight: FontWeight.w600,
                   fontSize: 13,
                 ),
               ),
@@ -339,9 +346,10 @@ class _SignInOtpViewState extends State<SignInOTPView> {
             ],
           )),
           SizedBox(
-            height: 30,
+            height: 10,
           ),
           OtpView(
+            isError: false,
             controller: controller.otpTextController,
             otpLength: 6,
             isobscureText: false,
@@ -488,6 +496,9 @@ class _SignInOtpViewState extends State<SignInOTPView> {
                 ],
               )
             ],
+          ),
+          SizedBox(
+            height: 100,
           )
         ],
       );

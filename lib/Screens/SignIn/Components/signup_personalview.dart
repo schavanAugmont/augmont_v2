@@ -331,6 +331,7 @@ class _SignUpPersonalViewState extends State<SignUpPersonalView> {
             height: 15,
           ),
           OtpView(
+            isError: false,
             controller: controller.otpTextController,
             otpLength: 6,
             isobscureText: false,

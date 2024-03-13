@@ -160,9 +160,9 @@ class ErrorHandling {
       margin: const EdgeInsets.all(20),
       messageText: Row(
         children: [
-          const Icon(Icons.check_circle_rounded, size: 24, color: Colors.white54),
+          const Icon(Icons.check_circle_rounded, size: 24, color: Colors.white),
           const SizedBox(width: 12),
-          Flexible(child: Text(msg, textAlign: TextAlign.start)),
+          Flexible(child: Text(msg, textAlign: TextAlign.start,style: TextStyle(color: Colors.white),)),
         ],
       ),
     ));
