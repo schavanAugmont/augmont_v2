@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:augmont_v2/Bindings/signin_binding.dart';
 import 'package:augmont_v2/Screens/SignIn/forgotpin_page.dart';
 import 'package:augmont_v2/Screens/SignIn/personalise_quest_page.dart';
-import 'package:augmont_v2/Screens/SignIn/signin_page1.dart';
-import 'package:augmont_v2/Utils/scaffold_view.dart';
 import 'package:augmont_v2/bindings/personalizedqus_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:otp_autofill/otp_autofill.dart';
 import '../Bindings/main_screen_binding.dart';
 import '../Models/CustomerDetailsModel.dart';
 import '../Models/PassbookDetailsModel.dart';
@@ -26,11 +24,11 @@ import '../Screens/Main/main_screen.dart';
 import '../Screens/SignIn/Components/SignInComponents.dart';
 import '../Screens/SignIn/signin_page2.dart';
 import '../Screens/SignIn/signin_page3.dart';
-import '../Utils/Validator.dart';
 import '../Utils/colors.dart';
 import '../Utils/device_util.dart';
 import '../Utils/dialog_helper.dart';
 import '../Utils/print_logs.dart';
+import '../Utils/scaffold_view.dart';
 import '../Utils/session_manager.dart';
 import '../Utils/strings.dart';
 import '../bindings/forgotpin_binding.dart';
@@ -64,8 +62,9 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   List<StateModel> listOfCities = [];
 
   //late final TextEditingController otpTextController;
-  //late OTPTextEditController otpTextController;
-  late TextEditingController otpTextController;
+  late OTPTextEditController otpTextController;
+
+  // late TextEditingController otpTextController;
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
   late TextEditingController emailController;
@@ -75,8 +74,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   late TextEditingController searchController;
   late TextEditingController mobileTextController = TextEditingController();
   late GlobalKey<FormState> formKey;
-
-  //late OTPInteractor otpInteractor;
+  late OTPInteractor otpInteractor;
 
   late String referenceCode;
 
@@ -120,9 +118,26 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   @override
   Future<void> onInit() async {
+    otpInteractor = OTPInteractor();
+    getSignature();
+    otpTextController = OTPTextEditController(
+        codeLength: 6,
+        onCodeReceive: (code) async {
+          PrintLogs.printData('Your Application receive code - $code');
+          try {
+            otpTextController.text = code;
+            otpOnClick(Get.context!);
+
+          } catch (e) {
+            PrintLogs.printException(e);
+          }
+          await otpTextController.stopListen();
+        },
+        otpInteractor: otpInteractor);
+
     pinTextController = TextEditingController();
     reenterpinTextController = TextEditingController();
-    otpTextController = TextEditingController();
+    // otpTextController = OTPTextEditController();
     firstNameController = TextEditingController();
     lastNameController = TextEditingController();
     stateController = TextEditingController();
@@ -247,8 +262,9 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       _authorized = 'Authenticating';
       update();
       authenticated = await auth.authenticate(
-        localizedReason:
-            'Scan your fingerprint (or face or whatever) to authenticate',
+        localizedReason: Platform.isAndroid
+            ? 'Scan your fingerprint to authenticate'
+            : 'Scan your face to authenticate',
         options: const AuthenticationOptions(
           stickyAuth: true,
           biometricOnly: true,
@@ -274,7 +290,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     update();
   }
 
-  void signIn() async {
+  void signIn(BuildContext context) async {
     DialogHelper.showLoading();
     model = null;
     var mobileNo = mobileTextController.text.toString();
@@ -299,10 +315,10 @@ class SignInController extends GetxController with StateMixin<dynamic> {
         update();
         if (model!.customerDetails!.isPinAdded! && isCustomer) {
           ErrorHandling.showToast("User logged in successfully");
-          navigateToPinSetup();
+         loginSuccessDailog(context);
         } else if (!model!.customerDetails!.isPinAdded! && isCustomer) {
           ErrorHandling.showToast("User logged in successfully");
-          navigateToPinSetup();
+        loginSuccessDailog(context);
         } else if (!model!.customerDetails!.isPinAdded! && !isCustomer) {
           navigateToBasicDetails();
         }
@@ -312,7 +328,12 @@ class SignInController extends GetxController with StateMixin<dynamic> {
         otpTextController.text = "";
       }
       DialogHelper.dismissLoader();
-      ErrorHandling.handleErrors(error);
+      if (error is BadRequestException) {
+        var object = jsonDecode(error.toString());
+        ErrorHandling.showToast(object['message']);
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
     });
   }
 
@@ -377,9 +398,13 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   Future<void> sendOtp(String mobileNo, bool isVoice, bool isOtpView) async {
     SignInProvider().generateOtp(mobileNo, isVoice).then(
-      (value) {
-        var jsonMap = jsonDecode(value);
+      (value) async {
+        await otpTextController.stopListen();
 
+        getSignature();
+        startListening();
+
+        var jsonMap = jsonDecode(value);
         var model = GenerateOtpModel.fromJson(jsonMap);
         referenceCode = model.referenceCode;
         isCustomer = model.isCustomer;
@@ -406,13 +431,13 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   @override
   Future<void> onClose() async {
-    //  await otpTextController.stopListen();
+      await otpTextController.stopListen();
     super.onClose();
   }
 
   @override
   Future<void> dispose() async {
-    //await otpTextController.stopListen();
+    await otpTextController.stopListen();
     countdownTimerController.dispose();
     mobileTextController.dispose();
     cancelTimer();
@@ -438,11 +463,11 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       isFirstNameError(false);
       isLastNameError(true);
       isValid = false;
-    // } else if (!Validator.validateEmailAddress(emailController.text.trim())) {
-    //   isLastNameError(false);
-    //   isFirstNameError(false);
-    //   isEmailError(true);
-    //   isValid = false;
+      // } else if (!Validator.validateEmailAddress(emailController.text.trim())) {
+      //   isLastNameError(false);
+      //   isFirstNameError(false);
+      //   isEmailError(true);
+      //   isValid = false;
     } else if (selectedState.trim().isEmpty) {
       isLastNameError(false);
       isFirstNameError(false);
@@ -507,103 +532,6 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   void showBiomatricPopup(BuildContext context) {
-    // showDialog(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return Dialog(
-    //       backgroundColor: Colors.white,
-    //       surfaceTintColor: Colors.transparent,
-    //       shape: RoundedRectangleBorder(
-    //         borderRadius: BorderRadius.circular(10.0),
-    //       ),
-    //       child: Container(
-    //         padding: const EdgeInsets.all(10.0),
-    //         child: Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           mainAxisAlignment: MainAxisAlignment.center,
-    //           crossAxisAlignment: CrossAxisAlignment.center,
-    //           children: [
-    //             Container(
-    //               padding: const EdgeInsets.only(top: 20),
-    //               margin: const EdgeInsets.symmetric(vertical: 30),
-    //               width: double.infinity,
-    //               child: Image.asset(
-    //                 Platform.isAndroid
-    //                     ? 'assets/images/ic_fingerprint.png'
-    //                     : 'assets/images/ic_face_id.png',
-    //                 width: 80,
-    //                 height: 80,
-    //               ),
-    //             ),
-    //             mainDescp(Platform.isAndroid
-    //                 ? Strings.unlockWithFinger
-    //                 : Strings.unlockWithFcID),
-    //             SizedBox(
-    //               height: 5,
-    //             ),
-    //             // maintitle(Strings.keepurAssets),
-    //             Text(Strings.keepurAssets,
-    //                 textAlign: TextAlign.center,
-    //                 style: TextStyle(
-    //                   color: primaryTextColor,
-    //                   fontFamily: Strings.fontFamilyName,
-    //                   fontWeight: FontWeight.w600,
-    //                   fontSize: 14,
-    //                 )),
-    //             SizedBox(
-    //               height: 10,
-    //             ),
-    //             GestureDetector(
-    //                 onTap: () {
-    //                   isBiometricClick(true);
-    //                   update();
-    //                   Get.back();
-    //                   setPin();
-    //                 },
-    //                 child: Container(
-    //                     width: MediaQuery.of(context).size.width,
-    //                     decoration: BoxDecoration(
-    //                       color: Colors.white,
-    //                       border: Border.all(color: shadowColor),
-    //                       borderRadius: BorderRadius.circular(5.0),
-    //                     ),
-    //                     margin: EdgeInsets.only(bottom: 10, top: 10),
-    //                     height: 40,
-    //                     child: Center(
-    //                         child: Text('Proceed',
-    //                             style: TextStyle(
-    //                               color: primaryTextColor,
-    //                               fontFamily: Strings.fontFamilyName,
-    //                               fontWeight: FontWeight.w600,
-    //                               fontSize: 14,
-    //                             ))))),
-    //             GestureDetector(
-    //               onTap: () {
-    //                 isBiometricClick(false);
-    //                 update();
-    //                 Get.back();
-    //                 setPin();
-    //               },
-    //               child: Container(
-    //                   width: MediaQuery.of(context).size.width,
-    //                   margin: EdgeInsets.only(bottom: 20),
-    //                   height: 40,
-    //                   child: Center(
-    //                       child: Text('Not Now',
-    //                           style: TextStyle(
-    //                             color: primaryTextColor,
-    //                             fontFamily: Strings.fontFamilyName,
-    //                             fontWeight: FontWeight.w600,
-    //                             fontSize: 14,
-    //                           )))),
-    //             )
-    //           ],
-    //         ),
-    //       ),
-    //     ); // Show custom popup
-    //   },
-    // );
-
     showModalBottomSheet(
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
@@ -801,7 +729,12 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       listOfStates =
           List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
     }, onError: (error) {
-      ErrorHandling.handleErrors(error);
+      if (error is BadRequestException) {
+        var object = jsonDecode(error.toString());
+        ErrorHandling.showToast(object['message']);
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
     });
   }
 
@@ -814,7 +747,12 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       listOfCities =
           List<StateModel>.from(data.map((x) => StateModel.fromJson(x)));
     }, onError: (error) {
-      ErrorHandling.handleErrors(error);
+      if (error is BadRequestException) {
+        var object = jsonDecode(error.toString());
+        ErrorHandling.showToast(object['message']);
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
     });
   }
 
@@ -826,33 +764,40 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       SessionManager.setCustomerId(details.data!.id.toString());
       //UserinfoUpdateService.userInfo.getOccupation();
     }, onError: (error) {
-      ErrorHandling.handleErrors(error);
+      if (error is BadRequestException) {
+        var object = jsonDecode(error.toString());
+        ErrorHandling.showToast(object['message']);
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
     });
   }
 
   void fetchPassbookDetails() async {
-    // SignInProvider().getPassbookDetails().then((value) {
-    //   try {
-    //     var jsonMap = jsonDecode(value);
-    //
-    //     var details = PassbookDetailsModel.fromJson(jsonMap);
-    //     fetchPersonalDetails();
-    //     fetchCustomerDetails();
-    //   } catch (e) {
-    //     DialogHelper.dismissLoader();
-    //     PrintLogs.printException(e);
-    //   }
-    // }, onError: (error) {
-    //   DialogHelper.dismissLoader();
-    //   if (error is UnProcessableEntity) {
-    //     existentCustomer();
-    //   } else {
-    //     ErrorHandling.handleErrors(error);
-    //   }
-    // });
+    SignInProvider().getPassbookDetails().then((value) {
+      try {
+        var jsonMap = jsonDecode(value);
 
-
-
+        var details = PassbookDetailsModel.fromJson(jsonMap);
+        fetchPersonalDetails();
+        fetchCustomerDetails();
+      } catch (e) {
+        DialogHelper.dismissLoader();
+        PrintLogs.printException(e);
+      }
+    }, onError: (error) {
+      DialogHelper.dismissLoader();
+      if (error is UnProcessableEntity) {
+        existentCustomer();
+      } else {
+        if (error is BadRequestException) {
+          var object = jsonDecode(error.toString());
+          ErrorHandling.showToast(object['message']);
+        } else {
+          ErrorHandling.handleErrors(error);
+        }
+      }
+    });
   }
 
   void existentCustomer() async {
@@ -862,7 +807,12 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       fetchPassbookDetails();
     }, onError: (error) {
       DialogHelper.dismissLoader();
-      ErrorHandling.handleErrors(error);
+      if (error is BadRequestException) {
+        var object = jsonDecode(error.toString());
+        ErrorHandling.showToast(object['message']);
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
     });
   }
 
@@ -875,15 +825,29 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       var details = CustomerDetailsModel.fromJson(jsonMap);
       if (details.result.data.cityId?.id == -1) {
       } else {
-        Get.offAll(
-          () => const MainScreen(),
-          binding: MainScreenBinding(),
-          transition: Transition.rightToLeft,
-        );
+        if(isCustomer){
+          Get.offAll(
+                () => const MainScreen(),
+            binding: MainScreenBinding(),
+            transition: Transition.rightToLeft,
+          );
+        }else{
+          Get.offAll(
+                () => PersonalizeQuestionScreen(),
+            binding: PersonalizedQuesBiding(),
+            transition: Transition.rightToLeft,
+          );
+        }
+
       }
     }, onError: (error) {
       DialogHelper.dismissLoader();
-      ErrorHandling.handleErrors(error);
+      if (error is BadRequestException) {
+        var object = jsonDecode(error.toString());
+        ErrorHandling.showToast(object['message']);
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
     });
   }
 
@@ -916,7 +880,12 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       }
     }, onError: (error) {
       DialogHelper.dismissLoader();
-      ErrorHandling.handleErrors(error);
+      if (error is BadRequestException) {
+        var object = jsonDecode(error.toString());
+        ErrorHandling.showToast(object['message']);
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
     });
   }
 
@@ -938,7 +907,12 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       }
     }, onError: (error) {
       DialogHelper.dismissLoader();
-      ErrorHandling.handleErrors(error);
+      if (error is BadRequestException) {
+        var object = jsonDecode(error.toString());
+        ErrorHandling.showToast(object['message']);
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
     });
   }
 
@@ -961,11 +935,16 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       }
     }, onError: (error) {
       DialogHelper.dismissLoader();
-      ErrorHandling.handleErrors(error);
+      if (error is BadRequestException) {
+        var object = jsonDecode(error.toString());
+        ErrorHandling.showToast(object['message']);
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
     });
   }
 
-  void signUp() async {
+  void signUp(BuildContext context) async {
     DialogHelper.showLoading();
     isOTPError(false);
     update();
@@ -989,7 +968,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       isPinAdded(false);
       update();
       ErrorHandling.showToast("User register successfully");
-      navigateToPinSetup();
+     loginSuccessDailog(context);
     }, onError: (error) {
       DialogHelper.dismissLoader();
       if (error is InvalidInputException) {
@@ -1022,7 +1001,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
   }
 
   Future<void> enableForgotPIN() async {
-    await Get.offAll(
+    await Get.off(
       () => const ForgotPinPage(),
       binding: ForgotpinBiding(),
       transition: Transition.rightToLeft,
@@ -1046,7 +1025,12 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       }
     }, onError: (error) {
       DialogHelper.dismissLoader();
-      ErrorHandling.handleErrors(error);
+      if (error is BadRequestException) {
+        var object = jsonDecode(error.toString());
+        ErrorHandling.showToast(object['message']);
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
     });
   }
 
@@ -1062,7 +1046,88 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     print("aut data $isBiometric $isForgot $canCheckBiometrics $isValidDevice");
 
     if (isBiometric && canCheckBiometrics && isValidDevice) {
-      authenticateMe();
+      Future.delayed(const Duration(seconds: 2), () async {
+        authenticateMe();
+      });
+    }
+  }
+
+  void startListening() {
+    if (Platform.isAndroid) {
+      otpTextController.startListenUserConsent(
+        (code) {
+          final exp = RegExp(r'(\d{6})');
+          return exp.stringMatch(code ?? '') ?? '';
+        },
+      );
+    }
+  }
+
+  Future<void> getSignature() async {
+    if (Platform.isAndroid) {
+      await otpInteractor
+          .getAppSignature()
+          //ignore: avoid_print
+          .then((value) => PrintLogs.printData('signature - $value'));
+    }
+  }
+
+  void loginSuccessDailog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      pageBuilder: (context, animation, secondaryAnimation) {
+        Future.delayed(Duration(seconds: 5), () {
+          Navigator.of(context).pop(true);
+          navigateToPinSetup();
+        });
+       return ScaffoldView(
+            child: Container(
+              margin: EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+
+                  SizedBox(height: 100,),
+                  maintitleCabin(
+                     isCustomer? "Your \nAccount is \nVerified!":"Your \nAccount is \nCreated!"
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  mainDescp(
+                      isCustomer? "Your OTP has been verified and your account has been login successfully!": "Your OTP has been verified and your account has been created successfully!"),
+                  Center(
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 20),
+                        child: Image.asset("assets/images/success_icon.png"),
+                        // child: FadeInImage.assetNetwork(
+                        //     placeholder: 'assets/images/designf.jpg', image: imgurl),
+                      )),
+                ],
+              ),
+            ));
+      },
+    );
+  }
+
+  void otpOnClick(BuildContext context){
+    pinTextController.clear();
+    reenterpinTextController.clear();
+    if (isCustomer) {
+      if (enableOtpButton.value) {
+        signIn(context);
+      } else {
+        ErrorHandling.showToast(Strings.enterOtp);
+      }
+    } else {
+      if (validateBasciInformation()) {
+        if (enableOtpButton.value) {
+          signUp(context);
+        } else {
+          ErrorHandling.showToast(Strings.enterOtp);
+        }
+      }
     }
   }
 }

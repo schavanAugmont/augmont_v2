@@ -3,13 +3,13 @@ import 'package:augmont_v2/controllers/personalizeQuestion_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:intl/intl.dart';
 
 import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
+import '../../widgets/stepper_widget.dart';
 
 class PersonalizeQuestionScreen extends StatefulWidget {
   @override
@@ -22,7 +22,17 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PersonalizeQuestionController>(builder: (controller) {
-      return  ScaffoldView(child: Stack(
+      return PopScope(
+          canPop: false,
+          onPopInvoked: (bool didPop) async {
+            if (didPop) {
+              return;
+            }
+            controller.goToHomeScreen();
+
+          },
+          child:ScaffoldView(
+          child: Stack(
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -36,30 +46,37 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
                 Container(
                   height: 50,
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       GestureDetector(
-                        child: Icon(
-                          size: 24,
-                          Icons.arrow_back_outlined,
-                          color: bottomNavigationColor,
-                        ),
                         onTap: () {
-
+                          controller.goToHomeScreen();
                         },
+                        child:Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              size: 24,
+                              Icons.arrow_back_outlined,
+                              color: bottomNavigationColor,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(Strings.back,
+                                style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: bottomNavigationColor,
+                                  fontFamily: Strings.fontFamilyName,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                )),
+                          ],
+                        ),
                       ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(Strings.back,
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: bottomNavigationColor,
-                            fontFamily: Strings.fontFamilyName,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          )),
+
                       Spacer(),
                       GestureDetector(
                         onTap: () {
@@ -83,11 +100,13 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
                     children: [
                       if (controller.cusomerInfoQuestion!.isNotEmpty) ...[
                         Container(
-                          margin: EdgeInsets.only(top: 20,),
+                          margin: EdgeInsets.only(
+                            top: 20,
+                          ),
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: Color(0xFFF0F7FA),
-                            borderRadius: BorderRadius.circular(10)),
+                              color: Color(0xFFF0F7FA),
+                              borderRadius: BorderRadius.circular(10)),
                           child: Column(
                             children: [
                               Row(
@@ -95,31 +114,28 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
                                   Text("Personalisation Questions",
                                       style: TextStyle(
                                         color: primaryTextColor,
-                                        fontFamily: Strings.fontfamilyCabinetGrotesk,
+                                        fontFamily:
+                                            Strings.fontfamilyCabinetGrotesk,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16,
                                       )),
-                                  // Spacer(),
-                                  // Text(
-                                  //     "${controller.counter + 1}/${controller.maxCount}",
-                                  //     style: TextStyle(
-                                  //       color: primaryTextColor,
-                                  //       fontFamily: Strings.fontFamilyName,
-                                  //       fontWeight: FontWeight.w500,
-                                  //       fontSize: 12,
-                                  //     )),
+
                                 ],
                               ),
                               SizedBox(
                                 height: 10,
                               ),
-                              LinearProgressIndicator(
-                                value: (controller.counter + 1) / controller.maxCount,
-                                backgroundColor: Colors.grey,
-                                minHeight: 5.0,
-                                valueColor:
-                                AlwaysStoppedAnimation<Color>(primaryTextColor),
-                              ),
+
+                                NumberStepper(
+                                  totalSteps: controller.maxCount,
+                                  width: MediaQuery.of(context).size.width,
+                                  curStep: (controller.counter + 1),
+                                  stepCompleteColor:greenColor,
+                                  currentStepColor: primaryColor,
+                                  inactiveColor: Colors.grey,
+                                  lineWidth: 3.5,
+                                  scrollController: controller.scrollController,
+                                ),
                               SizedBox(
                                 height: 10,
                               ),
@@ -130,10 +146,11 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
                           width: MediaQuery.sizeOf(context).width,
                           margin: EdgeInsets.only(top: 10),
                           padding: EdgeInsets.all(10),
-
                           child: Text(
                               controller
-                                  .cusomerInfoQuestion![controller.counter].question!,
+                                  .cusomerInfoQuestion![controller.counter]
+                                  .question!
+                                  .toTitleCase(),
                               style: TextStyle(
                                 color: primaryTextColor,
                                 fontFamily: Strings.fontFamilyName,
@@ -141,37 +158,49 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
                                 fontSize: 14,
                               )),
                         ),
-                        if (controller
-                            .cusomerInfoQuestion![controller.counter].option ==
+                        if (controller.cusomerInfoQuestion![controller.counter]
+                                .option ==
                             null)
                           showUserInfoDialog(
                               context,
                               controller,
                               controller
-                                  .cusomerInfoQuestion![controller.counter].question!,
-                              controller.cusomerInfoQuestion![controller.counter].type!,
-                              controller.cusomerInfoQuestion![controller.counter].id!,
-                              controller.cusomerInfoQuestion![controller.counter]
-                                  .type ==
-                                  'date'
+                                  .cusomerInfoQuestion![controller.counter]
+                                  .question!,
+                              controller
+                                  .cusomerInfoQuestion![controller.counter]
+                                  .type!,
+                              controller
+                                  .cusomerInfoQuestion![controller.counter].id!,
+                              controller
+                                          .cusomerInfoQuestion![
+                                              controller.counter]
+                                          .type ==
+                                      'date'
                                   ? true
                                   : false),
-                        if (controller
-                            .cusomerInfoQuestion![controller.counter].option !=
+                        if (controller.cusomerInfoQuestion![controller.counter]
+                                .option !=
                             null)
                           showUserInfoSingleSelectDialog(
                               context,
                               controller,
                               controller
-                                  .cusomerInfoQuestion![controller.counter].question!,
-                              controller.cusomerInfoQuestion![controller.counter].type!,
-                              controller
-                                  .cusomerInfoQuestion![controller.counter].option!,
-                              controller.cusomerInfoQuestion![controller.counter].id!,
-                              multiple: controller
                                   .cusomerInfoQuestion![controller.counter]
-                                  .type !=
-                                  'singleSelect'
+                                  .question!,
+                              controller
+                                  .cusomerInfoQuestion![controller.counter]
+                                  .type!,
+                              controller
+                                  .cusomerInfoQuestion![controller.counter]
+                                  .option!,
+                              controller
+                                  .cusomerInfoQuestion![controller.counter].id!,
+                              multiple: controller
+                                          .cusomerInfoQuestion![
+                                              controller.counter]
+                                          .type !=
+                                      'singleSelect'
                                   ? true
                                   : false)
                       ]
@@ -186,188 +215,38 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
               child: Container(
                   height: 55,
                   padding:
-                  EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   // Adjust padding as needed
                   child:
-                  // controller.enableMobileView.value ?
-                  ElevatedButton(
-                      onPressed: controller.incrementCounter,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: deliveryDescTextColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5.0),
+                      // controller.enableMobileView.value ?
+                      ElevatedButton(
+                          onPressed: controller.incrementCounter,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: deliveryDescTextColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5.0),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(Strings.next,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              )),
-                          Image.asset(
-                            "assets/images/arrow_right.png",
-                            height: 20,
-                          )
-                        ],
-                      ))))
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(Strings.next,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: Strings.fontFamilyName,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  )),
+                              Image.asset(
+                                "assets/images/arrow_right.png",
+                                height: 20,
+                              )
+                            ],
+                          ))))
         ],
-      ));
-      //   SafeArea(
-      //     child: Scaffold(
-      //   bottomNavigationBar: Container(
-      //     height: 55,
-      //     padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      //     // Adjust padding as needed
-      //     child: ElevatedButton(
-      //         onPressed: controller.incrementCounter,
-      //         style: ElevatedButton.styleFrom(
-      //             minimumSize: Size(double.infinity, 55.0),
-      //             backgroundColor: primaryColor),
-      //         child: Text(Strings.next,
-      //             style: TextStyle(
-      //               color: Colors.white,
-      //               fontFamily: Strings.fontFamilyName,
-      //               fontWeight: FontWeight.w600,
-      //               fontSize: 14,
-      //             ))),
-      //   ),
-      //   body: SingleChildScrollView(
-      //     child: Column(
-      //       crossAxisAlignment: CrossAxisAlignment.start,
-      //       mainAxisAlignment: MainAxisAlignment.start,
-      //       children: [
-      //         Padding(
-      //           padding: EdgeInsets.only(left: 20, right: 20, top: 20),
-      //           child: Row(
-      //             children: [
-      //               GestureDetector(
-      //                 child: const Icon(
-      //                   size: 15,
-      //                   Icons.arrow_back_ios,
-      //                   color: Colors.black,
-      //                 ),
-      //                 onTap: () {},
-      //               ),
-      //               Spacer(),
-      //               GestureDetector(
-      //                 onTap: () {
-      //                   controller.goToHomeScreen();
-      //                 },
-      //                 child: Text("Skip",
-      //                     style: TextStyle(
-      //                       color: primaryTextColor,
-      //                       fontFamily: Strings.fontFamilyName,
-      //                       fontWeight: FontWeight.w600,
-      //                       fontSize: 13,
-      //                     )),
-      //               )
-      //             ],
-      //           ),
-      //         ),
-      //         if (controller.cusomerInfoQuestion!.isNotEmpty) ...[
-      //           Container(
-      //             margin: EdgeInsets.only(top: 40, left: 20, right: 20),
-      //             padding: EdgeInsets.all(10),
-      //             decoration: BoxDecoration(
-      //                 border: Border.all(
-      //                     width: 2, color: kycProductBackgroundColor)),
-      //             child: Column(
-      //               children: [
-      //                 Row(
-      //                   children: [
-      //                     Text("Personalisation Questions",
-      //                         style: TextStyle(
-      //                           color: primaryTextColor,
-      //                           fontFamily: Strings.fontfamilyCabinetGrotesk,
-      //                           fontWeight: FontWeight.w600,
-      //                           fontSize: 16,
-      //                         )),
-      //                     // Spacer(),
-      //                     // Text(
-      //                     //     "${controller.counter + 1}/${controller.maxCount}",
-      //                     //     style: TextStyle(
-      //                     //       color: primaryTextColor,
-      //                     //       fontFamily: Strings.fontFamilyName,
-      //                     //       fontWeight: FontWeight.w500,
-      //                     //       fontSize: 12,
-      //                     //     )),
-      //                   ],
-      //                 ),
-      //                 SizedBox(
-      //                   height: 10,
-      //                 ),
-      //                 LinearProgressIndicator(
-      //                   value: (controller.counter + 1) / controller.maxCount,
-      //                   backgroundColor: Colors.grey,
-      //                   minHeight: 5.0,
-      //                   valueColor:
-      //                       AlwaysStoppedAnimation<Color>(primaryTextColor),
-      //                 ),
-      //               ],
-      //             ),
-      //           ),
-      //           Container(
-      //             width: MediaQuery.sizeOf(context).width,
-      //             margin: EdgeInsets.only(top: 10, left: 20, right: 20),
-      //             padding: EdgeInsets.all(10),
-      //             decoration: BoxDecoration(
-      //                 border: Border.all(
-      //                     width: 2, color: kycProductBackgroundColor)),
-      //             child: Text(
-      //                 controller
-      //                     .cusomerInfoQuestion![controller.counter].question!,
-      //                 style: TextStyle(
-      //                   color: primaryTextColor,
-      //                   fontFamily: Strings.fontFamilyName,
-      //                   fontWeight: FontWeight.w800,
-      //                   fontSize: 14,
-      //                 )),
-      //           ),
-      //           if (controller
-      //                   .cusomerInfoQuestion![controller.counter].option ==
-      //               null)
-      //             showUserInfoDialog(
-      //                 context,
-      //                 controller,
-      //                 controller
-      //                     .cusomerInfoQuestion![controller.counter].question!,
-      //                 controller.cusomerInfoQuestion![controller.counter].type!,
-      //                 controller.cusomerInfoQuestion![controller.counter].id!,
-      //                 controller.cusomerInfoQuestion![controller.counter]
-      //                             .type ==
-      //                         'date'
-      //                     ? true
-      //                     : false),
-      //           if (controller
-      //                   .cusomerInfoQuestion![controller.counter].option !=
-      //               null)
-      //             showUserInfoSingleSelectDialog(
-      //                 context,
-      //                 controller,
-      //                 controller
-      //                     .cusomerInfoQuestion![controller.counter].question!,
-      //                 controller.cusomerInfoQuestion![controller.counter].type!,
-      //                 controller
-      //                     .cusomerInfoQuestion![controller.counter].option!,
-      //                 controller.cusomerInfoQuestion![controller.counter].id!,
-      //                 multiple: controller
-      //                             .cusomerInfoQuestion![controller.counter]
-      //                             .type !=
-      //                         'singleSelect'
-      //                     ? true
-      //                     : false)
-      //         ]
-      //       ],
-      //     ),
-      //   ),
-      // ));
+      )));
     });
   }
 
@@ -381,8 +260,7 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
       TextInputType type = TextInputType.text,
       int? limit]) {
     return Container(
-        margin: EdgeInsets.only(top: 20),
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(5),
         color: kycProductBackgroundColor,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -428,20 +306,20 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
               controller: controller.commonController,
               style: TextStyle(
                 fontFamily: Strings.fontFamilyName,
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
                 color: primaryTextColor,
               ),
               decoration: InputDecoration(
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                       borderSide: const BorderSide(
-                          color: kycProductBackgroundColor, width: 0.5)),
+                          color: Color(0xFFD1E3E8), width: 0.5)),
                   hintText: hint.replaceAll('Please', '').capitalize,
                   hintStyle: TextStyle(
                     fontFamily: Strings.fontFamilyName,
                     fontWeight: FontWeight.w500,
-                    fontSize: 12,
+                    fontSize: 14,
                     color: primaryTextColor,
                   ),
                   counterText: ''),
@@ -486,54 +364,58 @@ class _PersonalizeQuestionScreenState extends State<PersonalizeQuestionScreen> {
       int questionId,
       {bool multiple = false}) {
     return Container(
-        padding: EdgeInsets.all(10),
-        height: MediaQuery.of(context).size.height*0.55,
-        child: ListView.builder(
-            //here your code
-            scrollDirection: Axis.vertical,
-            itemCount: data.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Container(
-                margin: EdgeInsets.only(bottom: 10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(width: 1, color: Colors.grey),
-                  borderRadius: BorderRadius.circular(5.0),
-                ),
-                child: Row(
-                  children: [
-                    Checkbox(
-                        value: controller.selectedOption.contains(data[index])
-                            ? true
-                            : false,
-                        onChanged: (value) {
-                          if (multiple == false) {
-                            controller.selectedOption.clear();
-                            controller.selectedOption.add(data[index]);
-                            controller.update();
-                          } else {
-                            if (controller.selectedOption
-                                .contains(data[index])) {
-                              controller.selectedOption.remove(data[index]);
-                              controller.update();
-                            } else {
+        padding: EdgeInsets.all(5),
+        child: Flexible(
+          child: ListView.builder(
+              padding: EdgeInsets.zero,
+              scrollDirection: Axis.vertical,
+              itemCount: data.length,
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    color: controller.selectedOption.contains(data[index])
+                        ?  Colors.amber.withOpacity(0.05):Colors.white,
+                    border: Border.all(width: 1, color:  controller.selectedOption.contains(data[index])
+                        ?primaryColor:Color(0xFFD1E3E8)),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                          value: controller.selectedOption.contains(data[index])
+                              ? true
+                              : false,
+                          onChanged: (value) {
+                            if (multiple == false) {
+                              controller.selectedOption.clear();
                               controller.selectedOption.add(data[index]);
                               controller.update();
+                            } else {
+                              if (controller.selectedOption
+                                  .contains(data[index])) {
+                                controller.selectedOption.remove(data[index]);
+                                controller.update();
+                              } else {
+                                controller.selectedOption.add(data[index]);
+                                controller.update();
+                              }
                             }
-                          }
-                        }),
-                    Flexible(
-                        child: Text(data[index],
-                            maxLines: 10,
-                            style: TextStyle(
-                              color: primaryTextColor,
-                              fontFamily: Strings.fontFamilyName,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 13,
-                            ))),
-                  ],
-                ),
-              );
-            }));
+                          }),
+                      Flexible(
+                          child: Text(data[index],
+                              maxLines: 10,
+                              style: TextStyle(
+                                color: primaryTextColor,
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ))),
+                    ],
+                  ),
+                );
+              }),
+        ));
   }
 }

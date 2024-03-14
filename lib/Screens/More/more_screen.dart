@@ -1,3 +1,6 @@
+import 'package:augmont_v2/Bindings/signin_binding.dart';
+import 'package:augmont_v2/Screens/SignIn/signin_page1.dart';
+import 'package:augmont_v2/Utils/scaffold_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,6 +9,7 @@ import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
 import '../../controllers/more_controller.dart';
 import '../Home/Components/HeaderWalletView.dart';
+import '../SignIn/Components/SignInComponents.dart';
 import 'components/morecell_view.dart';
 
 class MoreScreen extends StatelessWidget {
@@ -29,14 +33,103 @@ class MoreScreen extends StatelessWidget {
                   onPressed: () {},
                   isLoggedIn: false,
                 ),
-                profileView(context, controller),
-                moreSettingView(context, controller)
+                if (controller.isLoggedIn.value) ...[
+                  profileView(context, controller),
+                  moreSettingView(context, controller)
+                ],
+                if (!controller.isLoggedIn.value) loginView(context)
               ],
             )),
           ),
         ),
       );
     });
+  }
+
+  Widget loginView(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      height: MediaQuery.sizeOf(context).height * 0.65,
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Spacer(),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+                decoration: new BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    width: 2,
+                    color: Colors.black,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                margin: EdgeInsets.only(right: 10),
+                padding: EdgeInsets.all(15),
+                child: ImageIcon(
+                  AssetImage('assets/images/ic_add_user.png'),
+                  size: 30,
+                  color: Colors.black,
+                )),
+            SizedBox(
+              height: 10,
+            ),
+            Text("Onboard to Augmont!",
+                style: TextStyle(
+                  color: primaryTextColor,
+                  fontFamily: Strings.fontFamilyName,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                )),
+            SizedBox(
+              height: 8,
+            ),
+            Text(
+                "Register yourself quickly to avail the world class services awaiting you on other side.",
+                maxLines: 5,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: primaryTextColor,
+                  fontFamily: Strings.fontFamilyName,
+                  fontWeight: FontWeight.normal,
+                  fontSize: 13,
+                )),
+            GestureDetector(
+                onTap: () {
+                  Get.offAll(
+                    () => const SignInPage1(),
+                    binding: SignInBiding(),
+                    transition: Transition.rightToLeft,
+                  );
+
+
+                },
+                child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    margin: EdgeInsets.only(bottom: 10, top: 15),
+                    height: 40,
+                    child: Center(
+                        child: Text('Register/Sign-In Now',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: Strings.fontFamilyName,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ))))),
+            Spacer(),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget profileView(BuildContext context, MoreController controller) {
@@ -116,20 +209,21 @@ class MoreScreen extends StatelessWidget {
               children: [
                 Expanded(
                     child: profileComponets1(
-                        "02", Strings.upcomingPayment, false,controller)),
+                        "02", Strings.upcomingPayment, false, controller)),
                 Expanded(
-                    child:
-                        profileComponets1("04", Strings.pendingPayment, false,controller)),
+                    child: profileComponets1(
+                        "04", Strings.pendingPayment, false, controller)),
               ],
             ),
             SizedBox(height: 5),
             Row(
               children: [
                 Expanded(
-                    child: profileComponets1("03", Strings.activeLoan, true,controller)),
+                    child: profileComponets1(
+                        "03", Strings.activeLoan, true, controller)),
                 Expanded(
                     child: profileComponets1(
-                        "20.88 gms", Strings.totalsoldGold, true,controller)),
+                        "20.88 gms", Strings.totalsoldGold, true, controller)),
               ],
             ),
             SizedBox(height: 10),
@@ -210,15 +304,18 @@ class MoreScreen extends StatelessWidget {
                 width: 1,
                 color: shadowColor,
               ),
-              GestureDetector(onTap: (){
-                controller.goToMerchantPage();
-              },child: Text("Other Merchant (70%)",
-                  style: TextStyle(
-                    fontFamily: Strings.fontFamilyName,
-                    fontWeight: FontWeight.normal,
-                    color: primaryTextColor,
-                    fontSize: 13,
-                  )),)
+              GestureDetector(
+                onTap: () {
+                  controller.goToMerchantPage();
+                },
+                child: Text("Other Merchant (70%)",
+                    style: TextStyle(
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.normal,
+                      color: primaryTextColor,
+                      fontSize: 13,
+                    )),
+              )
             ],
           ),
         ],
@@ -226,48 +323,52 @@ class MoreScreen extends StatelessWidget {
     );
   }
 
-  Widget profileComponets1(String count, String title, bool isShown, MoreController controller) {
-    return GestureDetector(child: Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5.0),
-      ),
-      margin: EdgeInsets.only(bottom: 5, right: 5),
-      padding: EdgeInsets.all(10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          if (isShown)
-            Container(
-              margin: EdgeInsets.only(bottom: 5),
-              width: 25,
-              height: 25,
-              decoration: const BoxDecoration(
-                  shape: BoxShape.circle, color: shadowColor),
-            ),
-          textComponent(count, 18, FontWeight.w600),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Flexible(child: textComponent(title, 12, FontWeight.w600)),
+  Widget profileComponets1(
+      String count, String title, bool isShown, MoreController controller) {
+    return GestureDetector(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5.0),
+        ),
+        margin: EdgeInsets.only(bottom: 5, right: 5),
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            if (isShown)
               Container(
-                  padding: EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    color: kycProductBackgroundColor,
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  child: Icon(
-                    Icons.arrow_forward_ios_sharp,
-                    size: 10,
-                  ))
-            ],
-          )
-        ],
+                margin: EdgeInsets.only(bottom: 5),
+                width: 25,
+                height: 25,
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle, color: shadowColor),
+              ),
+            textComponent(count, 18, FontWeight.w600),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(child: textComponent(title, 12, FontWeight.w600)),
+                Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: kycProductBackgroundColor,
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    child: Icon(
+                      Icons.arrow_forward_ios_sharp,
+                      size: 10,
+                    ))
+              ],
+            )
+          ],
+        ),
       ),
-    ),onTap: (){
-      controller.goToPaymentPage();
-    },);
+      onTap: () {
+        controller.goToPaymentPage();
+      },
+    );
   }
 
   Widget profileComponets2(String title) {
@@ -331,57 +432,64 @@ class MoreScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          moreSettingComponents(Strings.profileSetting, controller.profileList,controller),
+          moreSettingComponents(
+              Strings.profileSetting, controller.profileList, controller),
           SizedBox(
             height: 8,
           ),
-          moreSettingComponents(Strings.shop, controller.shopList,controller),
+          moreSettingComponents(Strings.shop, controller.shopList, controller),
           SizedBox(
             height: 8,
           ),
-          moreSettingComponents(Strings.exchange, controller.exchangeList,controller),
+          moreSettingComponents(
+              Strings.exchange, controller.exchangeList, controller),
           SizedBox(
             height: 8,
           ),
-          moreSettingComponents(Strings.settings, controller.settingList,controller),
+          moreSettingComponents(
+              Strings.settings, controller.settingList, controller),
           SizedBox(
             height: 8,
           ),
-          moreSettingComponents("", controller.otherList,controller),
+          moreSettingComponents("", controller.otherList, controller),
           SizedBox(
             height: 10,
           ),
-          GestureDetector(onTap: (){
-            controller.logoutDailog(context);
-          },child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: primaryTextColor, width: 1),
-              borderRadius: BorderRadius.circular(5.0),
+          GestureDetector(
+            onTap: () {
+              controller.logoutDailog(context);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: primaryTextColor, width: 1),
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: EdgeInsets.all(10),
+              width: MediaQuery.sizeOf(context).width,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  textComponent(Strings.logout, 14, FontWeight.w600),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(
+                    Icons.logout,
+                    size: 16,
+                  )
+                ],
+              ),
             ),
-            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            padding: EdgeInsets.all(10),
-            width: MediaQuery.sizeOf(context).width,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                textComponent(Strings.logout, 14, FontWeight.w600),
-                SizedBox(
-                  width: 5,
-                ),
-                Icon(
-                  Icons.logout,
-                  size: 16,
-                )
-              ],
-            ),
-          ),)
+          )
         ],
       ),
     );
   }
 
-  Widget moreSettingComponents(String title, List<String> listDetails, MoreController controller) {
+  Widget moreSettingComponents(
+      String title, List<String> listDetails, MoreController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -398,43 +506,48 @@ class MoreScreen extends StatelessWidget {
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
-            return GestureDetector(onTap: (){
-              controller.navtigatTo(listDetails[index]);
-            },child: Container(
-              decoration: BoxDecoration(
-                color: kycProductBackgroundColor,
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              margin: EdgeInsets.only(bottom: 5),
-              padding: EdgeInsets.all(10),
-              width: MediaQuery.sizeOf(context).width,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (title.isNotEmpty) ...[
-                    Container(
-                      width: 20,
-                      height: 20,
-                      decoration: const BoxDecoration(
-                          shape: BoxShape.circle, color: shadowColor),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
+            return GestureDetector(
+              onTap: () {
+                controller.navtigatTo(listDetails[index]);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: kycProductBackgroundColor,
+                  borderRadius: BorderRadius.circular(5.0),
+                ),
+                margin: EdgeInsets.only(bottom: 5),
+                padding: EdgeInsets.all(10),
+                width: MediaQuery.sizeOf(context).width,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    if (title.isNotEmpty) ...[
+                      Container(
+                        width: 20,
+                        height: 20,
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle, color: shadowColor),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                    ],
+                    textComponent(listDetails[index], 12, FontWeight.normal),
+                    Spacer(),
+                    Icon(
+                      Icons.arrow_forward_ios_sharp,
+                      size: 11,
+                    )
                   ],
-                  textComponent(listDetails[index], 12, FontWeight.normal),
-                  Spacer(),
-                  Icon(
-                    Icons.arrow_forward_ios_sharp,
-                    size: 11,
-                  )
-                ],
+                ),
               ),
-            ),);
+            );
           },
         )
       ],
     );
   }
+
+
 }

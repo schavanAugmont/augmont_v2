@@ -115,9 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             GestureDetector(
                                 onTap: () {
-
-
-                                  MainScreenController().showSignupPopup(context);
+                                  MainScreenController()
+                                      .showSignupPopup(context);
                                 },
                                 child: Text(Strings.signUp,
                                     style: TextStyle(
@@ -299,29 +298,34 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                     ],
                                   ),
-                                 GestureDetector(onTap: (){
-                                   controller.goToInvestmentDashbord();
-                                 },
-                                 child:  Container(
-                                     width: MediaQuery.of(context).size.width,
-                                     decoration: BoxDecoration(
-                                       color: Colors.black,
-                                       border: Border.all(color: Colors.black),
-                                       borderRadius:
-                                       BorderRadius.circular(5.0),
-                                     ),
-                                     margin:
-                                     EdgeInsets.only(bottom: 10, top: 30),
-                                     height: 40,
-                                     child: Center(
-                                         child: Text('Invest to earn 16% p.a',
-                                             style: TextStyle(
-                                               color: Colors.white,
-                                               fontFamily:
-                                               Strings.fontFamilyName,
-                                               fontWeight: FontWeight.w600,
-                                               fontSize: 14,
-                                             )))),)
+                                  GestureDetector(
+                                    onTap: () {
+                                      controller.goToInvestmentDashbord();
+                                    },
+                                    child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                          border:
+                                              Border.all(color: Colors.black),
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
+                                        ),
+                                        margin: EdgeInsets.only(
+                                            bottom: 10, top: 30),
+                                        height: 40,
+                                        child: Center(
+                                            child: Text(
+                                                'Invest to earn 16% p.a',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontFamily:
+                                                      Strings.fontFamilyName,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 14,
+                                                )))),
+                                  )
                                 ],
                               ),
                             )
@@ -332,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
                         padding: const EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
-                          border: Border.all(color: lightColor,width: 1.0),
+                          border: Border.all(color: lightColor, width: 1.0),
                           borderRadius: BorderRadius.circular(6.0),
                         ),
                         child: Row(
@@ -343,10 +347,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               height: 90,
                               decoration: BoxDecoration(
                                   color: lightColor,
-                                  borderRadius: BorderRadius.circular(6.0)
-                              ),
+                                  borderRadius: BorderRadius.circular(6.0)),
                               alignment: Alignment.center,
-                              child: Image.asset("assets/images/coin.png",width: 40),
+                              child: Image.asset("assets/images/coin.png",
+                                  width: 40),
                             ),
                             const SizedBox(width: 10),
                             Expanded(
@@ -356,44 +360,51 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Text(
                                     "Augmont Gold Coin",
-                                    style: CustomTheme.style(size: 15, weight: FontWeight.w600),
+                                    style: CustomTheme.style(
+                                        size: 15, weight: FontWeight.w600),
                                   ),
                                   const SizedBox(height: 4),
+                                  Text(
+                                    "Order ID : 3456",
+                                    style: CustomTheme.style(
+                                        size: 13, weight: FontWeight.w400),
+                                  ),
                                   Row(
                                     children: [
                                       Text(
-                                        "Order ID : 3456",
-                                        style: CustomTheme.style(size: 13, weight: FontWeight.w400),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                                        width: 1,
-                                        height: 20,
-                                        color: lightColor,
-                                      ),
-                                      Text(
                                         "Status : ",
-                                        style: CustomTheme.style(size: 13, weight: FontWeight.w600),
+                                        style: CustomTheme.style(
+                                            size: 13, weight: FontWeight.w600),
                                       ),
                                       Text(
                                         "Booked",
-                                        style: CustomTheme.style(size: 13, weight: FontWeight.w600,color: Colors.green),
+                                        style: CustomTheme.style(
+                                            size: 13,
+                                            weight: FontWeight.w600,
+                                            color: Colors.green),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: 10),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 4),
                                     decoration: BoxDecoration(
                                       color: lightColor,
                                       borderRadius: BorderRadius.circular(2.0),
                                     ),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          "Upcoming EMI Date : 08/03/2024",
-                                          style: CustomTheme.style(size: 10, weight: FontWeight.w500),
+                                        Expanded(
+                                          child: Text(
+                                            "Upcoming EMI Date : 08/03/2024",
+                                            style: CustomTheme.style(
+                                                size: 10,
+                                                weight: FontWeight.w500),
+                                            maxLines: 3,
+                                          ),
                                         ),
                                         GestureDetector(
                                           onTap: () {
@@ -401,7 +412,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           },
                                           child: Text(
                                             "Pay Now",
-                                            style: CustomTheme.style(size: 12, weight: FontWeight.bold),
+                                            style: CustomTheme.style(
+                                                size: 12,
+                                                weight: FontWeight.bold),
                                           ),
                                         ),
                                       ],
@@ -414,7 +427,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       setfdView(context),
-
                       Container(
                         margin:
                             EdgeInsets.only(left: 20, right: 20, bottom: 20),
@@ -426,7 +438,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     "Get gold loan at 6% p.a.*",
                                     "Get Started",
                                     "assets/images/ic_loan.png",
-                                    false,controller,context)),
+                                    false,
+                                    controller,
+                                    context)),
                             SizedBox(
                               width: 10,
                             ),
@@ -435,7 +449,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     "Looking to Sell your gold?",
                                     "Get Started",
                                     "assets/images/ic_money.png",
-                                    false,controller,context))
+                                    false,
+                                    controller,
+                                    context))
                           ],
                         ),
                       ),
@@ -481,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       }))
                             ],
                           )),
-                     setWalletView(context),
+                      setWalletView(context),
                       Container(
                         margin:
                             EdgeInsets.only(left: 20, right: 20, bottom: 20),
@@ -493,7 +509,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     "Gift Gold to your loved once",
                                     "Gift Now",
                                     "assets/images/ic_giftbox.png",
-                                    true,controller,context)),
+                                    true,
+                                    controller,
+                                    context)),
                             SizedBox(
                               width: 10,
                             ),
@@ -502,7 +520,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     "Refer and earn gold up to 10,000",
                                     "Get Started",
                                     "assets/images/ic_speaker.png",
-                                    true,controller,context))
+                                    true,
+                                    controller,
+                                    context))
                           ],
                         ),
                       ),
@@ -576,69 +596,72 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget nudgetWid(String title, String actn, String logo, bool bool,HomeController controller, BuildContext context ) {
+  Widget nudgetWid(String title, String actn, String logo, bool bool,
+      HomeController controller, BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: bool ? kycProductBackgroundColor : Colors.white,
-        border: Border.all(color: kycProductBackgroundColor),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      height: 170,
-      child: GestureDetector(onTap: (){
-        if(actn=="Gift Now"){
-          controller.sendGiftDailog(context);
-        }
-      },child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(title,
-              maxLines: 2,
-              style: TextStyle(
-                color: primaryTextColor,
-                fontFamily: Strings.fontFamilyName,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              )),
-          SizedBox(
-            height: 10,
-          ),
-          Container(
-            height: 60,
-            width: 40,
-            child: FittedBox(
-              child: ImageIcon(
-                AssetImage(logo),
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Row(
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: bool ? kycProductBackgroundColor : Colors.white,
+          border: Border.all(color: kycProductBackgroundColor),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        height: 170,
+        child: GestureDetector(
+          onTap: () {
+            if (actn == "Gift Now") {
+              controller.sendGiftDailog(context);
+            }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(actn,
+              Text(title,
                   maxLines: 2,
                   style: TextStyle(
                     color: primaryTextColor,
                     fontFamily: Strings.fontFamilyName,
                     fontWeight: FontWeight.w600,
-                    fontSize: 11,
+                    fontSize: 14,
                   )),
               SizedBox(
-                width: 5,
+                height: 10,
               ),
-              Icon(
-                Icons.arrow_forward_ios_sharp,
-                size: 11,
+              Container(
+                height: 60,
+                width: 40,
+                child: FittedBox(
+                  child: ImageIcon(
+                    AssetImage(logo),
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                children: [
+                  Text(actn,
+                      maxLines: 2,
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 11,
+                      )),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    size: 11,
+                  )
+                ],
               )
             ],
-          )
-        ],
-      ),)
-    );
+          ),
+        ));
   }
 
   Widget shopListItem() {

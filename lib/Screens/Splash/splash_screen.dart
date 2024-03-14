@@ -6,11 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import '../../Bindings/signin_binding.dart';
 import '../../Utils/session_manager.dart';
 import '../../bindings/intro_binding.dart';
 import '../../bindings/personalizedqus_binding.dart';
 import '../Main/main_screen.dart';
 import '../SignIn/personalise_quest_page.dart';
+import '../SignIn/signin_page1.dart';
+import '../SignIn/signin_page3.dart';
 
 class SplashScreen extends StatefulWidget {
   static String routeName = "/SplashScreen";
@@ -73,27 +76,27 @@ _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          // Future.delayed(const Duration(seconds: 2), () async {
-          //   var isLogin = await SessionManager.isLoggedIn();
-          //   var isDashSelect = await SessionManager.getIsDashSelected();
-          //   print(isDashSelect);
-          //   if (isLogin) {
-          //     Get.off(
-          //         () => const SignInPage3(
-          //               isForgot: false,
-          //               refCode: '',
-          //             ),
-          //         binding: SignInBiding());
-          //
-          //   // Get.off(() => PersonalizeQuestionScreen(), binding: PersonalizedQuesBiding());
-          //   } else {
-          //     if (isDashSelect) {
-          //       Get.off(() => const SignInPage1(), binding: SignInBiding());
-          //     } else {
-          //       Get.off(() => const OnboardScreen(), binding: IntroBiding());
-          //     }
-          //   }
-          // });
+          Future.delayed(const Duration(seconds: 2), () async {
+            var isLogin = await SessionManager.isLoggedIn();
+            var isDashSelect = await SessionManager.getIsDashSelected();
+            print(isDashSelect);
+            if (isLogin) {
+              Get.off(
+                  () => const SignInPage3(
+                        isForgot: false,
+                        refCode: '',
+                      ),
+                  binding: SignInBiding());
+
+            // Get.off(() => PersonalizeQuestionScreen(), binding: PersonalizedQuesBiding());
+            } else {
+              if (isDashSelect) {
+                Get.off(() => const MainScreen(), binding: MainScreenBinding());
+              } else {
+                Get.off(() => const OnboardScreen(), binding: IntroBiding());
+              }
+            }
+          });
 
           // Get.offAll(
           //       () => const OnboardScreen(),
@@ -101,7 +104,7 @@ _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
           //   transition: Transition.rightToLeft,
           // );
 
-          Get.to(PersonalizeQuestionScreen(),binding: PersonalizedQuesBiding());
+         // Get.to(PersonalizeQuestionScreen(),binding: PersonalizedQuesBiding());
         }
 
       })

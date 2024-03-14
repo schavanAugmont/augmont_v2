@@ -20,6 +20,7 @@ class PersonalizeQuestionController extends GetxController
   int maxCount = 0;
   final commonController = TextEditingController();
   var social = false.obs;
+  ScrollController scrollController = ScrollController();
 
   @override
   void onInit() {
@@ -107,30 +108,46 @@ class PersonalizeQuestionController extends GetxController
   }
 
   void setQuesAns(String quesId, String answ) {
-    DialogHelper.showLoading();
-    try {
-      PersonalizQusProvider().customeraddAns(quesId, answ).then((value) {
-        var jsonMap = jsonDecode(value);
-        DialogHelper.dismissLoader();
-        if (jsonMap != null) {
-          commonController.clear();
-          social(false);
-          selectedOption.clear();
-          update();
-          if (counter != (maxCount - 1)) {
-            counter < maxCount ? counter++ : counter = maxCount;
-            update();
-          } else {
-            goToHomeScreen();
-          }
-        }
-      }, onError: (error) {
-        DialogHelper.dismissLoader();
-        ErrorHandling.handleErrors(error);
-      });
-    } catch (e) {
-      DialogHelper.dismissLoader();
-      ErrorHandling.handleErrors(e);
+    // DialogHelper.showLoading();
+    // try {
+    //   PersonalizQusProvider().customeraddAns(quesId, answ).then((value) {
+    //     var jsonMap = jsonDecode(value);
+    //     DialogHelper.dismissLoader();
+    //     if (jsonMap != null) {
+    //       commonController.clear();
+    //       social(false);
+    //       selectedOption.clear();
+    //       update();
+    //       if (counter != (maxCount - 1)) {
+    //         counter < maxCount ? counter++ : counter = maxCount;
+    //         update();
+    //       } else {
+    //         goToHomeScreen();
+    //       }
+    //     }
+    //   }, onError: (error) {
+    //     DialogHelper.dismissLoader();
+    //     ErrorHandling.handleErrors(error);
+    //   });
+    // } catch (e) {
+    //   DialogHelper.dismissLoader();
+    //   ErrorHandling.handleErrors(e);
+    // }
+
+    commonController.clear();
+    social(false);
+    selectedOption.clear();
+    update();
+    if (counter != (maxCount - 1)) {
+      counter < maxCount ? counter++ : counter = maxCount;
+      scrollController.animateTo(
+        counter * 50.0, // Adjust as needed
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+      update();
+    } else {
+      goToHomeScreen();
     }
   }
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:augmont_v2/Bindings/signin_binding.dart';
 import 'package:augmont_v2/Screens/SignIn/signin_page1.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:otp_autofill/otp_autofill.dart';
 import '../Bindings/main_screen_binding.dart';
 import '../Models/CustomerDetailsModel.dart';
 import '../Models/PassbookDetailsModel.dart';
@@ -31,7 +33,8 @@ class ForgotPinController extends GetxController with StateMixin<dynamic> {
   late String referenceCode;
   var isTimeOnGoing = false.obs;
   var isCustomer = true;
-  late TextEditingController otpTextController;
+  late OTPTextEditController otpTextController;
+  //late TextEditingController otpTextController;
   late TextEditingController mobileTextController = TextEditingController();
   late GlobalKey<FormState> formKey;
   var enableOtpButton = false.obs;
@@ -40,6 +43,7 @@ class ForgotPinController extends GetxController with StateMixin<dynamic> {
   var enablePINButton = false.obs;
   var enableMobileView = true.obs;
   var enableOtpView = false.obs;
+  late OTPInteractor otpInteractor;
 
   Timer? _timer;
   var timerValue = 60.obs;
@@ -50,7 +54,21 @@ class ForgotPinController extends GetxController with StateMixin<dynamic> {
 
   @override
   Future<void> onInit() async {
-    otpTextController = TextEditingController();
+   // otpTextController = TextEditingController();
+    otpInteractor = OTPInteractor();
+    getSignature();
+    otpTextController = OTPTextEditController(
+        codeLength: 6,
+        onCodeReceive: (code) async {
+          PrintLogs.printData('Your Application receive code - $code');
+          try {
+            otpTextController.text = code;
+          } catch (e) {
+            PrintLogs.printException(e);
+          }
+          await otpTextController.stopListen();
+        },
+        otpInteractor: otpInteractor);
     formKey = GlobalKey<FormState>();
     super.onInit();
   }
@@ -122,7 +140,12 @@ class ForgotPinController extends GetxController with StateMixin<dynamic> {
         otpTextController.text = "";
       }
       DialogHelper.dismissLoader();
-      ErrorHandling.handleErrors(error);
+      if (error is BadRequestException) {
+        var object = jsonDecode(error.toString());
+        ErrorHandling.showToast(object['message']);
+      } else {
+        ErrorHandling.handleErrors(error);
+      }
     });
   }
 
@@ -165,7 +188,11 @@ class ForgotPinController extends GetxController with StateMixin<dynamic> {
 
   Future<void> sendOtp(String mobileNo, bool isVoice, bool isOtpView) async {
     SignInProvider().sendOTPResetPin(mobileNo, isVoice).then(
-      (value) {
+      (value) async {
+        await otpTextController.stopListen();
+
+        getSignature();
+        startListening();
         var jsonMap = jsonDecode(value);
         referenceCode = jsonMap['referenceCode'];
         isCustomer = true;
@@ -189,12 +216,13 @@ class ForgotPinController extends GetxController with StateMixin<dynamic> {
 
   @override
   Future<void> onClose() async {
-    //  await otpTextController.stopListen();
+      await otpTextController.stopListen();
     super.onClose();
   }
 
   @override
   Future<void> dispose() async {
+    await otpTextController.stopListen();
     mobileTextController.dispose();
     cancelTimer();
     super.dispose();
@@ -204,7 +232,33 @@ class ForgotPinController extends GetxController with StateMixin<dynamic> {
     Get.offAll(() =>  SignInPage3(isForgot: true,refCode: referenceCode,), binding: SignInBiding());
   }
 
+
+  void navigateToHomePage() {
+    Get.offAll(() =>  MainScreen(), binding: MainScreenBinding());
+  }
+
+
   void onBackPress() {
     Get.back();
+  }
+
+  void startListening() {
+    if (Platform.isAndroid) {
+      otpTextController.startListenUserConsent(
+            (code) {
+          final exp = RegExp(r'(\d{6})');
+          return exp.stringMatch(code ?? '') ?? '';
+        },
+      );
+    }
+  }
+
+  Future<void> getSignature() async {
+    if (Platform.isAndroid) {
+      await otpInteractor
+          .getAppSignature()
+      //ignore: avoid_print
+          .then((value) => PrintLogs.printData('signature - $value'));
+    }
   }
 }

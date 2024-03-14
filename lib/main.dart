@@ -1,3 +1,4 @@
+import 'package:augmont_v2/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -20,7 +21,8 @@ Future<void> main() async {
       statusBarIconBrightness: Brightness.dark,
     ),
   );
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await DeviceUtil.instance.init();
   await GetStorage.init('augmont');
   runApp(const AugmontApp());
@@ -35,10 +37,9 @@ class AugmontApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: Strings.goldForAll,
       theme: CustomTheme.lightTheme,
-      home:const SplashScreen(),
+      home: const SplashScreen(),
+      getPages: routeList,
       defaultTransition: Transition.rightToLeft,
     );
   }
 }
-
-

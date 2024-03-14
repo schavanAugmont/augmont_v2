@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:augmont_v2/Bindings/main_screen_binding.dart';
 import 'package:augmont_v2/Models/ScreenDataModel.dart';
+import 'package:augmont_v2/Screens/Main/main_screen.dart';
 import 'package:augmont_v2/Utils/session_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -116,6 +118,6 @@ class IntroController extends GetxController {
 
   void goToNavigation() {
     SessionManager.setIsDashSelected(true);
-    Get.off(() => SignInPage1(), binding: SignInBiding());
+    Get.off(() => MainScreen(), binding: MainScreenBinding());
   }
 }

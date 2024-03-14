@@ -1,10 +1,12 @@
 import 'package:augmont_v2/Controllers/sing_in_controller.dart';
+import 'package:augmont_v2/Screens/SignIn/signin_page3.dart';
 import 'package:augmont_v2/Utils/scaffold_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import '../../Bindings/signin_binding.dart';
 import '../../Network/ErrorHandling.dart';
 import '../../Utils/Validator.dart';
 import '../../Utils/colors.dart';
@@ -45,26 +47,38 @@ class ForgotPinPageState extends State<ForgotPinPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       GestureDetector(
-                        child: Icon(
-                          size: 24,
-                          Icons.arrow_back_outlined,
-                          color: bottomNavigationColor,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              size: 24,
+                              Icons.arrow_back_outlined,
+                              color: bottomNavigationColor,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(Strings.back,
+                                style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  color: bottomNavigationColor,
+                                  fontFamily: Strings.fontFamilyName,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                )),
+                          ],
                         ),
                         onTap: () {
-                          controller.clearBackStack();
+                          Get.off(
+                                  () => const SignInPage3(
+                                isForgot: false,
+                                refCode: '',
+                              ),
+                              binding: SignInBiding());
                         },
                       ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(Strings.back,
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: bottomNavigationColor,
-                            fontFamily: Strings.fontFamilyName,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          )),
+
                       Spacer(),
                       Row(
                         children: List.generate(

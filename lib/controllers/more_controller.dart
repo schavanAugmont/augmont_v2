@@ -298,7 +298,13 @@ class MoreController extends GetxController with StateMixin<dynamic> {
                              ),
                            ),
                            onPressed: () {
-                             Get.back();
+
+                             SessionManager.clearAll();
+                             SessionManager.setSelectedProduct(Strings.moduleOther);
+                             SessionManager.setIsDashSelected(true);
+                             checkLoginStatus();
+                             update();
+                             Navigator.pop(context);
                            },
                            child: Text('Log-out',
                                style: TextStyle(
@@ -311,7 +317,7 @@ class MoreController extends GetxController with StateMixin<dynamic> {
                       SizedBox(width: 10,),
                       Expanded(child: ElevatedButton(
                           onPressed: () {
-                            Get.back();
+                            Navigator.pop(context);
                           },
                           style: ElevatedButton.styleFrom(
                             minimumSize: Size(double.infinity, 40.0),

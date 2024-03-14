@@ -92,23 +92,7 @@ class SignInPageState2 extends State<SignInPage2> {
                       // controller.enableMobileView.value ?
                       ElevatedButton(
                           onPressed: () {
-                            controller.pinTextController.clear();
-                            controller.reenterpinTextController.clear();
-                            if (controller.isCustomer) {
-                              if (controller.enableOtpButton.value) {
-                                controller.signIn();
-                              } else {
-                                ErrorHandling.showToast(Strings.enterOtp);
-                              }
-                            } else {
-                              if (controller.validateBasciInformation()) {
-                                if (controller.enableOtpButton.value) {
-                                  controller.signUp();
-                                } else {
-                                  ErrorHandling.showToast(Strings.enterOtp);
-                                }
-                              }
-                            }
+                            controller.otpOnClick(context);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: deliveryDescTextColor,
