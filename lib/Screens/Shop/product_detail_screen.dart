@@ -1,6 +1,8 @@
+import 'package:augmont_v2/Screens/Shop/product_list_screen.dart';
 import 'package:augmont_v2/Screens/emi/emi_landing_screen.dart';
 import 'package:augmont_v2/Screens/offer/offer_screen.dart';
 import 'package:augmont_v2/Screens/review/review_screen.dart';
+import 'package:augmont_v2/Screens/withdrawal/withdrawal_from_screen.dart';
 import 'package:augmont_v2/Utils/colors.dart';
 import 'package:augmont_v2/Utils/themes.dart';
 import 'package:augmont_v2/bindings/offer_binding.dart';
@@ -9,6 +11,7 @@ import 'package:augmont_v2/bindings/shop_emi_binding.dart';
 import 'package:augmont_v2/bottomsheet/choose_weght_bottomsheet.dart';
 import 'package:augmont_v2/controllers/product_detail_controller.dart';
 import 'package:augmont_v2/widgets/augmont_app_bar.dart';
+import 'package:augmont_v2/widgets/augmont_bottom_app_bar.dart';
 import 'package:augmont_v2/widgets/offer_grid.dart';
 import 'package:augmont_v2/widgets/price_widget.dart';
 import 'package:augmont_v2/widgets/rating_bar_detail_widget.dart';
@@ -19,7 +22,8 @@ import 'package:get/get.dart';
 import '../../widgets/product_grid.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({super.key});
+  final Purpose purpose;
+  const ProductDetailScreen({super.key,this.purpose = Purpose.buy});
 
   @override
   Widget build(BuildContext context) {
@@ -561,55 +565,57 @@ class ProductDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            bottomNavigationBar: Container(
-              height: 70,
-              padding: const EdgeInsets.all(10),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    spreadRadius: 0,
-                    blurRadius: 12,
-                    offset: Offset(0, -4)
-                  )
-                ]
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 60,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                    ),
-                    child: Image.asset("assets/icons/cart.png",width: 24,),
+            bottomNavigationBar: AugmontBottomAppBar(
+              child: Visibility(
+                visible: purpose!=Purpose.withdrawal,
+                replacement: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0)
+                    )
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.to(()=> const EmiLandingScreen(),binding: ShopEMIBinding(),transition: Transition.rightToLeft);
-                      },
-                      child: Container(
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          border: Border.all(),
+                  onPressed: () {
+                    Get.to(()=> const WithdrawalFromScreen());
+                  },
+                  child: const Text("Select Investments"),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 60,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                      ),
+                      child: Image.asset("assets/icons/cart.png",width: 24,),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.to(()=> const EmiLandingScreen(),binding: ShopEMIBinding(),transition: Transition.rightToLeft);
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                          ),
+                          child: Text("Book on EMI",style: CustomTheme.style(weight: FontWeight.bold),),
                         ),
-                        child: Text("Book on EMI",style: CustomTheme.style(weight: FontWeight.bold),),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      color: Colors.black,
-                      child: Text("Buy Now",style: CustomTheme.style(weight: FontWeight.bold,color: Colors.white),),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.center,
+                        color: Colors.black,
+                        child: Text("Buy Now",style: CustomTheme.style(weight: FontWeight.bold,color: Colors.white),),
+                      ),
                     ),
-                  ),
-
-                ],
+                  ],
+                ),
               ),
             ),
           ),

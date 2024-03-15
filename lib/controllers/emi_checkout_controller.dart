@@ -1,3 +1,4 @@
+import 'package:augmont_v2/Screens/Shop/product_list_screen.dart';
 import 'package:augmont_v2/widgets/payment_method_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,8 @@ class EmiCheckoutController extends GetxController with StateMixin<dynamic>{
   var currentStep = 0;
 
   PaymentMethod? paymentMethod;
+
+  Purpose purpose = Purpose.emi;
 
   @override
   void onInit() {

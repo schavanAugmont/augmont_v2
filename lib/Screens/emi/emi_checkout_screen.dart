@@ -1,5 +1,6 @@
 import 'package:augmont_v2/Screens/emi/components/emi_address_page.dart';
 import 'package:augmont_v2/Screens/emi/components/emi_summary_page.dart';
+import 'package:augmont_v2/Screens/withdrawal/withdrawal_order_detail_screen.dart';
 import 'package:augmont_v2/Utils/colors.dart';
 import 'package:augmont_v2/Utils/themes.dart';
 
@@ -8,21 +9,24 @@ import '../../widgets/augmont_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../Shop/product_list_screen.dart';
 import 'emi_detail_screen.dart';
 
 class EmiCheckoutScreen extends StatelessWidget {
-  const EmiCheckoutScreen({super.key});
+  final Purpose purpose;
+  const EmiCheckoutScreen({super.key,this.purpose = Purpose.emi});
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<EmiCheckoutController>(
       builder: (controller) {
+        controller.purpose = purpose;
         return SafeArea(
           child: Scaffold(
             backgroundColor: Colors.white,
-            appBar: const AugmontAppbar(
+            appBar:  AugmontAppbar(
               canBack: true,
-              title: "Checkout",
+              title:purpose==Purpose.emi? "Checkout":"Purchase Summary",
             ),
             bottomNavigationBar: AnimatedContainer(
               duration: const Duration(milliseconds: 400),
@@ -49,7 +53,9 @@ class EmiCheckoutScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8.0),
                         )
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(()=> const WithdrawalOrderDetailScreen());
+                    },
                     child: Text("Proceed to Pay",style: CustomTheme.style(weight: FontWeight.w600,color: Colors.white),),
                   ),
                 ],
