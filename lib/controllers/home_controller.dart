@@ -39,10 +39,10 @@ class HomeController extends GetxController with StateMixin<dynamic> {
   @override
   void onInit() {
     sessionManager = SessionManager();
-    currentGoldBuyRate('₹ $goldBuyRate  / gm');
-    currentSilverBuyRate('₹ $silverBuyRate  / gm');
-    currentGoldSellRate('₹ $goldSellRate  / gm');
-    currentSilverSellRate('₹ $silverSellRate  / gm');
+    currentGoldBuyRate('₹ $goldBuyRate/gm');
+    currentSilverBuyRate('₹ $silverBuyRate/gm');
+    currentGoldSellRate('₹ $goldSellRate/gm');
+    currentSilverSellRate('₹ $silverSellRate/gm');
     setTimer();
     //isLoggedIn();
     super.onInit();
@@ -83,11 +83,11 @@ class HomeController extends GetxController with StateMixin<dynamic> {
         goldBuyGstRate = double.parse(rates.rate.rates.gBuyGst);
         silverBuyGstRate = double.parse(rates.rate.rates.sBuyGst);
 
-        currentGoldBuyRate('₹ $goldBuyRate  / gm');
-        currentSilverBuyRate('₹ $silverBuyRate  / gm');
+        currentGoldBuyRate('₹ $goldBuyRate/gm');
+        currentSilverBuyRate('₹ $silverBuyRate/gm');
 
-        currentGoldSellRate('₹ $goldSellRate  / gm');
-        currentSilverSellRate('₹ $silverSellRate  / gm');
+        currentGoldSellRate('₹ $goldSellRate/gm');
+        currentSilverSellRate('₹ $silverSellRate/gm');
 
         redrawObject = Object();
 

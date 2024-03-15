@@ -26,7 +26,7 @@ class HeaderWalletView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 5, right: 15),
+      padding: const EdgeInsets.only(left: 5, right: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,7 +46,7 @@ class HeaderWalletView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(left: 10),
+
                   height: 50,
                   child: Image.asset('assets/images/logo.png'),
                 ),
@@ -62,7 +62,7 @@ class HeaderWalletView extends StatelessWidget {
                         child: Image.asset(
                           'assets/images/ic_bell.png',
                           width: 20,
-                          color: primaryColor,
+                          color: bottomNavigationColor,
                         ),
                       ),
                       const SizedBox(
@@ -73,7 +73,7 @@ class HeaderWalletView extends StatelessWidget {
                         child: Image.asset(
                           'assets/images/ic_gift.png',
                           width: 20,
-                          color: primaryColor,
+                          color: bottomNavigationColor,
                         ),
                       ),
                     ],

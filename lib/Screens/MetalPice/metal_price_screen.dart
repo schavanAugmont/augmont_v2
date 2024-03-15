@@ -8,25 +8,28 @@ class MetalPriceScreen extends StatelessWidget{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      color: kycProductBackgroundColor,
+
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(Strings.goldPrice,
               style: TextStyle(
                 color: primaryTextColor,
                 fontFamily: Strings.fontFamilyName,
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
               )),
-          Spacer(),
+
+          SizedBox(width: 10,),
+
           Text('₹ 6000/gm',
               style: TextStyle(
-                color: primaryTextColor,
+                color: Colors.green,
                 fontFamily: Strings.fontFamilyName,
-                fontWeight: FontWeight.normal,
-                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
               )),
           const SizedBox(
             width: 5,

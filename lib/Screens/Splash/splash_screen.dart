@@ -76,27 +76,29 @@ _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          Future.delayed(const Duration(seconds: 2), () async {
-            var isLogin = await SessionManager.isLoggedIn();
-            var isDashSelect = await SessionManager.getIsDashSelected();
-            print(isDashSelect);
-            if (isLogin) {
-              Get.off(
-                  () => const SignInPage3(
-                        isForgot: false,
-                        refCode: '',
-                      ),
-                  binding: SignInBiding());
+          // Future.delayed(const Duration(seconds: 2), () async {
+          //   var isLogin = await SessionManager.isLoggedIn();
+          //   var isDashSelect = await SessionManager.getIsDashSelected();
+          //   print(isDashSelect);
+          //   if (isLogin) {
+          //     Get.off(
+          //         () => const SignInPage3(
+          //               isForgot: false,
+          //               refCode: '',
+          //             ),
+          //         binding: SignInBiding());
+          //
+          //   // Get.off(() => PersonalizeQuestionScreen(), binding: PersonalizedQuesBiding());
+          //   } else {
+          //     if (isDashSelect) {
+          //       Get.off(() => const MainScreen(), binding: MainScreenBinding());
+          //     } else {
+          //       Get.off(() => const OnboardScreen(), binding: IntroBiding());
+          //     }
+          //   }
+          // });
 
-            // Get.off(() => PersonalizeQuestionScreen(), binding: PersonalizedQuesBiding());
-            } else {
-              if (isDashSelect) {
-                Get.off(() => const MainScreen(), binding: MainScreenBinding());
-              } else {
-                Get.off(() => const OnboardScreen(), binding: IntroBiding());
-              }
-            }
-          });
+          Get.off(() => const MainScreen(), binding: MainScreenBinding());
 
           // Get.offAll(
           //       () => const OnboardScreen(),

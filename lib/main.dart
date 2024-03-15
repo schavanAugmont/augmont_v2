@@ -16,13 +16,13 @@ Future<void> main() async {
   await FlutterDownloader.initialize();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.white,
+      statusBarColor: Colors.black,
       statusBarBrightness: Brightness.dark,
       statusBarIconBrightness: Brightness.dark,
     ),
   );
   SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],);
   await DeviceUtil.instance.init();
   await GetStorage.init('augmont');
   runApp(const AugmontApp());

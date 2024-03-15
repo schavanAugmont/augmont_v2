@@ -39,7 +39,7 @@ const redColor = Color(0xFFFF0000);
 const kycProductBackgroundColor = Color(0xffF7F8FA);
 const greenColor = Color(0xff00A300);
 const grayColor = Color(0xff95a5a6);
-
+const borderColor=Color(0xffD1E3E8);
 const lightgreenshede = Color(0xFFF0FAF6);
 Color lightgreenshede1 = const Color(0xFFB2D9CC);
 Color greenshede0 = const Color(0xFF66A690);

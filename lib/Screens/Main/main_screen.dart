@@ -48,6 +48,8 @@ class _MainBodyState extends State<MainScreen> with WidgetsBindingObserver {
       builder: (controller) {
         return WillPopScope(
           child: Scaffold(
+            extendBody: true,
+            backgroundColor: Colors.white,
             body: Stack(
               children: [
                 _buildOffstageNavigator(0, controller),
@@ -133,7 +135,7 @@ class _MainBodyState extends State<MainScreen> with WidgetsBindingObserver {
           const Padding(
             padding: EdgeInsets.all(5.0),
             child: ImageIcon(
-              AssetImage("assets/images/ic_home.png"),
+              AssetImage("assets/images/bottom_menu1.png"),
             ),
           ),
           Strings.home.toCapitalized()),
@@ -141,7 +143,7 @@ class _MainBodyState extends State<MainScreen> with WidgetsBindingObserver {
           const Padding(
             padding: EdgeInsets.all(5.0),
             child: ImageIcon(
-              AssetImage("assets/images/ic_exchange.png"),
+              AssetImage("assets/images/bottom_menu2.png"),
             ),
           ),
           Strings.exchange.toCapitalized()),
@@ -149,7 +151,7 @@ class _MainBodyState extends State<MainScreen> with WidgetsBindingObserver {
           const Padding(
             padding: EdgeInsets.all(5.0),
             child: ImageIcon(
-              AssetImage("assets/images/ic_shop.png"),
+              AssetImage("assets/images/bottom_menu3.png"),
             ),
           ),
           Strings.shop.toCapitalized()),
@@ -157,7 +159,7 @@ class _MainBodyState extends State<MainScreen> with WidgetsBindingObserver {
           const Padding(
             padding: EdgeInsets.all(5.0),
             child: ImageIcon(
-              AssetImage("assets/images/ic_more.png"),
+              AssetImage("assets/images/bottom_menu4.png"),
             ),
           ),
           Strings.more.toCapitalized())
