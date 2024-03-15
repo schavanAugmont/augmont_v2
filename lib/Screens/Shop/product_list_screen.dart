@@ -12,15 +12,19 @@ import 'package:get/get.dart';
 
 import '../../bottomsheet/search_bottomsheet.dart';
 
+enum Purpose{buy,emi,withdrawal}
+
 class ProductListScreen extends StatelessWidget {
   final String query;
+  final Purpose purpose;
 
-  const ProductListScreen({super.key, this.query = ""});
+  const ProductListScreen({super.key, this.query = "",this.purpose = Purpose.buy});
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ProductController>(
       builder: (controller) {
+        controller.purpose = purpose;
         return SafeArea(
           child: Scaffold(
             backgroundColor: Colors.white,
@@ -147,7 +151,7 @@ class ProductListScreen extends StatelessWidget {
                       return GestureDetector(
                         onTap: () {
                           Get.to(
-                            () => const ProductDetailScreen(),
+                            () => ProductDetailScreen(purpose: purpose,),
                             binding: ProductDetailBinding(),
                             transition: Transition.rightToLeft,
                           );

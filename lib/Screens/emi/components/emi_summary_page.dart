@@ -1,3 +1,4 @@
+import 'package:augmont_v2/Screens/Shop/product_list_screen.dart';
 import 'package:augmont_v2/Utils/colors.dart';
 import 'package:augmont_v2/Utils/themes.dart';
 import 'package:augmont_v2/controllers/emi_checkout_controller.dart';
@@ -47,7 +48,9 @@ class EmiSummaryPage extends StatelessWidget {
                       color: Colors.black26,
                     ),
                     summry("Product Price", "₹57,500"),
-                    summry("EMI / month", "₹9,000*6"),
+                    if(controller.purpose == Purpose.emi)...[
+                      summry("EMI / month", "₹9,000*6"),
+                    ],
                     summry("Additional Charges (3% GST)", "₹500"),
                     summry("Total Interest amount", "₹1500"),
                     summry("Platform Fee", "₹20"),
@@ -77,26 +80,28 @@ class EmiSummaryPage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 14),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: lightColor)
+              if(controller.purpose == Purpose.emi)...[
+                const SizedBox(height: 14),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: lightColor)
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("First EMI Date : ",style: CustomTheme.style(),),
+                      Text("02 FEB, 24.",style: CustomTheme.style(weight: FontWeight.w600),),
+                    ],
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("First EMI Date : ",style: CustomTheme.style(),),
-                    Text("02 FEB, 24.",style: CustomTheme.style(weight: FontWeight.w600),),
-                  ],
-                ),
-              ),
+              ],
               const SizedBox(height: 14),
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: lightColor,
-                  border: Border.all(color: Colors.black26),
+                  border: Border.all(color: Colors.black12),
                   borderRadius: BorderRadius.circular(8.0)
                 ),
                 child: Row(

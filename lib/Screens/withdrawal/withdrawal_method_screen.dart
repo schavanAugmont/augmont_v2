@@ -1,3 +1,4 @@
+import 'package:augmont_v2/Screens/withdrawal/withdrawal_convert_into_jewellery_screen.dart';
 import 'package:augmont_v2/Utils/colors.dart';
 import 'package:augmont_v2/Utils/extension_util.dart';
 import 'package:augmont_v2/Utils/themes.dart';
@@ -70,7 +71,7 @@ class WithdrawalMethodScreen extends StatelessWidget {
               20.h,
               GestureDetector(
                 onTap: (){
-
+                  Get.to(()=>const WithdrawalConvertIntoJewellery());
                 },
                 child: Container(
                   decoration: BoxDecoration(
