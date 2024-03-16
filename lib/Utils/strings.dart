@@ -861,6 +861,10 @@ class Strings {
 
   static String back="Back";
 
+  static String investNow="Invest Now";
+  static String myPortfolio="My Portfolio";
+  static String totalValue="Total Value";
+
 }
 
 extension StringExtension on String {

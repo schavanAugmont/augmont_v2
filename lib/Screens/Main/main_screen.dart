@@ -62,6 +62,7 @@ class _MainBodyState extends State<MainScreen> with WidgetsBindingObserver {
             bottomNavigationBar: BottomNavigationBar(
               items: _navBarItems(),
               onTap: controller.onTap,
+
               currentIndex: controller.selectedIndex,
               elevation: 15,
               type: BottomNavigationBarType.fixed,

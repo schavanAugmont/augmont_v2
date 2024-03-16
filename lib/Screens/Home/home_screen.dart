@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:augmont_v2/Controllers/main_screen_controller.dart';
 import 'package:augmont_v2/Screens/Home/Components/home_components.dart';
 import 'package:augmont_v2/Utils/colors.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../Controllers/home_controller.dart';
 import '../../Utils/session_manager.dart';
@@ -85,8 +88,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  createProfile(context),
-                  goldSelection(context, controller),
+                  if (controller.isLoggedIn.value) createProfile(context),
+                  if (controller.isLoggedIn.value)
+                    goldSelection(context, controller),
+                  portfolioContainer(context),
+                  priceNugets(context),
+                  earningNugetsContainer(context),
+                  sipContainer(context),
+                  rewardNugetsContainer(context),
                   loanContainer(context),
                   setfdView(context),
                   Container(
@@ -95,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Expanded(
-                            child: nudgetWid(
+                            child: moduleWidget(
                                 "Get gold loan at 6% p.a.*",
                                 "Get Started",
                                 "assets/images/gold_bricks.png",
@@ -106,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: 10,
                         ),
                         Expanded(
-                            child: nudgetWid(
+                            child: moduleWidget(
                                 "Looking to Sell your gold?",
                                 "Get Started",
                                 "assets/images/gold_bag.png",
@@ -167,7 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Expanded(
-                            child: nudgetWid(
+                            child: moduleWidget(
                                 "Gift Gold to your \nLoved once",
                                 "Gift Now",
                                 "assets/images/gift_image.png",
@@ -178,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: 10,
                         ),
                         Expanded(
-                            child: nudgetWid(
+                            child: moduleWidget(
                                 "Refer and Earn Gold up to 10,000",
                                 "Get Started",
                                 "assets/images/share_coin.png",
@@ -201,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget nudgetWid(String title, String actn, String logo, bool bool,
+  Widget moduleWidget(String title, String actn, String logo, bool bool,
       HomeController controller, BuildContext context) {
     return Container(
         padding: EdgeInsets.all(10),
@@ -225,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   maxLines: 3,
                   style: TextStyle(
                     color: primaryTextColor,
-                    fontFamily: Strings.fontFamilyName,
+                    fontFamily: Strings.fontfamilyCabinetGrotesk,
                     fontWeight: FontWeight.w700,
                     fontSize: 17,
                   )),
@@ -321,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
               maxLines: 2,
               style: TextStyle(
                 color: bottomNavigationColor,
-                fontFamily: Strings.fontFamilyName,
+                fontFamily: Strings.fontfamilyCabinetGrotesk,
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
               )),
@@ -572,8 +581,8 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        border: Border.all(color: lightColor, width: 1.0),
-        borderRadius: BorderRadius.circular(6.0),
+        border: Border.all(color: borderColor, width: 1.0),
+        borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -641,24 +650,25 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 10,
           ),
-
-          Row(children: [
-            Text("0.5 gm ",
-                style: TextStyle(
-                  color: bottomNavigationColor,
-                  fontFamily: Strings.fontFamilyName,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                )),
-            Spacer(),
-            Text("2 gm ",
-                style: TextStyle(
-                  color: bottomNavigationColor,
-                  fontFamily: Strings.fontFamilyName,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                )),
-          ],),
+          Row(
+            children: [
+              Text("0.5 gm ",
+                  style: TextStyle(
+                    color: bottomNavigationColor,
+                    fontFamily: Strings.fontFamilyName,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  )),
+              Spacer(),
+              Text("2 gm ",
+                  style: TextStyle(
+                    color: bottomNavigationColor,
+                    fontFamily: Strings.fontFamilyName,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  )),
+            ],
+          ),
           SizedBox(
             height: 4,
           ),
@@ -676,8 +686,8 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       padding: const EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        border: Border.all(color: lightColor, width: 1.0),
-        borderRadius: BorderRadius.circular(6.0),
+        border: Border.all(color: borderColor, width: 1.0),
+        borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -706,78 +716,80 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontSize: 18,
                         )),
                     const SizedBox(height: 10),
-                   Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     crossAxisAlignment: CrossAxisAlignment.start,
-                     children: [
-                       RichText(
-                           text: TextSpan(
-                             text: "₹15,000 \n",
-                             style: TextStyle(
-                               fontFamily: Strings.fontFamilyName,
-                               fontWeight: FontWeight.w600,
-                               color: primaryTextColor,
-                               fontSize: 14,
-                             ),
-                             children: <TextSpan>[
-                               TextSpan(
-                                 text: 'Installment Amount',
-                                 style: TextStyle(
-                                   fontFamily: Strings.fontFamilyName,
-                                   fontWeight: FontWeight.normal,
-                                   color: primaryTextColor,
-                                   fontSize: 10,
-                                 ),
-                               ),
-                             ],
-                           )),
-
-                       RichText(
-                           text: TextSpan(
-                             text: "07",
-                             style: TextStyle(
-                               fontFamily: Strings.fontFamilyName,
-                               fontWeight: FontWeight.w600,
-                               color: primaryTextColor,
-                               fontSize: 14,
-                             ),
-                             children: <TextSpan>[
-                               TextSpan(
-                                 text: "/10\n",
-                                 style: TextStyle(
-                                   fontFamily: Strings.fontFamilyName,
-                                   fontWeight: FontWeight.normal,
-                                   color: primaryTextColor,
-                                   fontSize: 14,
-                                 ) ),
-                               TextSpan(
-                                 text: 'Installment',
-                                 style: TextStyle(
-                                   fontFamily: Strings.fontFamilyName,
-                                   fontWeight: FontWeight.normal,
-                                   color: primaryTextColor,
-                                   fontSize: 10,
-                                 ),
-                               ),
-                             ],
-                           )),
-                     ],
-                   )
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RichText(
+                            text: TextSpan(
+                          text: "₹15,000 \n",
+                          style: TextStyle(
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.w600,
+                            color: primaryTextColor,
+                            fontSize: 14,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Installment Amount',
+                              style: TextStyle(
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.normal,
+                                color: primaryTextColor,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        )),
+                        RichText(
+                            text: TextSpan(
+                          text: "07",
+                          style: TextStyle(
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.w600,
+                            color: primaryTextColor,
+                            fontSize: 14,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                                text: "/10\n",
+                                style: TextStyle(
+                                  fontFamily: Strings.fontFamilyName,
+                                  fontWeight: FontWeight.normal,
+                                  color: primaryTextColor,
+                                  fontSize: 14,
+                                )),
+                            TextSpan(
+                              text: 'Installment',
+                              style: TextStyle(
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.normal,
+                                color: primaryTextColor,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ],
+                        )),
+                      ],
+                    )
                   ],
                 ),
               ),
-              SizedBox(width: 10,),
+              SizedBox(
+                width: 10,
+              ),
               Container(
                 alignment: Alignment.center,
-                child: Image.asset("assets/images/share_coin.png",height: 50,),
+                child: Image.asset(
+                  "assets/images/share_coin.png",
+                  height: 50,
+                ),
               ),
             ],
           ),
           SizedBox(
             height: 10,
           ),
-
-
           LinearProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
             value: 0.3,
@@ -785,5 +797,663 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  Widget priceNugets(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: borderColor,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Lowest Gold Price in 3 Months",
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontfamilyCabinetGrotesk,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20,
+                      )),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(Strings.investNow,
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: bottomNavigationColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      )),
+                ],
+              )),
+              SizedBox(
+                width: 20,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/low_price_image.png',
+                    height: 60,
+                  ),
+                  Text("₹6,002/gm",
+                      maxLines: 5,
+                      style: TextStyle(
+                        color: bottomNavigationColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 17,
+                      ))
+                ],
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget sipContainer(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      padding: const EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: borderColor, width: 1.0),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text("Wedding Jewellery",
+              style: TextStyle(
+                color: primaryTextColor,
+                fontFamily: Strings.fontFamilyName,
+                fontWeight: FontWeight.normal,
+                fontSize: 10,
+              )),
+          Text("Earn up to ₹5.57 CR on your SIP ",
+              style: TextStyle(
+                color: bottomNavigationColor,
+                fontFamily: Strings.fontfamilyCabinetGrotesk,
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              )),
+          const SizedBox(height: 20),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                      text: TextSpan(
+                    text: "Current earnings ",
+                    style: TextStyle(
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.w600,
+                      color: primaryTextColor,
+                      fontSize: 14,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: '(After 40 Years)',
+                        style: TextStyle(
+                          fontFamily: Strings.fontFamilyName,
+                          fontWeight: FontWeight.normal,
+                          color: primaryTextColor,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  )),
+                  Text(
+                    "₹75 Lakhs",
+                    style: TextStyle(
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.w600,
+                      color: primaryTextColor,
+                      fontSize: 12,
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              LinearProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                value: 0.3,
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                      text: TextSpan(
+                    text: "Current earnings ",
+                    style: TextStyle(
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.w600,
+                      color: primaryTextColor,
+                      fontSize: 14,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: '(After 40 Years)',
+                        style: TextStyle(
+                          fontFamily: Strings.fontFamilyName,
+                          fontWeight: FontWeight.normal,
+                          color: primaryTextColor,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  )),
+                  Text(
+                    "₹75 Lakhs",
+                    style: TextStyle(
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.w600,
+                      color: primaryTextColor,
+                      fontSize: 12,
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              LinearProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                value: 0.3,
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: deliveryDescTextColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5.0),
+                  ),
+                ),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Step-up your SIP by 5%",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      )),
+                  Image.asset(
+                    "assets/images/arrow_right.png",
+                    height: 20,
+                  )
+                ],
+              ))
+        ],
+      ),
+    );
+  }
+
+  Widget rewardNugetsContainer(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      decoration: BoxDecoration(
+        border: Border.all(color: borderColor, width: 1.0),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                color: borderColor,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(10.0),
+                  topLeft: Radius.circular(10.0),
+                )),
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Text(Strings.myPortfolio,
+                    style: TextStyle(
+                      color: bottomNavigationColor,
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    )),
+                Spacer(),
+                RichText(
+                    text: TextSpan(
+                  text: "${Strings.totalValue}\n",
+                  style: TextStyle(
+                    fontFamily: Strings.fontFamilyName,
+                    fontWeight: FontWeight.w500,
+                    color: primaryTextColor,
+                    fontSize: 11,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: '12 Grams',
+                      style: TextStyle(
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w600,
+                        color: primaryTextColor,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
+                )),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(
+                  child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    RichText(
+                        text: TextSpan(
+                      text: "Level 3\n",
+                      style: TextStyle(
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w500,
+                        color: primaryTextColor,
+                        fontSize: 13,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text: 'Novice',
+                          style: TextStyle(
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.w800,
+                            color: primaryTextColor,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    )),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    LinearProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                      value: 0.3,
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                      "Invest more worth 3 grams of gold to reach the next level",
+                      style: TextStyle(
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.normal,
+                        color: primaryTextColor,
+                        fontSize: 13,
+                      ),
+                      maxLines: 4,
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "View all levels",
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w700,
+                        color: primaryTextColor,
+                        fontSize: 13,
+                      ),
+                    )
+                  ],
+                ),
+              )),
+              SizedBox(
+                width: 10,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "04",
+                    style: TextStyle(
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.w700,
+                      color: primaryTextColor,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Image.asset(
+                    "assets/images/crown_icon.png",
+                  ),
+                  Text(
+                    "15g",
+                    style: TextStyle(
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.normal,
+                      color: primaryTextColor,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget earningNugetsContainer(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      decoration: BoxDecoration(
+        border: Border.all(color: borderColor, width: 1.0),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                color: borderColor,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(10.0),
+                  topLeft: Radius.circular(10.0),
+                )),
+            padding: EdgeInsets.all(10),
+            child: Row(
+              children: [
+                Image.asset(
+                  "assets/images/trend_down.png",
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text("You’ve missed on earning ₹15,325",
+                    style: TextStyle(
+                      color: bottomNavigationColor,
+                      fontFamily: Strings.fontfamilyCabinetGrotesk,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                    )),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Image.asset(
+                      "assets/images/trend_up.png",
+                    ),
+                    SizedBox(
+                      width: 2,
+                    ),
+                    Text("Your Earnings",
+                        style: TextStyle(
+                          color: bottomNavigationColor,
+                          fontFamily: Strings.fontFamilyName,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        )),
+                    Spacer(),
+                    Image.asset(
+                      "assets/images/database.png",
+                    ),
+                    SizedBox(
+                      width: 2,
+                    ),
+                    Text("Missed Earnings",
+                        style: TextStyle(
+                          color: bottomNavigationColor,
+                          fontFamily: Strings.fontFamilyName,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        )),
+                  ],
+                ),
+                Container(
+                  child: LinearProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                    value: 0.3,
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 15),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                OutlinedButton(
+                    onPressed: () {},
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Enable Gold+",
+                            style: TextStyle(
+                              color: bottomNavigationColor,
+                              fontFamily: Strings.fontFamilyName,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            )),
+                        Image.asset(
+                          "assets/images/arrow_right.png",
+                          height: 20,
+                          color: bottomNavigationColor,
+                        )
+                      ],
+                    ))
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget portfolioContainer(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      decoration: BoxDecoration(
+        border: Border.all(color: borderColor, width: 1.0),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          // background image and bottom contents
+          Column(
+            children: <Widget>[
+              Container(
+                width: MediaQuery.sizeOf(context).width,
+                decoration: BoxDecoration(
+                    color: borderColor,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10.0),
+                      topLeft: Radius.circular(10.0),
+                    )),
+                padding: EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      children: [
+                        Text("My Portfolio",
+                            style: TextStyle(
+                              color: bottomNavigationColor,
+                              fontFamily: Strings.fontFamilyName,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                            )),
+                        SizedBox(width: 5,),
+                        Icon(Icons.remove_red_eye_outlined,color: bottomNavigationColor,size: 18,)
+                      ],
+                    ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text("₹1,03,500",
+                        style: TextStyle(
+                          color: primaryTextColor,
+                          fontFamily: Strings.fontfamilyCabinetGrotesk,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 22,
+                        )),
+                    SizedBox(
+                      height: 30,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.sizeOf(context).width,
+                margin: EdgeInsets.all(10),
+                color: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 40,
+                    ),
+                    Text("View Details",
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontFamily: Strings.fontFamilyName,
+                          fontWeight: FontWeight.w600,
+                          color: primaryTextColor,
+                          fontSize: 14,
+                        )),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    OutlinedButton(
+                        onPressed: () {},
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Invest More",
+                                style: TextStyle(
+                                  color: bottomNavigationColor,
+                                  fontFamily: Strings.fontFamilyName,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                )),
+                            Image.asset(
+                              "assets/images/arrow_right.png",
+                              height: 20,
+                              color: bottomNavigationColor,
+                            )
+                          ],
+                        ))
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Profile image
+          Positioned(
+            top: 85.0,
+            left: 10.0,
+            right: 10.0,
+            child: Container(
+              width: MediaQuery.sizeOf(context).width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: borderColor, width: 1.0),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              padding: EdgeInsets.all(15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  portfolioWidget("12g ", "Total Gold"),
+                  portfolioWidget("08g ", "Total Silver"),
+                  portfolioWidget("0.78g ", "Gold+ Earned"),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget portfolioWidget(String value, String title) {
+    return RichText(
+        text: TextSpan(
+      text: "$value\n",
+      style: TextStyle(
+        fontFamily: Strings.fontFamilyName,
+        fontWeight: FontWeight.w600,
+        color: primaryTextColor,
+        fontSize: 18,
+      ),
+      children: <TextSpan>[
+        TextSpan(
+          text: title,
+          style: TextStyle(
+            fontFamily: Strings.fontFamilyName,
+            fontWeight: FontWeight.normal,
+            color: primaryTextColor,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    ));
   }
 }

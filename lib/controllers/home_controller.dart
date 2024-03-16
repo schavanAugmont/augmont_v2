@@ -20,6 +20,7 @@ import '../network/Providers/HomeProvider.dart';
 
 class HomeController extends GetxController with StateMixin<dynamic> {
   late SessionManager sessionManager;
+  var isLoggedIn=false.obs;
 
   Timer? timer;
 
