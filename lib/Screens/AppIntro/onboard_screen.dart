@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Bindings/signin_binding.dart';
+import '../../Models/ScreenDataModel.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
 
@@ -35,7 +36,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
                               (index) => controller.buildDot(index: index),
                             ),
                           ),
-
                           Spacer(),
                           GestureDetector(
                             child: Text("Skip",
@@ -66,13 +66,9 @@ class _OnboardScreenState extends State<OnboardScreen> {
                           itemCount: controller.allinonboardlist.length,
                           itemBuilder: (context, index) {
                             return PageBuilderWidget(
-                                title: controller.allinonboardlist[index].title
-                                    .toString(),
-                                description: controller
-                                    .allinonboardlist[index].description
-                                    .toString(),
-                                imgurl: controller.allinonboardlist[index].image
-                                    .toString());
+                              screenDataModel:
+                                  controller.allinonboardlist[index],
+                            );
                           }),
                     ),
                     Padding(
@@ -135,15 +131,9 @@ class _OnboardScreenState extends State<OnboardScreen> {
 }
 
 class PageBuilderWidget extends StatelessWidget {
-  String title;
-  String description;
-  String imgurl;
+  ScreenData screenDataModel;
 
-  PageBuilderWidget(
-      {Key? key,
-      required this.title,
-      required this.description,
-      required this.imgurl})
+  PageBuilderWidget({Key? key, required this.screenDataModel})
       : super(key: key);
 
   @override
@@ -156,10 +146,11 @@ class PageBuilderWidget extends StatelessWidget {
         children: [
           Center(
               child: Container(
+            height: 250,
             margin: const EdgeInsets.only(top: 20),
-            child: Image.asset(imgurl),
-            // child: FadeInImage.assetNetwork(
-            //     placeholder: 'assets/images/designf.jpg', image: imgurl),
+            child: screenDataModel.url!.isEmpty
+                ? Image.asset(screenDataModel!.image!)
+                : Image.network( screenDataModel!.url!),
           )),
           const SizedBox(
             height: 20,
@@ -173,14 +164,14 @@ class PageBuilderWidget extends StatelessWidget {
           //       fontSize: 30,
           //     )),
           RichText(
-          text: TextSpan(
-          children: getStyledTextSpan(title, "Gold"),
+              text: TextSpan(
+            children: getStyledTextSpan(screenDataModel!.title!, "Gold"),
           )),
           const SizedBox(
             height: 10,
           ),
           //discription
-          Text(description,
+          Text(screenDataModel!.description!,
               textAlign: TextAlign.start,
               style: TextStyle(
                 color: Colors.black,
@@ -198,29 +189,29 @@ class PageBuilderWidget extends StatelessWidget {
     List<String> words = sentence.split(" ");
 
     for (String word in words) {
-      if (word == dynamicWord ||  word == "\n$dynamicWord") {
+      if (word == dynamicWord || word == "\n$dynamicWord") {
         // Change the style for the dynamic word
         spans.add(
           TextSpan(
             text: word + " ",
             style: TextStyle(
-                    color: primaryColor,
-                    fontFamily: Strings.fontfamilyCabinetGrotesk,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 30,
-                  ),
+              color: primaryColor,
+              fontFamily: Strings.fontfamilyCabinetGrotesk,
+              fontWeight: FontWeight.w700,
+              fontSize: 30,
+            ),
           ),
         );
       } else {
         spans.add(
           TextSpan(
             text: word + " ",
-             style: TextStyle(
-                  color: primaryTextColor,
-                  fontFamily: Strings.fontfamilyCabinetGrotesk,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 30,
-                ),
+            style: TextStyle(
+              color: primaryTextColor,
+              fontFamily: Strings.fontfamilyCabinetGrotesk,
+              fontWeight: FontWeight.w700,
+              fontSize: 30,
+            ),
           ),
         );
       }

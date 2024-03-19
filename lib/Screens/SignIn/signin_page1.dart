@@ -25,9 +25,8 @@ class SignInPage1 extends StatefulWidget {
 class SignInPageState1 extends State<SignInPage1> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SignInController>(builder: (controller) {
+    return GetBuilder<SignInController>( builder: (controller) {
       return WillPopScope(
-
           onWillPop: () async {
             controller.clearSessionFields();
             Get.offAll(

@@ -13,13 +13,13 @@ import 'package:get/get.dart';
 
 import '../controllers/digitalinvestment_controller.dart';
 import '../controllers/myorders_controller.dart';
-import '../controllers/wallet_controller.dart';
+import '../controllers/wallets_controller.dart';
 
 class MoreBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<EditProfileController>(() => EditProfileController());
-    Get.lazyPut<WalletController>(() => WalletController());
+    Get.lazyPut<WalletsController>(() => WalletsController());
     Get.lazyPut<NomineeController>(() => NomineeController());
     Get.lazyPut<PoliciesController>(() => PoliciesController());
     Get.lazyPut<EditNomineeController>(() => EditNomineeController());

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:augmont_v2/Controllers/home_controller.dart';
 import 'package:augmont_v2/Screens/More/ExchangeSetting/myLoan_screen.dart';
 import 'package:augmont_v2/Screens/More/ExchangeSetting/soglisting_screen.dart';
 import 'package:augmont_v2/Screens/More/OtherSettings/asstes_screen.dart';
@@ -259,6 +260,8 @@ class MoreController extends GetxController with StateMixin<dynamic> {
   void logoutDailog(BuildContext context) {
     showModalBottomSheet<int>(
       backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      useRootNavigator: true,
       context: context,
       builder: (context) {
         return StatefulBuilder(builder: (context, StateSetter setState) {
@@ -303,6 +306,7 @@ class MoreController extends GetxController with StateMixin<dynamic> {
                              SessionManager.setSelectedProduct(Strings.moduleOther);
                              SessionManager.setIsDashSelected(true);
                              checkLoginStatus();
+                             HomeController.to.isLoggedIn();
                              update();
                              Navigator.pop(context);
                            },

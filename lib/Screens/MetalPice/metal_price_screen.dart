@@ -4,7 +4,11 @@ import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
 
 class MetalPriceScreen extends StatelessWidget{
-  @override
+   final String metalPrice;
+
+   const MetalPriceScreen({super.key,required this.metalPrice});
+
+   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
@@ -24,7 +28,7 @@ class MetalPriceScreen extends StatelessWidget{
 
           SizedBox(width: 10,),
 
-          Text('₹ 6000/gm',
+          Text(metalPrice,
               style: TextStyle(
                 color: Colors.green,
                 fontFamily: Strings.fontFamilyName,

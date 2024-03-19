@@ -16,6 +16,29 @@ class HomeProvider  extends GetConnect {
   }
 
 
+  Future<dynamic> getProductList() async {
+    try {
+      final response = await ApiClient().getApi("customer/app/category/category-list",server: ServerType.EMI);
+      print(response);
+      return response;
+
+    }catch(e){
+      return Future.error(e);
+    }
+  }
+
+  Future<dynamic> getStepupSIPList(String customerId) async {
+    try {
+      final response = await ApiClient().getApi("sip/sip-data/all-sip?from=1&to=25&customerId=$customerId&isStepUpSip=false");
+      print(response);
+      return response;
+
+    }catch(e){
+      return Future.error(e);
+    }
+  }
+
+
   Future<dynamic> getAppVersion() async {
     try {
       final response = await ApiClient().getApi("app-version");

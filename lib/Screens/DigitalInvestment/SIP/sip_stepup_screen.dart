@@ -99,7 +99,7 @@ class _SIPStepupState extends State<SIPStepupScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              MetalPriceScreen(),
+             MetalPriceScreen(metalPrice: "₹ 0,00/gm",),
               if (widget.isEditable)
                 Container(
                   margin: EdgeInsets.only(bottom: 10, left: 10, right: 10),

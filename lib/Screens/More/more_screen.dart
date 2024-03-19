@@ -156,7 +156,7 @@ class MoreScreen extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            textComponent("Sagar Chavan", 15, FontWeight.w600),
+            textComponent("Customer Name", 15, FontWeight.w600),
             SizedBox(
               height: 2,
             ),

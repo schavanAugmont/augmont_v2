@@ -92,7 +92,7 @@ class DigitalInvestmentController extends GetxController {
                   ),
                 ),
 
-                MetalPriceScreen(),
+               MetalPriceScreen(metalPrice: "₹ 0,00/gm",),
                 SizedBox(
                   height: 10,
                 ),

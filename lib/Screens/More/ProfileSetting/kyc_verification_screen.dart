@@ -1,4 +1,4 @@
-import 'package:augmont_v2/controllers/wallet_controller.dart';
+import 'package:augmont_v2/controllers/wallets_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';

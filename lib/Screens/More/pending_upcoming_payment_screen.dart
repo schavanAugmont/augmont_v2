@@ -1,4 +1,4 @@
-import 'package:augmont_v2/controllers/wallet_controller.dart';
+import 'package:augmont_v2/controllers/wallets_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -19,7 +19,7 @@ class PendingUpcomingPaymentScreen extends StatefulWidget {
 class _PendingUpcomingPaymentState extends State<PendingUpcomingPaymentScreen> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<WalletController>(builder: (controller) {
+    return GetBuilder<WalletsController>(builder: (controller) {
       return PopScope(
           canPop: false, //It should be false to work
           onPopInvoked: (didPop) {

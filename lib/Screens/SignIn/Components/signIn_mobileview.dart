@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:augmont_v2/Screens/SignIn/Components/SignInComponents.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -82,6 +84,14 @@ class _SignInMobileViewState extends State<SignInMobileView>{
                   maxLength: 10,
                   maxLines: 1,
                   controller: controller.mobileTextController,
+                  onTap: () {
+                    if (Platform.isAndroid &&
+                        controller.isShowMobilePop
+                            .value) {
+                      controller
+                          .openMobilePopup();
+                    }
+                  },
                   onChanged: (value) {
                     if (Validator.validateMobileNumber(number: value)) {
                       controller.setEnableGenrateOtpButton(true);

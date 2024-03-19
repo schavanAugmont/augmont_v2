@@ -105,7 +105,7 @@ class _SIPSummaryState extends State<SIPSummaryScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              MetalPriceScreen(),
+             MetalPriceScreen(metalPrice: "₹ 0,00/gm",),
               sipDetailsWidget(),
               sipFieldWidget(controller)
             ],

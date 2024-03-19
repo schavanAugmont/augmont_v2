@@ -57,7 +57,7 @@ class _EditSIPState extends State<EditSIPScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              MetalPriceScreen(),
+             MetalPriceScreen(metalPrice: "₹ 0,00/gm",),
               editComponents(
                   "SIP Purpose: SIP Name", "Change SIP Purpose", 1, controller,context),
               editComponents("Amount per month: ₹6000", "Change SIP Structure",

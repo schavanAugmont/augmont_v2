@@ -4,30 +4,43 @@ import 'dart:convert';
 import 'package:augmont_v2/Screens/DigitalInvestment/digiinvestment_dashborad_screen.dart';
 import 'package:augmont_v2/Screens/GoldGift/gold_gift_screen.dart';
 import 'package:augmont_v2/bindings/gifting_binding.dart';
+import 'package:augmont_v2/controllers/wallet_controller.dart';
+import 'package:augmont_v2/models/HomeProductModel.dart';
+import 'package:augmont_v2/models/stepupsipList_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
+import '../Models/PassbookDetailsModel.dart';
 import '../Network/ErrorHandling.dart';
+import '../Network/Providers/SignInProvider.dart';
 import '../Utils/colors.dart';
+import '../Utils/dialog_helper.dart';
 import '../Utils/popover.dart';
 import '../Utils/print_logs.dart';
 import '../Utils/session_manager.dart';
 import '../Utils/strings.dart';
 import '../bindings/digitalinvestment_binding.dart';
+import '../models/FDPassbookDetailsModel.dart';
 import '../models/GoldRateModel.dart';
 import '../network/Providers/HomeProvider.dart';
+import '../network/Providers/WalletProvider.dart';
 
 class HomeController extends GetxController with StateMixin<dynamic> {
   late SessionManager sessionManager;
-  var isLoggedIn=false.obs;
+  var isUserLoggedIn = false.obs;
 
+  static HomeController get to => Get.find();
   Timer? timer;
 
   var currentGoldBuyRate = "".obs;
   var currentSilverBuyRate = "".obs;
   var currentGoldSellRate = "".obs;
   var currentSilverSellRate = "".obs;
+
+  var stepupListData = <StepupListData>[].obs;
+  var productListData = <ProductData>[].obs;
 
   double goldBuyGstRate = 0.0;
   double silverBuyGstRate = 0.0;
@@ -37,6 +50,24 @@ class HomeController extends GetxController with StateMixin<dynamic> {
   double silverSellRate = 0.0;
   var redrawObject = Object();
 
+  var walletGoldInGrams = "".obs;
+  var walletFDGoldInGrams = "".obs;
+  var walletSilverInGrams = "".obs;
+  var walletAmt = 0.0.obs;
+  late SessionManager _sessionManager;
+
+  var sellableGoldBalance = 0.0.obs;
+  var sellableSilverBalance = 0.0.obs;
+
+  var goldInGrams = 0.0.obs;
+  var goldFDGrams = 0.0.obs;
+  var silverInGrams = 0.0.obs;
+
+  var standardGoldRates = 0.0.obs;
+  var plusGoldRates = 0.0.obs;
+  var diffrenceGoldRate = 0.0.obs;
+  var isVisible=true.obs;
+
   @override
   void onInit() {
     sessionManager = SessionManager();
@@ -44,13 +75,19 @@ class HomeController extends GetxController with StateMixin<dynamic> {
     currentSilverBuyRate('₹ $silverBuyRate/gm');
     currentGoldSellRate('₹ $goldSellRate/gm');
     currentSilverSellRate('₹ $silverSellRate/gm');
+    setWalletData();
+    getProductList();
+    fetchGoldRate();
     setTimer();
-    //isLoggedIn();
+    isLoggedIn();
+
     super.onInit();
   }
 
   @override
   void onReady() {
+    // WalletController.to.fetchPassbookDetails();
+    // WalletController.to.getFDDetails();
     super.onReady();
   }
 
@@ -101,6 +138,93 @@ class HomeController extends GetxController with StateMixin<dynamic> {
         ErrorHandling.handleErrors(error);
       }
     });
+  }
+
+  Future<void> isLoggedIn() async {
+    var boo = await SessionManager.isLoggedIn();
+    // futureDate = await SessionManager.getDate();
+    isUserLoggedIn(boo);
+    update();
+    if (isUserLoggedIn.value) {
+      fetchPassbookDetails();
+      getFDDetails();
+      getStepupSIPList();
+    } else {
+      setWalletData();
+    }
+
+    // if(boo) FirebaseUtil.login();
+    // if (boo) {
+    //   final token = await sessionManager.getFcmToken();
+    //   sessionManager.isFcmTokenSet().then((value) {
+    //     if(value == false){
+    //       ApiBaseHelper().putApi('customer/app/notification/fcm-update',jsonEncode({
+    //         'fcmToken':token,
+    //       })).then((value){
+    //         sessionManager.setIsFcmTokenSet(true);
+    //       });
+    //     }
+    //   });
+    // }
+  }
+
+  Future<void> fetchPassbookDetails({showDialog = true}) async {
+    if (showDialog) DialogHelper.showLoading();
+    SignInProvider().getPassbookDetails().then(
+      (value) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        try {
+          var jsonMap = jsonDecode(value);
+          var details = PassbookDetailsModel.fromJson(jsonMap);
+          walletGoldInGrams(details.result.data.goldGrms + "g");
+          walletSilverInGrams(details.result.data.silverGrms + "g");
+
+          sellableGoldBalance(
+              double.parse(details.result.data.sellableGoldBalance));
+          sellableSilverBalance(
+              double.parse(details.result.data.sellableSilverBalance));
+
+          goldInGrams(double.parse(details.result.data.goldGrms));
+          silverInGrams(double.parse(details.result.data.silverGrms));
+
+          setDifferenceCal();
+
+          update();
+        } catch (e) {
+          PrintLogs.printException(e);
+        }
+      },
+      onError: (error) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        ErrorHandling.handleErrors(error);
+      },
+    );
+  }
+
+  Future<void> getFDDetails({showDialog = true}) async {
+    if (showDialog) DialogHelper.showLoading();
+    WalletProvider().getFDBalance().then(
+      (value) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        try {
+          var jsonMap = jsonDecode(value);
+          var details = FDPassbookDetailsModel.fromJson(jsonMap);
+          walletFDGoldInGrams(details.data!.result!.data!.investedGold! + "g");
+          goldFDGrams(double.parse(details.data!.result!.data!.investedGold!));
+          update();
+        } catch (e) {
+          PrintLogs.printException(e);
+        }
+      },
+      onError: (error) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        ErrorHandling.handleErrors(error);
+      },
+    );
   }
 
   void setTimer() async {
@@ -165,7 +289,8 @@ class HomeController extends GetxController with StateMixin<dynamic> {
                   ElevatedButton(
                       onPressed: () {
                         Get.back();
-                        Get.to(()=>GoldGiftScreen(),binding: GiftingBinding());
+                        Get.to(() => GoldGiftScreen(),
+                            binding: GiftingBinding());
                       },
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 40.0),
@@ -212,5 +337,90 @@ class HomeController extends GetxController with StateMixin<dynamic> {
         ),
       ],
     ));
+  }
+
+  void getStepupSIPList({showDialog = true}) async {
+    if (showDialog) DialogHelper.showLoading();
+    var customerId = SessionManager.getCustomerId();
+    HomeProvider().getStepupSIPList(customerId).then(
+      (value) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        try {
+          var jsonMap = jsonDecode(value);
+          print("sip kls $jsonMap");
+          var details = StepupSIPListModel.fromJson(jsonMap);
+          stepupListData.clear();
+          details.data?.forEach((it) {
+            stepupListData.add(it);
+          });
+          update();
+        } catch (e) {
+          PrintLogs.printException(e);
+        }
+      },
+      onError: (error) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        ErrorHandling.handleErrors(error);
+      },
+    );
+  }
+
+  void getProductList({showDialog = true}) async {
+    if (showDialog) DialogHelper.showLoading();
+    HomeProvider().getProductList().then(
+      (value) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        try {
+          var jsonMap = jsonDecode(value);
+          print("productList $jsonMap");
+          var details = HomeProductModel.fromJson(jsonMap);
+          productListData.clear();
+          details.data?.forEach((it) {
+            productListData.add(it);
+          });
+          update();
+        } catch (e) {
+          PrintLogs.printException(e);
+        }
+      },
+      onError: (error) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        ErrorHandling.handleErrors(error);
+      },
+    );
+  }
+
+  void setWalletData() {
+    walletGoldInGrams("0.00g");
+    walletFDGoldInGrams("0.00g");
+    walletSilverInGrams("0.00g");
+    update();
+  }
+
+  void setDifferenceCal() {
+    var totalgoldRate = goldBuyRate * goldInGrams.value;
+    standardGoldRates((11 / 100) * totalgoldRate);
+    plusGoldRates((16 / 100) * totalgoldRate);
+    diffrenceGoldRate(plusGoldRates.value - standardGoldRates.value);
+    update();
+  }
+
+  String replaceText(String value){
+    print("word count ${value.length}");
+   // var value1=value.replaceRange(1, value.length, 'x');
+
+    List<String> words = value.split('');
+
+    // Iterate over the words and replace those within the specified range
+    for (int i = 1; i <= value.length && i < words.length; i++) {
+      words[i] = 'X';
+    }
+
+    return words.join(' ');
+
   }
 }

@@ -105,7 +105,7 @@ class _OneTimeSummaryState extends State<OneTimeSummaryScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              MetalPriceScreen(),
+             MetalPriceScreen(metalPrice: "₹ 0,00/gm",),
               otgDetailsWidget(),
             ],
           ),

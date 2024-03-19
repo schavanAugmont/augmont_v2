@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:mobile_number/mobile_number.dart';
+import 'package:mobile_number/sim_card.dart';
 import 'package:otp_autofill/otp_autofill.dart';
 import '../Bindings/main_screen_binding.dart';
 import '../Models/CustomerDetailsModel.dart';
@@ -27,6 +29,7 @@ import '../Screens/SignIn/signin_page3.dart';
 import '../Utils/colors.dart';
 import '../Utils/device_util.dart';
 import '../Utils/dialog_helper.dart';
+import '../Utils/mobileselection_popup.dart';
 import '../Utils/print_logs.dart';
 import '../Utils/scaffold_view.dart';
 import '../Utils/session_manager.dart';
@@ -36,11 +39,11 @@ import '../network/ErrorHandling.dart';
 
 class SignInController extends GetxController with StateMixin<dynamic> {
   late LocalAuthentication _localAuthentication;
-
+  List<SimCard> simCard = <SimCard>[];
   static SignInController get to => Get.find();
   var canCheckBiometrics = false.obs;
   var isUserAuthenticated = false.obs;
-
+  var isShowMobilePop = true.obs;
   var isTimeOnGoing = false.obs;
 
   var isStateSelected = false.obs;
@@ -1128,6 +1131,51 @@ class SignInController extends GetxController with StateMixin<dynamic> {
           ErrorHandling.showToast(Strings.enterOtp);
         }
       }
+    }
+  }
+
+  openMobilePopup(){
+
+    initMobileNumberState();
+  }
+
+  Future<void> initMobileNumberState() async {
+    if (!await MobileNumber.hasPhonePermission) {
+      await MobileNumber.requestPhonePermission;
+      return;
+    }
+    try {
+      simCard = (await MobileNumber.getSimCards)!;
+      for (var s in simCard) {
+        print('Serial number: ${s.number}');
+      }
+      print(simCard.length);
+
+      showDialog(
+        context: Get.context!,
+        builder: (BuildContext context) => MobileSelectionPopup(
+          simCard: simCard,
+          callBack: (String mobile) {
+            if (mobile.length > 10) {
+              int startcount= mobile.length-10;
+              int endcount=mobile.length;
+              mobile = mobile.substring(startcount,endcount);
+            }
+            mobileTextController.text = mobile;
+            setEnableGenrateOtpButton(true);
+             isShowMobilePop(false);
+            update();
+            Get.back();
+          },
+          closecallBack: (){
+            isShowMobilePop(false);
+            update();
+            Get.back();
+          },
+        ),
+      );
+    } on PlatformException catch (e) {
+      debugPrint("Failed to get mobile number because of '${e.message}'");
     }
   }
 }

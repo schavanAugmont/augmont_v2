@@ -1,20 +1,14 @@
-import 'dart:ffi';
-
-import 'package:augmont_v2/Controllers/main_screen_controller.dart';
 import 'package:augmont_v2/Screens/Home/Components/home_components.dart';
 import 'package:augmont_v2/Utils/colors.dart';
+import 'package:augmont_v2/models/HomeProductModel.dart';
+import 'package:augmont_v2/models/stepupsipList_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
-import 'package:get_storage/get_storage.dart';
-
 import '../../Controllers/home_controller.dart';
 import '../../Utils/session_manager.dart';
 import '../../Utils/strings.dart';
-import '../../Utils/themes.dart';
-import '../../dialog/emi_due_dialog.dart';
 import '../MetalPice/metal_price_screen.dart';
 import 'Components/HeaderWalletView.dart';
 
@@ -61,7 +55,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {},
                   isLoggedIn: false,
                 ),
-                MetalPriceScreen()
+                MetalPriceScreen(
+                  metalPrice: controller.currentGoldBuyRate.value,
+                )
               ],
             ),
             centerTitle: true,
@@ -88,15 +84,58 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  if (controller.isLoggedIn.value) createProfile(context),
-                  if (controller.isLoggedIn.value)
+                  if (!controller.isUserLoggedIn.value) ...[
+                    createProfile(context),
                     goldSelection(context, controller),
-                  portfolioContainer(context),
-                  priceNugets(context),
-                  earningNugetsContainer(context),
-                  sipContainer(context),
-                  rewardNugetsContainer(context),
-                  loanContainer(context),
+                  ],
+
+                  // Padding(
+                  //   padding: const EdgeInsets.all(32.0),
+                  //   child: Stack(
+                  //     children: <Widget>[
+                  //       Container(
+                  //         margin: EdgeInsets.only(bottom: 20.0),
+                  //         child: ClipPath(
+                  //           clipper: ArcClipper(),
+                  //           child: Container(
+                  //               width: 200.0,
+                  //               height: 25.0,
+                  //               padding: EdgeInsets.all(8.0),
+                  //               color: Colors.lightBlue,
+                  //               child: Center(
+                  //                   child: Text(
+                  //                     'PROMO',
+                  //                     style: TextStyle(
+                  //                         color: Colors.white,
+                  //                         fontWeight: FontWeight.bold,
+                  //                         fontSize: 20.0),
+                  //                   ))),
+                  //         ),
+                  //       ),
+                  //       Positioned(
+                  //         bottom: 0.0,
+                  //         child: ClipPath(
+                  //           clipper: TriangleClipper(),
+                  //           child: Container(
+                  //             width: 20.0,
+                  //             height: 20.0,
+                  //             color: Colors.blue[700],
+                  //           ),
+                  //         ),
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
+
+                  if (controller.isUserLoggedIn.value) ...[
+                    portfolioContainer(context, controller),
+                    // priceNugets(context),
+                    earningNugetsContainer(context, controller),
+                    if (controller.stepupListData.isNotEmpty)
+                      sipContainer(context, controller.stepupListData[0]),
+                    // rewardNugetsContainer(context),
+                    // loanContainer(context),
+                  ],
                   setfdView(context),
                   Container(
                     margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
@@ -125,6 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+                  if(controller.productListData.isNotEmpty)
                   Container(
                       margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
                       child: Column(
@@ -160,16 +200,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               child: ListView.builder(
                                   //here your code
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: 5,
+                                  itemCount: controller.productListData.length,
                                   shrinkWrap: true,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    return shopListItem();
+                                    return shopListItem(controller.productListData[index]);
                                   }))
                         ],
                       )),
                   setWalletView(context),
-                  emiContainer(context),
+                  // emiContainer(context),
                   Container(
                     margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
                     child: Row(
@@ -177,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Expanded(
                             child: moduleWidget(
-                                "Gift Gold to your \nLoved once",
+                                "Gift Gold \nto your \nLoved once",
                                 "Gift Now",
                                 "assets/images/gift_image.png",
                                 true,
@@ -286,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
-  Widget shopListItem() {
+  Widget shopListItem(ProductData productListData) {
     return Container(
       padding: EdgeInsets.all(10),
       margin: EdgeInsets.only(right: 10),
@@ -295,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen> {
         border: Border.all(color: borderColor),
         borderRadius: BorderRadius.circular(10.0),
       ),
-      height: 220,
+      height: 240,
       width: 150,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -319,22 +359,22 @@ class _HomeScreenState extends State<HomeScreen> {
           // ),
 
           Center(
-              child: Image.asset(
-            'assets/images/gold_icon.png',
+              child: Image.network(
+            productListData.subCategoryImg.toString(),
             height: 80,
           )),
           SizedBox(
             height: 10,
           ),
-          Text("Gold Coins",
-              maxLines: 2,
+          Text(productListData.subCategoryName.toString(),
+              maxLines: 1,
               style: TextStyle(
                 color: bottomNavigationColor,
                 fontFamily: Strings.fontfamilyCabinetGrotesk,
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
               )),
-          Text("Starting From \u{20B9}10000",
+          Text("Starting From \u{20B9}${productListData.startingPrice.toString()}",
               maxLines: 2,
               style: TextStyle(
                 color: bottomNavigationColor,
@@ -384,7 +424,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: 2,
                 ),
-                Text(controller.currentGoldBuyRate.value,
+                Text(
+                    isGoldSelected
+                        ? controller.currentGoldBuyRate.value
+                        : controller.currentSilverBuyRate.value,
                     style: TextStyle(
                       color: primaryTextColor,
                       fontFamily: Strings.fontFamilyName,
@@ -866,7 +909,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget sipContainer(BuildContext context) {
+  Widget sipContainer(BuildContext context, StepupListData stepupListData) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       padding: const EdgeInsets.all(10.0),
@@ -878,7 +921,7 @@ class _HomeScreenState extends State<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text("Wedding Jewellery",
+          Text(stepupListData.planName.toString(),
               style: TextStyle(
                 color: primaryTextColor,
                 fontFamily: Strings.fontFamilyName,
@@ -1181,7 +1224,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget earningNugetsContainer(BuildContext context) {
+  Widget earningNugetsContainer(
+      BuildContext context, HomeController controller) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       decoration: BoxDecoration(
@@ -1208,13 +1252,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   width: 10,
                 ),
-                Text("You’ve missed on earning ₹15,325",
-                    style: TextStyle(
-                      color: bottomNavigationColor,
-                      fontFamily: Strings.fontfamilyCabinetGrotesk,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                    )),
+                Expanded(
+                    child: Text(
+                        "You’ve missed on earning ₹${controller.diffrenceGoldRate.toStringAsFixed(2)}",
+                        maxLines: 2,
+                        style: TextStyle(
+                          color: bottomNavigationColor,
+                          fontFamily: Strings.fontfamilyCabinetGrotesk,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ))),
               ],
             ),
           ),
@@ -1255,11 +1302,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 Container(
-                  child: LinearProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
-                    value: 0.3,
+                  // child: LinearProgressIndicator(
+                  //   valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+                  //   value: controller.standardGoldRates.value,
+                  // ),
+                  child: Slider(
+                    inactiveColor: Color(0xffFFF7E8),
+                    value: controller.standardGoldRates.value,
+                    max: controller.plusGoldRates.value,
+                    onChanged: (double newValue) {
+                      setState(() {});
+                    },
                   ),
-                  margin: EdgeInsets.symmetric(vertical: 15),
                 ),
                 SizedBox(
                   height: 10,
@@ -1296,7 +1350,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget portfolioContainer(BuildContext context) {
+  Widget portfolioContainer(BuildContext context, HomeController controller) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       decoration: BoxDecoration(
@@ -1334,8 +1388,14 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontWeight: FontWeight.w400,
                               fontSize: 14,
                             )),
-                        SizedBox(width: 5,),
-                        Icon(Icons.remove_red_eye_outlined,color: bottomNavigationColor,size: 18,)
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Icon(
+                          Icons.remove_red_eye_outlined,
+                          color: bottomNavigationColor,
+                          size: 18,
+                        )
                       ],
                     ),
                     SizedBox(
@@ -1377,7 +1437,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 10,
                     ),
                     OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          controller.goToInvestmentDashbord();
+                        },
                         style: OutlinedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -1421,9 +1483,12 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  portfolioWidget("12g ", "Total Gold"),
-                  portfolioWidget("08g ", "Total Silver"),
-                  portfolioWidget("0.78g ", "Gold+ Earned"),
+                  portfolioWidget(
+                      controller.walletGoldInGrams.value, "Total Gold"),
+                  portfolioWidget(
+                      controller.walletSilverInGrams.value, "Total Silver"),
+                  portfolioWidget(
+                      controller.walletFDGoldInGrams.value, "Gold+ Earned"),
                 ],
               ),
             ),

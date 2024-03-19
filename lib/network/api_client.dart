@@ -14,7 +14,7 @@ import 'app_exception.dart';
 enum ServerType { DigiGold, EMI }
 
 class ApiClient {
-  final String _emiBaseUrl = "https://agent-loan-api-test.dev.augmont.com/api/";
+  final String _emiBaseUrl = "https://agent-emi-api-test.dev.augmont.com";
   final String _baseUrl = "https://agent-loan-api-test.dev.augmont.com";
   final String _webUrl = "https://www.augmont.com/";
   static bool LogEvent = false;

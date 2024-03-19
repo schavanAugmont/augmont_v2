@@ -77,7 +77,7 @@ class _SIPManageGoldState extends State<SIPManageGoldScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              MetalPriceScreen(),
+             MetalPriceScreen(metalPrice: "₹ 0,00/gm",),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Row(

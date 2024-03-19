@@ -57,7 +57,7 @@ class _SIPDetailsState extends State<SIPDetailsScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              MetalPriceScreen(),
+             MetalPriceScreen(metalPrice: "₹ 0,00/gm",),
               sipDetailsWidget(controller),
               partnerWidget(),
               earnWidget(),

@@ -46,7 +46,6 @@ class HeaderWalletView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-
                   height: 50,
                   child: Image.asset('assets/images/logo.png'),
                 ),
@@ -56,13 +55,17 @@ class HeaderWalletView extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       GestureDetector(
                         onTap: () {},
-                        child: Image.asset(
-                          'assets/images/ic_bell.png',
-                          width: 20,
-                          color: bottomNavigationColor,
+                        child: Container(
+                          margin: EdgeInsets.only(top: 2),
+                          child: Image.asset(
+                            'assets/images/ic_bell.png',
+                            width: 18,
+                            color: bottomNavigationColor,
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -72,7 +75,7 @@ class HeaderWalletView extends StatelessWidget {
                         onTap: () {},
                         child: Image.asset(
                           'assets/images/ic_gift.png',
-                          width: 20,
+                          width: 18,
                           color: bottomNavigationColor,
                         ),
                       ),

@@ -37,44 +37,26 @@ class IntroController extends GetxController {
   }
 
   void getIntroScreenList() async {
-    allinonboardlist.add(ScreenData(
-        id: 1,
-        title: "Buy \nPhysical Gold \nOnline",
-        description: "Grow your wealth, one Gram at a time with Gold SIP.",
-        image: "assets/images/dash_img1.png"));
 
-    allinonboardlist.add(ScreenData(
-        id: 2,
-        title: "Invest In \nThe Digital \nGold",
-        description:
-            "Augmont  offers turning your digital transactions into tangible investments.",
-        image: "assets/images/dash_img2.png"));
+    DialogHelper.showLoading();
+    IntroProvider().getLoanList("introduction").then((value) {
+      DialogHelper.dismissLoader();
+      try {
+        var jsonMap = jsonDecode(value);
+        var details = ScreenDataModel.fromJson(jsonMap);
+        var data = details.data;
+        if (data != null) {
+          allinonboardlist.addAll(data);
+        }
+        update();
+      } catch (e) {
+       setIntoData();
+      }
+    }, onError: (error) {
+      setIntoData();
+    });
 
-    allinonboardlist.add(ScreenData(
-        id: 3,
-        title: "Loan \nAgainst \nGold",
-        description:
-            "Monetize your gold assets with a loan against gold, providing a flexible and immediate financial solution.",
-        image: "assets/images/dash_img3.png"));
-
-    // DialogHelper.showLoading();
-    // IntroProvider().getLoanList("introduction").then((value) {
-    //   DialogHelper.dismissLoader();
-    //   try {
-    //     var jsonMap = jsonDecode(value);
-    //     var details = ScreenDataModel.fromJson(jsonMap);
-    //     var data = details.data;
-    //     if (data != null) {
-    //       allinonboardlist.addAll(data);
-    //     }
-    //     update();
-    //   } catch (e) {
-    //     PrintLogs.printException(e);
-    //   }
-    // }, onError: (error) {
-    //   DialogHelper.dismissLoader();
-    //   ErrorHandling.handleErrors(error);
-    // });
+    //setIntoData();
   }
 
   void pageChanged(int index) {
@@ -119,5 +101,28 @@ class IntroController extends GetxController {
   void goToNavigation() {
     SessionManager.setIsDashSelected(true);
     Get.off(() => MainScreen(), binding: MainScreenBinding());
+  }
+
+  void setIntoData() {
+    allinonboardlist.add(ScreenData(
+        id: 1,
+        title: "Buy \nPhysical Gold \nOnline",
+        description: "Grow your wealth, one Gram at a time with Gold SIP.",
+        image: "assets/images/dash_img1.png"));
+
+    allinonboardlist.add(ScreenData(
+        id: 2,
+        title: "Invest In \nThe Digital \nGold",
+        description:
+        "Augmont  offers turning your digital transactions into tangible investments.",
+        image: "assets/images/dash_img2.png"));
+
+    allinonboardlist.add(ScreenData(
+        id: 3,
+        title: "Loan \nAgainst \nGold",
+        description:
+        "Monetize your gold assets with a loan against gold, providing a flexible and immediate financial solution.",
+        image: "assets/images/dash_img3.png"));
+
   }
 }

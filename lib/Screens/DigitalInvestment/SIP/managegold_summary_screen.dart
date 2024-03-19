@@ -57,7 +57,7 @@ class _ManageGoldSummaryState extends State<ManageGoldSummaryScreen> {
         ),
         body: SingleChildScrollView(
           child: Column(
-            children: [MetalPriceScreen(), sipDetailsWidget(), otherWidget()],
+            children: [ MetalPriceScreen(metalPrice: "₹ 0,00/gm",), sipDetailsWidget(), otherWidget()],
           ),
         ),
       ));

@@ -1,4 +1,4 @@
-import 'package:augmont_v2/controllers/wallet_controller.dart';
+import 'package:augmont_v2/controllers/wallets_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -23,7 +23,7 @@ class WalletScreen extends StatefulWidget {
 class _WalletState extends State<WalletScreen> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<WalletController>(builder: (controller) {
+    return GetBuilder<WalletsController>(builder: (controller) {
       return PopScope(
           canPop: false, //It should be false to work
           onPopInvoked: (didPop) {
@@ -168,7 +168,7 @@ class _WalletState extends State<WalletScreen> {
     );
   }
 
-  Widget emptyWallet(BuildContext context, WalletController controller) {
+  Widget emptyWallet(BuildContext context, WalletsController controller) {
     return Container(
       width: MediaQuery.sizeOf(context).width,
       height: MediaQuery.sizeOf(context).height / 1.5,
@@ -206,7 +206,7 @@ class _WalletState extends State<WalletScreen> {
     );
   }
 
-  Widget walletList(BuildContext context, WalletController controller) {
+  Widget walletList(BuildContext context, WalletsController controller) {
     return Column(
       children: [
         Container(

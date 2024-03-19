@@ -46,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
     );
 
-_animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
     animateSplash();
   }
@@ -59,7 +59,8 @@ _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldView(child: Center(
+    return ScaffoldView(
+        child: Center(
       child: FadeTransition(
         opacity: _animation,
         child: Column(
@@ -76,39 +77,29 @@ _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _animation = Tween<double>(begin: 0, end: 1).animate(_controller)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          // Future.delayed(const Duration(seconds: 2), () async {
-          //   var isLogin = await SessionManager.isLoggedIn();
-          //   var isDashSelect = await SessionManager.getIsDashSelected();
-          //   print(isDashSelect);
-          //   if (isLogin) {
-          //     Get.off(
-          //         () => const SignInPage3(
-          //               isForgot: false,
-          //               refCode: '',
-          //             ),
-          //         binding: SignInBiding());
-          //
-          //   // Get.off(() => PersonalizeQuestionScreen(), binding: PersonalizedQuesBiding());
-          //   } else {
-          //     if (isDashSelect) {
-          //       Get.off(() => const MainScreen(), binding: MainScreenBinding());
-          //     } else {
-          //       Get.off(() => const OnboardScreen(), binding: IntroBiding());
-          //     }
-          //   }
-          // });
+          Future.delayed(const Duration(seconds: 2), () async {
+            var isLogin = await SessionManager.isLoggedIn();
+            var isPinAdded = await SessionManager.getIsPinAdded();
+            var isDashSelect = await SessionManager.getIsDashSelected();
+            print("isDashSelect $isDashSelect");
+            print("isPinAdded $isPinAdded");
+            if (isLogin && isPinAdded) {
+              Get.off(
+                  () => const SignInPage3(
+                        isForgot: false,
+                        refCode: '',
+                      ),
+                  binding: SignInBiding());
+            } else if (isLogin && !isPinAdded) {
+              Get.offAll(() => SignInPage1(), binding: SignInBiding());
+            } else if (isDashSelect) {
+              Get.off(() => const MainScreen(), binding: MainScreenBinding());
+            } else {
+              Get.off(() => const OnboardScreen(), binding: IntroBiding());
+            }
+          });
 
-          Get.off(() => const MainScreen(), binding: MainScreenBinding());
-
-          // Get.offAll(
-          //       () => const OnboardScreen(),
-          //   binding: IntroBiding(),
-          //   transition: Transition.rightToLeft,
-          // );
-
-         // Get.to(PersonalizeQuestionScreen(),binding: PersonalizedQuesBiding());
         }
-
       })
       ..addStatusListener((status) => print('$status'));
 

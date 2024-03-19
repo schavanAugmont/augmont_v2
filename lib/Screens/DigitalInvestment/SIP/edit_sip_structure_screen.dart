@@ -57,7 +57,7 @@ class _EditSIPStructureState extends State<EditSIPStructureScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              MetalPriceScreen(),
+             MetalPriceScreen(metalPrice: "₹ 0,00/gm",),
               projectedGrowthView(context),
               growthCal(controller),
               Padding(

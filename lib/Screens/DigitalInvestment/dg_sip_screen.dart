@@ -74,7 +74,7 @@ class _DgSIPState extends State<DgSIPScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              MetalPriceScreen(),
+              MetalPriceScreen(metalPrice: "₹ 0,00/gm",),
               projectedGrowthView(context),
               growthCal(controller),
             ],
