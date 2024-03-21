@@ -31,6 +31,7 @@ class SignInPageState2 extends State<SignInPage2> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child: SingleChildScrollView(
+              reverse: true,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -69,14 +70,13 @@ class SignInPageState2 extends State<SignInPage2> {
                         Row(
                           children: List.generate(
                             3,
-                                (index) => buildDot(index: index, 1),
+                            (index) => buildDot(index: index, 1),
                           ),
                         ),
                       ],
                     ),
                   ),
                   SignInOTPView(),
-
                 ],
               ),
             ),
@@ -84,6 +84,7 @@ class SignInPageState2 extends State<SignInPage2> {
           Align(
               alignment: Alignment.bottomCenter,
               child: Container(
+                  margin: EdgeInsets.only(bottom: 20),
                   height: 55,
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),

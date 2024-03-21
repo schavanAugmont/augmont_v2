@@ -25,85 +25,85 @@ class SignInPage1 extends StatefulWidget {
 class SignInPageState1 extends State<SignInPage1> {
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<SignInController>( builder: (controller) {
+    return GetBuilder<SignInController>(builder: (controller) {
       return WillPopScope(
           onWillPop: () async {
             controller.clearSessionFields();
             Get.offAll(
-                  () => const MainScreen(),
+              () => const MainScreen(),
               binding: MainScreenBinding(),
               transition: Transition.rightToLeft,
             );
             return false;
-          },child:ScaffoldView(
-          child:
-
-              Stack(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  height: 50,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        child: Icon(
-                          size: 24,
-                          Icons.arrow_back_outlined,
-                          color: bottomNavigationColor,
-                        ),
-                        onTap: () {
-                          Get.offAll(
+          },
+          child: ScaffoldView(
+              child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      height: 50,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            child: Icon(
+                              size: 24,
+                              Icons.arrow_back_outlined,
+                              color: bottomNavigationColor,
+                            ),
+                            onTap: () {
+                              Get.offAll(
                                 () => const MainScreen(),
-                            binding: MainScreenBinding(),
-                            transition: Transition.rightToLeft,
-                          );
-                        },
+                                binding: MainScreenBinding(),
+                                transition: Transition.rightToLeft,
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(Strings.back,
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: bottomNavigationColor,
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              )),
+                          Spacer(),
+                          Row(
+                            children: List.generate(
+                              3,
+                              (index) => buildDot(index: index, 0),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(Strings.back,
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: bottomNavigationColor,
-                            fontFamily: Strings.fontFamilyName,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          )),
-                      Spacer(),
-                      Row(
-                        children: List.generate(
-                          3,
-                          (index) => buildDot(index: index, 0),
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                    // Container(
+                    //   height: 200,
+                    //   color: Colors.grey,
+                    //   margin: EdgeInsets.symmetric(vertical: 30),
+                    // ),
+                    // if (controller.enableMobileView.value) const SignInMobileView(),
+                    // if (controller.enableOtpView.value) const SignInOTPView()
+                    SignInMobileView(),
+                  ],
                 ),
-                // Container(
-                //   height: 200,
-                //   color: Colors.grey,
-                //   margin: EdgeInsets.symmetric(vertical: 30),
-                // ),
-                // if (controller.enableMobileView.value) const SignInMobileView(),
-                // if (controller.enableOtpView.value) const SignInOTPView()
-                SignInMobileView(),
-              ],
-            ),
-          ),
-        Align(
+              ),
+              Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
+                      margin: EdgeInsets.only(bottom: 20),
                       height: 55,
                       padding:
                           EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -141,8 +141,8 @@ class SignInPageState1 extends State<SignInPage1> {
                                   )
                                 ],
                               ))))
-        ],
-      )));
+            ],
+          )));
     });
   }
 }

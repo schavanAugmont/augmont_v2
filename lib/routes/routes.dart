@@ -25,6 +25,10 @@ final routeList = [
     name: HomeScreen.routeName,
     page: () => const HomeScreen(),
   ),
+  GetPage(
+    name: HomeScreen.routeName,
+    page: () => const HomeScreen(),
+  ),
 
 ];
 

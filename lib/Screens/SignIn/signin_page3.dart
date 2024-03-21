@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import '../../Utils/Validator.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
+import '../../bindings/signin_binding.dart';
 import '../../widgets/animated_dot.dart';
 import 'Components/OtpView.dart';
 
@@ -55,26 +56,39 @@ class SignInPageState3 extends State<SignInPage3> {
                       if (!controller.isPinAdded.value ||
                           controller.isForgotPIN.value) ...[
                         GestureDetector(
-                          child: Icon(
-                            size: 24,
-                            Icons.arrow_back_outlined,
-                            color: bottomNavigationColor,
+                          child: Row(
+                            children: [
+                              Icon(
+                                size: 24,
+                                Icons.arrow_back_outlined,
+                                color: bottomNavigationColor,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(Strings.back,
+                                  style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: bottomNavigationColor,
+                                    fontFamily: Strings.fontFamilyName,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  )),
+                            ],
                           ),
                           onTap: () {
-                            controller.clearBackStack();
+                            if (widget.isForgot) {
+                              Get.offAll(
+                                  () => const SignInPage3(
+                                        isForgot: false,
+                                        refCode: '',
+                                      ),
+                                  binding: SignInBiding());
+                            } else {
+                              controller.clearBackStack();
+                            }
                           },
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(Strings.back,
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: bottomNavigationColor,
-                              fontFamily: Strings.fontFamilyName,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            )),
                         Spacer(),
                         Row(
                           children: List.generate(
@@ -109,6 +123,7 @@ class SignInPageState3 extends State<SignInPage3> {
           Align(
               alignment: Alignment.bottomCenter,
               child: Container(
+                  margin: EdgeInsets.only(bottom: 20),
                   height: 55,
                   padding:
                       EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -134,7 +149,7 @@ class SignInPageState3 extends State<SignInPage3> {
                                       if (controller.isForgotPIN.value) {
                                         controller.resetPin();
                                       } else {
-                                        if (controller.isBiometricAvl.value) {
+                                        if (controller.isBioMetricsAvlb.value) {
                                           controller
                                               .showBiomatricPopup(context);
                                         } else {
@@ -163,8 +178,6 @@ class SignInPageState3 extends State<SignInPage3> {
                           ))))
         ],
       ));
-
-
     });
   }
 

@@ -29,7 +29,8 @@ class ForgotPinPageState extends State<ForgotPinPage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ForgotPinController>(builder: (controller) {
-      return ScaffoldView(child: Stack(
+      return ScaffoldView(
+          child: Stack(
         children: [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -46,7 +47,7 @@ class ForgotPinPageState extends State<ForgotPinPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GestureDetector(
+                      InkWell(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -71,19 +72,18 @@ class ForgotPinPageState extends State<ForgotPinPage> {
                         ),
                         onTap: () {
                           Get.off(
-                                  () => const SignInPage3(
-                                isForgot: false,
-                                refCode: '',
-                              ),
+                              () => const SignInPage3(
+                                    isForgot: false,
+                                    refCode: '',
+                                  ),
                               binding: SignInBiding());
                         },
                       ),
-
                       Spacer(),
                       Row(
                         children: List.generate(
                           3,
-                              (index) => buildDot(
+                          (index) => buildDot(
                               index: index,
                               controller.enableMobileView.value ? 0 : 1),
                         ),
@@ -103,106 +103,107 @@ class ForgotPinPageState extends State<ForgotPinPage> {
           Align(
               alignment: Alignment.bottomCenter,
               child: Container(
+                  margin: EdgeInsets.only(bottom: 20),
                   height: 55,
                   padding:
-                  EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   // Adjust padding as needed
                   child: controller.enableMobileView.value
                       ? ElevatedButton(
-                      onPressed: controller.enableGenrateOtpButton.value
-                          ? () {
-                        controller.startTimer(false, true);
-                      }
-                          : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: deliveryDescTextColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5.0),
+                          onPressed: controller.enableGenrateOtpButton.value
+                              ? () {
+                                  controller.startTimer(false, true);
+                                }
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: deliveryDescTextColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5.0),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(Strings.generateOtp,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              )),
-                          Image.asset(
-                            "assets/images/arrow_right.png",
-                            height: 20,
-                          )
-                        ],
-                      ))
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(Strings.generateOtp,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: Strings.fontFamilyName,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  )),
+                              Image.asset(
+                                "assets/images/arrow_right.png",
+                                height: 20,
+                              )
+                            ],
+                          ))
                       : ElevatedButton(
-                      onPressed: () {
-                        if (controller.enableOtpButton.value) {
-                          controller.verifyOTP();
-                        } else {
-                          ErrorHandling.showToast(Strings.enterOtp);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: deliveryDescTextColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5.0),
+                          onPressed: () {
+                            if (controller.enableOtpButton.value) {
+                              controller.verifyOTP();
+                            } else {
+                              ErrorHandling.showToast(Strings.enterOtp);
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: deliveryDescTextColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5.0),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(Strings.verifyOtp,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              )),
-                          Image.asset(
-                            "assets/images/arrow_right.png",
-                            height: 20,
-                          )
-                        ],
-                      ))
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(Strings.verifyOtp,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: Strings.fontFamilyName,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  )),
+                              Image.asset(
+                                "assets/images/arrow_right.png",
+                                height: 20,
+                              )
+                            ],
+                          ))
 
-                // ElevatedButton(
-                //     onPressed: controller.enableGenrateOtpButton.value
-                //         ? () {
-                //       controller.startTimer(false, true);
-                //     }
-                //         : null,
-                //     style: ElevatedButton.styleFrom(
-                //       backgroundColor: deliveryDescTextColor,
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.all(
-                //           Radius.circular(5.0),
-                //         ),
-                //       ),
-                //     ),
-                //     child: Row(
-                //       mainAxisAlignment:
-                //       MainAxisAlignment.spaceBetween,
-                //       children: [
-                //         Text(Strings.generateOtp,
-                //             style: TextStyle(
-                //               color: Colors.white,
-                //               fontFamily: Strings.fontFamilyName,
-                //               fontWeight: FontWeight.w600,
-                //               fontSize: 14,
-                //             )),
-                //         Image.asset(
-                //           "assets/images/arrow_right.png",
-                //           height: 20,
-                //         )
-                //       ],
-                //     ))
-              ))
+                  // ElevatedButton(
+                  //     onPressed: controller.enableGenrateOtpButton.value
+                  //         ? () {
+                  //       controller.startTimer(false, true);
+                  //     }
+                  //         : null,
+                  //     style: ElevatedButton.styleFrom(
+                  //       backgroundColor: deliveryDescTextColor,
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.all(
+                  //           Radius.circular(5.0),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     child: Row(
+                  //       mainAxisAlignment:
+                  //       MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         Text(Strings.generateOtp,
+                  //             style: TextStyle(
+                  //               color: Colors.white,
+                  //               fontFamily: Strings.fontFamilyName,
+                  //               fontWeight: FontWeight.w600,
+                  //               fontSize: 14,
+                  //             )),
+                  //         Image.asset(
+                  //           "assets/images/arrow_right.png",
+                  //           height: 20,
+                  //         )
+                  //       ],
+                  //     ))
+                  ))
         ],
       ));
     });
@@ -339,7 +340,7 @@ class ForgotPinPageState extends State<ForgotPinPage> {
               ),
               Expanded(
                 child: TextFormField(
-                  enabled:false,
+                  enabled: false,
                   keyboardType: TextInputType.number,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly

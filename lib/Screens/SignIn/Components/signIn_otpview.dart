@@ -498,8 +498,8 @@ class _SignInOtpViewState extends State<SignInOTPView> {
             ],
           ),
           SizedBox(
-            height: 100,
-          )
+              height:
+                  (MediaQuery.of(context).viewInsets.bottom != 0) ? 300 : 100)
         ],
       );
     });

@@ -8,6 +8,8 @@ PODS:
     - Flutter
   - local_auth_ios (0.0.1):
     - Flutter
+  - otp_autofill (0.0.1):
+    - Flutter
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -27,6 +29,7 @@ DEPENDENCIES:
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_pdfview (from `.symlinks/plugins/flutter_pdfview/ios`)
   - local_auth_ios (from `.symlinks/plugins/local_auth_ios/ios`)
+  - otp_autofill (from `.symlinks/plugins/otp_autofill/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -44,6 +47,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_pdfview/ios"
   local_auth_ios:
     :path: ".symlinks/plugins/local_auth_ios/ios"
+  otp_autofill:
+    :path: ".symlinks/plugins/otp_autofill/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -61,11 +66,12 @@ SPEC CHECKSUMS:
   flutter_downloader: 058b9c41564a90500f67f3e432e3524613a7fd83
   flutter_pdfview: 25f53dd6097661e6395b17de506e6060585946bd
   local_auth_ios: 1ba1475238daa33a6ffa2a29242558437be435ac
+  otp_autofill: 93bcc21475705d35445927cb9aef24e818bbf083
   package_info_plus: 115f4ad11e0698c8c1c5d8a689390df880f47e85
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
-  webview_flutter_wkwebview: be0f0d33777f1bfd0c9fdcb594786704dbf65f36
+  webview_flutter_wkwebview: 4f3e50f7273d31e5500066ed267e3ae4309c5ae4
 
 PODFILE CHECKSUM: eb7de198ff4c9600041c27e3fc63d77fb9d3a7bd
 

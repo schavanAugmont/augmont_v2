@@ -4,6 +4,7 @@ import 'package:augmont_v2/Utils/extension_util.dart';
 import 'package:augmont_v2/Utils/themes.dart';
 import 'package:augmont_v2/controllers/digitalinvestment_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../Utils/colors.dart';
@@ -32,8 +33,7 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
             }
             controller.onBack();
           },
-          child: SafeArea(
-              child: Scaffold(
+          child: Scaffold(
             appBar: AppBar(
               centerTitle: false,
               titleSpacing: 0.0,
@@ -58,6 +58,18 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
                         fontWeight: FontWeight.w600,
                         fontSize: 14,
                       ))),
+              flexibleSpace: new Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    colors: [
+                      Colors.amber.withOpacity(0.2),
+                      Colors.amber.withOpacity(0.1),
+                    ],
+                  ),
+                ),
+              ),
+              systemOverlayStyle: SystemUiOverlayStyle.dark,
             ),
             bottomNavigationBar: Container(
                 height: 55,
@@ -80,358 +92,9 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                      width: 340,
-                      margin: EdgeInsets.only(top: 15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(40),
-                        border: Border.all(color: shadowColor),
-                        color: white,
-                        boxShadow: const [
-                          BoxShadow(
-                            color: shadowColor,
-                            offset: Offset(0.0, 1.0),
-                            blurRadius: 0.5,
-                          )
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 4.0,
-                          horizontal: 4.0,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              height: 25,
-                              width: 160,
-                              decoration: BoxDecoration(
-                                color: controller.isGoldSelected
-                                    ? primaryTextColor
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(40),
-                              ),
-                              child: GestureDetector(
-                                  onTap: () {
-                                    controller.onViewTap(true);
-                                  },
-                                  child: Center(
-                                    child: Text(
-                                      'Gold Investments',
-                                      style: TextStyle(
-                                        fontFamily: Strings.fontFamilyName,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 13,
-                                        color: controller.isGoldSelected
-                                            ? Colors.white
-                                            : Colors.grey,
-                                      ),
-                                    ),
-                                  )),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              width: 160,
-                              height: 25,
-                              decoration: BoxDecoration(
-                                color: controller.isGoldSelected
-                                    ? Colors.white
-                                    : primaryTextColor,
-                                borderRadius: BorderRadius.circular(40),
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  controller.onViewTap(false);
-                                },
-                                child: Center(
-                                    child: Text(
-                                  'Sliver Investments',
-                                  style: TextStyle(
-                                    fontFamily: Strings.fontFamilyName,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                    color: controller.isGoldSelected
-                                        ? Colors.grey
-                                        : Colors.white,
-                                  ),
-                                )),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8.0),
-                      border: Border.all(color: lightColor)
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: lightColor),
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(8.0),
-                            )
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: lightColor,
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text("Gold Portfolio",style: CustomTheme.style(weight: FontWeight.bold,color: secondaryTextColor,size: 18),),
-                                    6.h,
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text("₹1,22,000",style: CustomTheme.style(weight: FontWeight.w600),),
-                                        Icon(Icons.arrow_upward_rounded,color: Colors.green),
-                                        Text("(12%)",style: CustomTheme.style(weight: FontWeight.w600,color: Colors.green),),
-                                      ],
-                                    ),
-                                    6.h,
-                                    Text("Total Investment: ₹7,35,000 ",style: CustomTheme.style(color: secondaryTextColor),),
-                                  ],
-                                ),
-                              ),
-                              10.h,
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("Total Gold (g):",style: CustomTheme.style(weight: FontWeight.w600),),
-                                  Text("42.80g",style: CustomTheme.style(),),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.black,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                )
-                              ),
-                              onPressed: () {
-                                Get.to(()=> WithdrawalLandingScreen());
-                              },
-                              child: Text("Withdraw Investment",style: CustomTheme.style(weight: FontWeight.w600),),
-                            ),
-                            Container(
-                              width: 1,
-                              height: 24,
-                              color: lightColor,
-                            ),
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                  foregroundColor: Colors.black,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  )
-                              ),
-                              onPressed: () {},
-                              child: Text("Transaction History",style: CustomTheme.style(weight: FontWeight.w600)),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: kycProductBackgroundColor),
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    margin: EdgeInsets.only(left: 10, right: 10, top: 20),
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text('₹ 6000/gm',
-                                    style: TextStyle(
-                                      color: primaryTextColor,
-                                      fontFamily: Strings.fontFamilyName,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    )),
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: "+124 (1.8%)",
-                                        style: TextStyle(
-                                          fontFamily: Strings.fontFamilyName,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: ' This  month',
-                                        style: TextStyle(
-                                            fontFamily: Strings.fontFamilyName,
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 12,
-                                            color: primaryTextColor),
-                                      ),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                            Spacer(),
-                            OutlinedButton.icon(
-                              // <-- OutlinedButton
-                              onPressed: () {
-                                controller.priceAlertsDailog(context);
-                              },
-                              style: OutlinedButton.styleFrom(
-                                padding: EdgeInsets.all(10),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              icon: Icon(
-                                Icons.notifications,
-                                size: 15.0,
-                                color: primaryTextColor,
-                              ),
-                              label: Text(
-                                'Price Alerts',
-                                style: TextStyle(
-                                    fontFamily: Strings.fontFamilyName,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 12,
-                                    color: primaryTextColor),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          height: 250,
-                          child: LinechartWidget(),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                            height: 35,
-                            child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: controller.listTime.length,
-                                shrinkWrap: true,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        controller.selectedTime =
-                                            controller.listTime[index];
-                                      });
-                                    },
-                                    child: Container(
-                                        margin: EdgeInsets.only(right: 5),
-                                        padding: EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
-                                          border: Border.all(
-                                              color: controller.selectedTime ==
-                                                      controller.listTime[index]
-                                                  ? primaryTextColor
-                                                  : Colors.grey),
-                                        ),
-                                        child: Text(controller.listTime[index],
-                                            style: TextStyle(
-                                              color: controller.selectedTime ==
-                                                      controller.listTime[index]
-                                                  ? primaryTextColor
-                                                  : Colors.grey,
-                                              fontFamily:
-                                                  Strings.fontFamilyName,
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 12,
-                                            ))),
-                                  );
-                                })),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-                    decoration: BoxDecoration(
-                      color: kycProductBackgroundColor,
-                      borderRadius: BorderRadius.circular(5.0),
-                      border: Border.all(color: shadowColor),
-                    ),
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        ImageIcon(
-                          AssetImage('assets/images/ic_idea.png'),
-                          size: 30,
-                          color: Colors.black,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Graph Insights",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontFamily: Strings.fontFamilyName,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                )),
-                            SizedBox(
-                              height: 0,
-                            ),
-                            Text(
-                                "Gold Price at 3 Month Low, \nbest time to buy ",
-                                style: TextStyle(
-                                  color: primaryTextColor,
-                                  fontFamily: Strings.fontFamilyName,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 15,
-                                )),
-                          ],
-                        )),
-                      ],
-                    ),
-                  ),
+                  metalSelectionWidget(context, controller),
+                  portfolioContainer(context, controller),
+                  priceGRaphWidget(context, controller),
                   SizedBox(
                     height: 20,
                   ),
@@ -443,25 +106,22 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
                   Container(
                     margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5.0),
-                      border: Border.all(color: kycProductBackgroundColor),
+                      color:borderColor,
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(color: borderColor),
                     ),
                     padding: EdgeInsets.all(15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        ImageIcon(
-                          AssetImage('assets/images/ic_coins.png'),
-                          size: 30,
-                          color: Colors.black,
-                        ),
+                        Image.asset('assets/images/mutli_customer.png',height: 30),
+
                         SizedBox(
                           width: 10,
                         ),
                         Expanded(
                           child: Text(
-                              "Over 10K customers have invested in Gold SIP with Aiugmont",
+                              "Over 10K customers have invested in Gold SIP with Augmont",
                               style: TextStyle(
                                 color: primaryTextColor,
                                 fontFamily: Strings.fontFamilyName,
@@ -480,18 +140,18 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text("Advantages of Digital Gold",
+                          Text("Advantages of Digital \nGold Investment",
                               style: TextStyle(
-                                color: primaryTextColor,
-                                fontFamily: Strings.fontFamilyName,
+                                color: bottomNavigationColor,
+                                fontFamily: Strings.fontfamilyCabinetGrotesk,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 14,
+                                fontSize: 20,
                               )),
                           SizedBox(
                             height: 10,
                           ),
                           SizedBox(
-                              height: 130.0,
+                              height: 200.0,
                               child: ListView.builder(
                                   //here your code
                                   scrollDirection: Axis.horizontal,
@@ -499,7 +159,7 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
                                   shrinkWrap: true,
                                   itemBuilder:
                                       (BuildContext context, int index) {
-                                    return newsListItem();
+                                    return digitalInvestmentListItem();
                                   }))
                         ],
                       )),
@@ -512,9 +172,9 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
                           Text("Gold in th News",
                               style: TextStyle(
                                 color: primaryTextColor,
-                                fontFamily: Strings.fontFamilyName,
+                                fontFamily: Strings.fontfamilyCabinetGrotesk,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 14,
+                                fontSize: 20,
                               )),
                           SizedBox(
                             height: 10,
@@ -534,40 +194,32 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
                       )),
                   Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: kycProductBackgroundColor),
+                      color: borderColor,
+                      border: Border.all(color: borderColor),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                    padding: EdgeInsets.all(15),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                            padding: EdgeInsets.all(20),
-                            child: Row(
+                        Text(
+                            "Use DigiGold to Purchase \nJewellery and more",
+                            style: TextStyle(
+                              color: bottomNavigationColor,
+                              fontFamily: Strings.fontfamilyCabinetGrotesk,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                            )),
+                       Row(
                               children: [
-                                ImageIcon(
-                                  AssetImage('assets/images/ic_shop.png'),
-                                  size: 40,
-                                  color: primaryTextColor,
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
+
                                 Expanded(
                                     child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                        "Use DigiGold to purchase \nJewellry and many more",
-                                        style: TextStyle(
-                                          color: primaryTextColor,
-                                          fontFamily: Strings.fontFamilyName,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 14,
-                                        )),
-                                    SizedBox(
-                                      height: 2,
-                                    ),
                                     Text(
                                         "Use your digital gold to pay at nearest store",
                                         maxLines: 5,
@@ -577,155 +229,40 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
                                           fontWeight: FontWeight.normal,
                                           fontSize: 14,
                                         )),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+
+                                    Text(
+                                        "Find stores near you",
+                                        style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          color: bottomNavigationColor,
+                                          fontFamily: Strings.fontFamilyName,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        )),
+
                                   ],
                                 )),
+                                SizedBox(
+                                  width: 15,
+                                ),
+
+                                  Image.asset('assets/images/store_image.png'),
+
+
                               ],
-                            )),
-                        Container(
-                            width: MediaQuery.of(context).size.width,
-                            color: kycProductBackgroundColor,
-                            height: 30,
-                            padding: EdgeInsets.only(left: 20),
-                            child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text('Find stores near you',
-                                    style: TextStyle(
-                                      color: primaryTextColor,
-                                      fontFamily: Strings.fontFamilyName,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ))))
+                            ),
+
                       ],
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: kycProductBackgroundColor),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            ImageIcon(
-                              AssetImage('assets/images/ic_safe.png'),
-                              size: 30,
-                              color: primaryTextColor,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Expanded(
-                                child: Text("Your Gold is 100% safe with us!",
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                      color: primaryTextColor,
-                                      fontFamily: Strings.fontFamilyName,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ))),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text("13.5k",
-                                    style: TextStyle(
-                                      color: primaryTextColor,
-                                      fontFamily: Strings.fontFamilyName,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                    )),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                Text("People have invested with augmont",
-                                    maxLines: 5,
-                                    style: TextStyle(
-                                      color: primaryTextColor,
-                                      fontFamily: Strings.fontFamilyName,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 11,
-                                    )),
-                              ],
-                            )),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text("\$3 Bn Revenues",
-                                    style: TextStyle(
-                                      color: primaryTextColor,
-                                      fontFamily: Strings.fontFamilyName,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                    )),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                Text(
-                                    "Top 150 unlisted companies in India- Dun & Brandstreet",
-                                    maxLines: 5,
-                                    style: TextStyle(
-                                      color: primaryTextColor,
-                                      fontFamily: Strings.fontFamilyName,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 11,
-                                    )),
-                              ],
-                            )),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Expanded(
-                                child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text("10+ Award wining",
-                                    style: TextStyle(
-                                      color: primaryTextColor,
-                                      fontFamily: Strings.fontFamilyName,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 12,
-                                    )),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                Text("Best Gold seller award by BFGC",
-                                    maxLines: 5,
-                                    style: TextStyle(
-                                      color: primaryTextColor,
-                                      fontFamily: Strings.fontFamilyName,
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 11,
-                                    )),
-                              ],
-                            )),
-                          ],
-                        )
-                      ],
-                    ),
-                  )
+                  safeGoldWidget(context)
                 ],
               ),
             ),
-          )));
+          ));
     });
   }
 
@@ -899,7 +436,7 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
       margin: EdgeInsets.only(right: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: kycProductBackgroundColor),
+        border: Border.all(color: borderColor),
         borderRadius: BorderRadius.circular(10.0),
       ),
       width: 200,
@@ -909,20 +446,20 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
         children: [
           Row(
             children: [
-              ImageIcon(
-                AssetImage("assets/images/ic_image.png"),
-                size: 12,
+              Image.asset(
+                "assets/images/news_icon.png",
+                height: 30,
               ),
               SizedBox(
                 width: 10,
               ),
-              Text("Gold Coins",
+              Text("Money Control",
                   maxLines: 2,
                   style: TextStyle(
                     color: primaryTextColor,
                     fontFamily: Strings.fontFamilyName,
                     fontWeight: FontWeight.w600,
-                    fontSize: 13,
+                    fontSize: 18,
                   )),
             ],
           ),
@@ -942,11 +479,58 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
           Text("08th Oct 2023",
               maxLines: 2,
               style: TextStyle(
+                color: Colors.grey,
+                fontFamily: Strings.fontFamilyName,
+                fontWeight: FontWeight.w600,
+                fontSize: 11,
+              )),
+        ],
+      ),
+    );
+  }
+
+  Widget digitalInvestmentListItem() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.only(right: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      width: 150,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+         Center(child:  Image.asset(
+           "assets/images/lower_tax.png",
+           height: 90,
+         ),),
+          SizedBox(
+            width: 10,
+          ),
+          Text("Lower Tax",
+              maxLines: 2,
+              style: TextStyle(
+                color: primaryTextColor,
+                fontFamily: Strings.fontFamilyName,
+                fontWeight: FontWeight.w600,
+                fontSize: 18,
+              )),
+          SizedBox(
+            height: 5,
+          ),
+          Text(
+              "Compared to Jewellery digital only charge 3% tax.",
+
+              style: TextStyle(
                 color: primaryTextColor,
                 fontFamily: Strings.fontFamilyName,
                 fontWeight: FontWeight.w500,
-                fontSize: 10,
+                fontSize: 12,
               )),
+
         ],
       ),
     );
@@ -954,8 +538,12 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
 
   Widget growthCal(DigitalInvestmentController controller) {
     return Container(
-        margin: EdgeInsets.only(left: 10, right: 10, bottom: 20),
+        margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
         padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(color: borderColor),
+          borderRadius: BorderRadius.circular(5.0),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -963,18 +551,15 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
             Text("Growth Calculator",
                 style: TextStyle(
                   color: primaryTextColor,
-                  fontFamily: Strings.fontFamilyName,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15,
+                  fontFamily: Strings.fontfamilyCabinetGrotesk,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
                 )),
             SizedBox(
               height: 10,
             ),
             Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: kycProductBackgroundColor),
-                borderRadius: BorderRadius.circular(5.0),
-              ),
+
               margin: EdgeInsets.only(top: 10),
               height: 250,
               child: BarchartWidegt(
@@ -1344,5 +929,592 @@ class _DigitalInvestmentGoldState extends State<DigitalInvestmentGoldScreen> {
             )
           ],
         ));
+  }
+
+  Widget metalSelectionWidget(
+      BuildContext context, DigitalInvestmentController controller) {
+    return Align(
+      alignment: Alignment.center,
+      child: Container(
+        margin: EdgeInsets.only(top: 15, left: 20, right: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(40),
+          border: Border.all(color: borderColor),
+          color: white,
+          boxShadow: const [
+            BoxShadow(
+              color: borderColor,
+              offset: Offset(0.0, 1.0),
+              blurRadius: 0.5,
+            )
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 4.0,
+            horizontal: 4.0,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.onViewTap(true);
+                    },
+                    child: Container(
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: controller.isGoldSelected
+                              ? primaryColor
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Gold Investments',
+                            style: TextStyle(
+                              fontFamily: Strings.fontFamilyName,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                              color: controller.isGoldSelected
+                                  ? Colors.white
+                                  : primaryTextColor,
+                            ),
+                          ),
+                        )),
+                  )),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.onViewTap(false);
+                    },
+                    child: Container(
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: controller.isGoldSelected
+                            ? Colors.white
+                            : primaryColor,
+                        borderRadius: BorderRadius.circular(40),
+                      ),
+                      child: Center(
+                          child: Text(
+                        'Sliver Investments',
+                        style: TextStyle(
+                          fontFamily: Strings.fontFamilyName,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: controller.isGoldSelected
+                              ? primaryTextColor
+                              : Colors.white,
+                        ),
+                      )),
+                    ),
+                  ))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget portfolioContainer(
+      BuildContext context, DigitalInvestmentController controller) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      decoration: BoxDecoration(
+        border: Border.all(color: borderColor, width: 1.0),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          // background image and bottom contents
+          Column(
+            children: <Widget>[
+              Container(
+                width: MediaQuery.sizeOf(context).width,
+                decoration: BoxDecoration(
+                    color: borderColor,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10.0),
+                      topLeft: Radius.circular(10.0),
+                    )),
+                padding: EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text("Gold Portfolio",
+                        style: TextStyle(
+                          color: bottomNavigationColor,
+                          fontFamily: Strings.fontFamilyName,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 14,
+                        )),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text("₹1,03,500",
+                        style: TextStyle(
+                          color: primaryTextColor,
+                          fontFamily: Strings.fontfamilyCabinetGrotesk,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 22,
+                        )),
+                    5.h,
+                    RichText(
+                        text: TextSpan(
+                      text: "Total Investment: ",
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 12,
+                      ),
+                      children: <InlineSpan>[
+                        TextSpan(
+                          text: '₹ 5,60,000',
+                          style: TextStyle(
+                            color: primaryTextColor,
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    )),
+                    SizedBox(
+                      height: 30,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: MediaQuery.sizeOf(context).width,
+                margin: EdgeInsets.all(10),
+                color: Colors.white,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 40,
+                    ),
+                    Divider(
+                      height: 0.5,
+                      color: lightColor,
+                    ),
+                    2.h,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        TextButton(
+                          style: TextButton.styleFrom(
+                              foregroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              )),
+                          onPressed: () {
+                            Get.to(() => WithdrawalLandingScreen());
+                          },
+                          child: Text(
+                            "Withdraw Investment",
+                            style: TextStyle(
+                              color: primaryTextColor,
+                              fontFamily: Strings.fontFamilyName,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: 1,
+                          height: 24,
+                          color: lightColor,
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                              foregroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              )),
+                          onPressed: () {},
+                          child: Text(
+                            "Transaction History",
+                            style: TextStyle(
+                              color: primaryTextColor,
+                              fontFamily: Strings.fontFamilyName,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+          // Profile image
+          Positioned(
+            top: 105.0,
+            left: 10.0,
+            right: 10.0,
+            child: Container(
+              width: MediaQuery.sizeOf(context).width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: borderColor, width: 1.0),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              padding: EdgeInsets.all(15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  portfolioWidget("42.8g", "Total Gold"),
+                  portfolioWidget("6.8g", "Gold+ (G)"),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget portfolioWidget(String value, String title) {
+    return RichText(
+        text: TextSpan(
+      text: "$value\n",
+      style: TextStyle(
+        fontFamily: Strings.fontFamilyName,
+        fontWeight: FontWeight.w600,
+        color: primaryTextColor,
+        fontSize: 18,
+      ),
+      children: <TextSpan>[
+        TextSpan(
+          text: title,
+          style: TextStyle(
+            fontFamily: Strings.fontFamilyName,
+            fontWeight: FontWeight.normal,
+            color: primaryTextColor,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    ));
+  }
+
+  Widget priceNugets(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: borderColor,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: EdgeInsets.only(top: 15),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Gold Prices at 3 Month Low,best time to buy",
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontfamilyCabinetGrotesk,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                      )),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
+                  // Text(Strings.investNow,
+                  //     style: TextStyle(
+                  //       decoration: TextDecoration.underline,
+                  //       color: bottomNavigationColor,
+                  //       fontFamily: Strings.fontFamilyName,
+                  //       fontWeight: FontWeight.w600,
+                  //       fontSize: 12,
+                  //     )),
+                ],
+              )),
+              SizedBox(
+                width: 20,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/low_price_image.png',
+                    height: 60,
+                  ),
+                  // Text("₹6,002/gm",
+                  //     maxLines: 5,
+                  //     style: TextStyle(
+                  //       color: bottomNavigationColor,
+                  //       fontFamily: Strings.fontFamilyName,
+                  //       fontWeight: FontWeight.w600,
+                  //       fontSize: 17,
+                  //     ))
+                ],
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget priceGRaphWidget(
+      BuildContext context, DigitalInvestmentController controller) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+      padding: EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('₹ 6000/gm',
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 20,
+                      )),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "+124 (1.8%)",
+                          style: TextStyle(
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                            color: Colors.green,
+                          ),
+                        ),
+                        TextSpan(
+                          text: ' This  month',
+                          style: TextStyle(
+                              fontFamily: Strings.fontFamilyName,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 12,
+                              color: primaryTextColor),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+              Spacer(),
+              GestureDetector(
+                // <-- OutlinedButton
+                onTap: () {
+                  controller.priceAlertsDailog(context);
+                },
+                child: Text(
+                  'Price Alerts',
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                      color: bottomNavigationColor),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            height: 250,
+            child: LinechartWidget(),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+              height: 35,
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: controller.listTime.length,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          controller.selectedTime = controller.listTime[index];
+                        });
+                      },
+                      child: Container(
+                          margin: EdgeInsets.only(right: 5),
+                          padding: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: controller.selectedTime ==
+                                    controller.listTime[index]
+                                ? primaryColor
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(5.0),
+                            border: Border.all(
+                                color: controller.selectedTime ==
+                                        controller.listTime[index]
+                                    ? primaryColor
+                                    : Colors.grey),
+                          ),
+                          child: Text(controller.listTime[index],
+                              style: TextStyle(
+                                color: controller.selectedTime ==
+                                        controller.listTime[index]
+                                    ? Colors.white
+                                    : Colors.grey,
+                                fontFamily: Strings.fontFamilyName,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 12,
+                              ))),
+                    );
+                  })),
+          priceNugets(context)
+        ],
+      ),
+    );
+  }
+
+  Widget safeGoldWidget(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: borderColor),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      padding: EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text("Your Gold is 100% \nsafe with us!",
+              maxLines: 2,
+              style: TextStyle(
+                color: bottomNavigationColor,
+                fontFamily: Strings.fontfamilyCabinetGrotesk,
+                fontWeight: FontWeight.w700,
+                fontSize: 20,
+              )),
+          10.h,
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("13.5k",
+                      style: TextStyle(
+                        color: bottomNavigationColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      )),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Text("People have invested with augmont",
+                      maxLines: 5,
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 11,
+                      )),
+                ],
+              )),
+              SizedBox(
+                width: 5,
+              ),
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("\$3 Bn Revenues",
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      )),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Text("Top 150 unlisted companies in India- Dun & Brandstreet",
+                      maxLines: 5,
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 11,
+                      )),
+                ],
+              )),
+              SizedBox(
+                width: 5,
+              ),
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("10+ Award wining",
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      )),
+                  SizedBox(
+                    height: 2,
+                  ),
+                  Text("Best Gold seller award by BFGC",
+                      maxLines: 5,
+                      style: TextStyle(
+                        color: primaryTextColor,
+                        fontFamily: Strings.fontFamilyName,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 11,
+                      )),
+                ],
+              )),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }

@@ -15,6 +15,7 @@ class LinechartWidget extends StatelessWidget{
     return  SfCartesianChart(
 
         primaryXAxis: CategoryAxis(
+
           isVisible: true,
             majorGridLines: const MajorGridLines(width: 0)
         ),

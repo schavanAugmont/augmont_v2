@@ -308,7 +308,7 @@ class MoreController extends GetxController with StateMixin<dynamic> {
                              checkLoginStatus();
                              HomeController.to.isLoggedIn();
                              update();
-                             Navigator.pop(context);
+                             Get.back();
                            },
                            child: Text('Log-out',
                                style: TextStyle(

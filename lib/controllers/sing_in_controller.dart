@@ -40,8 +40,10 @@ import '../network/ErrorHandling.dart';
 class SignInController extends GetxController with StateMixin<dynamic> {
   late LocalAuthentication _localAuthentication;
   List<SimCard> simCard = <SimCard>[];
+
   static SignInController get to => Get.find();
   var canCheckBiometrics = false.obs;
+  var isBioMetricsAvlb=false.obs;
   var isUserAuthenticated = false.obs;
   var isShowMobilePop = true.obs;
   var isTimeOnGoing = false.obs;
@@ -129,8 +131,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
           PrintLogs.printData('Your Application receive code - $code');
           try {
             otpTextController.text = code;
-            otpOnClick(Get.context!);
-
+            // otpOnClick(Get.context!);
           } catch (e) {
             PrintLogs.printException(e);
           }
@@ -254,6 +255,14 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     PrintLogs.printData(canCheckBiometrics.toString());
     this.canCheckBiometrics(canCheckBiometrics);
     isBiometricAvl(canCheckBiometrics);
+
+    final List<BiometricType> availableBiometrics =
+    await auth.getAvailableBiometrics();
+    if (availableBiometrics.isNotEmpty) {
+      isBioMetricsAvlb(true);
+    }
+
+
     update();
     return canCheckBiometrics;
   }
@@ -318,10 +327,10 @@ class SignInController extends GetxController with StateMixin<dynamic> {
         update();
         if (model!.customerDetails!.isPinAdded! && isCustomer) {
           ErrorHandling.showToast("User logged in successfully");
-         loginSuccessDailog(context);
+          loginSuccessDailog(context);
         } else if (!model!.customerDetails!.isPinAdded! && isCustomer) {
           ErrorHandling.showToast("User logged in successfully");
-        loginSuccessDailog(context);
+          loginSuccessDailog(context);
         } else if (!model!.customerDetails!.isPinAdded! && !isCustomer) {
           navigateToBasicDetails();
         }
@@ -434,7 +443,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
 
   @override
   Future<void> onClose() async {
-      await otpTextController.stopListen();
+    await otpTextController.stopListen();
     super.onClose();
   }
 
@@ -828,20 +837,19 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       var details = CustomerDetailsModel.fromJson(jsonMap);
       if (details.result.data.cityId?.id == -1) {
       } else {
-        if(isCustomer){
+        if (isCustomer) {
           Get.offAll(
-                () => const MainScreen(),
+            () => const MainScreen(),
             binding: MainScreenBinding(),
             transition: Transition.rightToLeft,
           );
-        }else{
+        } else {
           Get.offAll(
-                () => PersonalizeQuestionScreen(),
+            () => PersonalizeQuestionScreen(),
             binding: PersonalizedQuesBiding(),
             transition: Transition.rightToLeft,
           );
         }
-
       }
     }, onError: (error) {
       DialogHelper.dismissLoader();
@@ -971,7 +979,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       isPinAdded(false);
       update();
       ErrorHandling.showToast("User register successfully");
-     loginSuccessDailog(context);
+      loginSuccessDailog(context);
     }, onError: (error) {
       DialogHelper.dismissLoader();
       if (error is InvalidInputException) {
@@ -1041,14 +1049,26 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     var sessionDevice = SessionManager.getDeviceId();
     var isBiometric = SessionManager.getIsBiometricAdded();
     bool canCheckBiometrics = await _localAuthentication.canCheckBiometrics;
+
     bool isValidDevice = false;
     if (sessionDevice == DeviceUtil.instance.deviceId.toString()) {
       isValidDevice = true;
     }
 
-    print("aut data $isBiometric $isForgot $canCheckBiometrics $isValidDevice");
+    final List<BiometricType> availableBiometrics =
+        await auth.getAvailableBiometrics();
+    bool checkDeviceSupport = false;
+    if (availableBiometrics.isNotEmpty) {
+      checkDeviceSupport = true;
+    }
 
-    if (isBiometric && canCheckBiometrics && isValidDevice) {
+    print(
+        "aut data $isBiometric $isForgot $canCheckBiometrics $isValidDevice $checkDeviceSupport");
+
+    if (isBiometric &&
+        canCheckBiometrics &&
+        isValidDevice &&
+        checkDeviceSupport) {
       Future.delayed(const Duration(seconds: 2), () async {
         authenticateMe();
       });
@@ -1083,38 +1103,40 @@ class SignInController extends GetxController with StateMixin<dynamic> {
           Navigator.of(context).pop(true);
           navigateToPinSetup();
         });
-       return ScaffoldView(
+        return ScaffoldView(
             child: Container(
-              margin: EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-
-                  SizedBox(height: 100,),
-                  maintitleCabin(
-                     isCustomer? "Your \nAccount is \nVerified!":"Your \nAccount is \nCreated!"
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  mainDescp(
-                      isCustomer? "Your OTP has been verified and your account has been login successfully!": "Your OTP has been verified and your account has been created successfully!"),
-                  Center(
-                      child: Container(
-                        margin: const EdgeInsets.only(top: 20),
-                        child: Image.asset("assets/images/success_icon.png"),
-                        // child: FadeInImage.assetNetwork(
-                        //     placeholder: 'assets/images/designf.jpg', image: imgurl),
-                      )),
-                ],
+          margin: EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 100,
               ),
-            ));
+              maintitleCabin(isCustomer
+                  ? "Your \nAccount is \nVerified!"
+                  : "Your \nAccount is \nCreated!"),
+              const SizedBox(
+                height: 5,
+              ),
+              mainDescp(isCustomer
+                  ? "Your OTP has been verified and your account has been login successfully!"
+                  : "Your OTP has been verified and your account has been created successfully!"),
+              Center(
+                  child: Container(
+                margin: const EdgeInsets.only(top: 20),
+                child: Image.asset("assets/images/success_icon.png"),
+                // child: FadeInImage.assetNetwork(
+                //     placeholder: 'assets/images/designf.jpg', image: imgurl),
+              )),
+            ],
+          ),
+        ));
       },
     );
   }
 
-  void otpOnClick(BuildContext context){
+  void otpOnClick(BuildContext context) {
     pinTextController.clear();
     reenterpinTextController.clear();
     if (isCustomer) {
@@ -1134,8 +1156,7 @@ class SignInController extends GetxController with StateMixin<dynamic> {
     }
   }
 
-  openMobilePopup(){
-
+  openMobilePopup() {
     initMobileNumberState();
   }
 
@@ -1157,17 +1178,17 @@ class SignInController extends GetxController with StateMixin<dynamic> {
           simCard: simCard,
           callBack: (String mobile) {
             if (mobile.length > 10) {
-              int startcount= mobile.length-10;
-              int endcount=mobile.length;
-              mobile = mobile.substring(startcount,endcount);
+              int startcount = mobile.length - 10;
+              int endcount = mobile.length;
+              mobile = mobile.substring(startcount, endcount);
             }
             mobileTextController.text = mobile;
             setEnableGenrateOtpButton(true);
-             isShowMobilePop(false);
+            isShowMobilePop(false);
             update();
             Get.back();
           },
-          closecallBack: (){
+          closecallBack: () {
             isShowMobilePop(false);
             update();
             Get.back();

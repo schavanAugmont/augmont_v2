@@ -99,6 +99,8 @@ class _SplashScreenState extends State<SplashScreen>
             }
           });
 
+          //Get.off(() => const MainScreen(), binding: MainScreenBinding());
+
         }
       })
       ..addStatusListener((status) => print('$status'));
