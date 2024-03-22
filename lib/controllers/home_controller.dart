@@ -88,6 +88,8 @@ class HomeController extends GetxController with StateMixin<dynamic> {
   void onReady() {
     // WalletController.to.fetchPassbookDetails();
     // WalletController.to.getFDDetails();
+
+   // isLoggedIn();
     super.onReady();
   }
 
@@ -99,6 +101,7 @@ class HomeController extends GetxController with StateMixin<dynamic> {
 
   @override
   void dispose() {
+    cancelTimer();
     super.dispose();
   }
 
@@ -141,7 +144,8 @@ class HomeController extends GetxController with StateMixin<dynamic> {
   }
 
   Future<void> isLoggedIn() async {
-    var boo = await SessionManager.isLoggedIn();
+    var boo = SessionManager.isLoggedIn();
+    ErrorHandling.showToast("refresh controller");
     // futureDate = await SessionManager.getDate();
     isUserLoggedIn(boo);
     update();

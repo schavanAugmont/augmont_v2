@@ -14,6 +14,8 @@ import '../../widgets/animated_dot.dart';
 import '../Main/main_screen.dart';
 
 class SignInPage1 extends StatefulWidget {
+  static String routeName = "/SignInPage1";
+
   const SignInPage1({super.key});
 
   @override
@@ -55,10 +57,25 @@ class SignInPageState1 extends State<SignInPage1> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           GestureDetector(
-                            child: Icon(
-                              size: 24,
-                              Icons.arrow_back_outlined,
-                              color: bottomNavigationColor,
+                            child: Row(
+                              children: [
+                                Icon(
+                                  size: 24,
+                                  Icons.arrow_back_outlined,
+                                  color: bottomNavigationColor,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(Strings.back,
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: bottomNavigationColor,
+                                      fontFamily: Strings.fontFamilyName,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    )),
+                              ],
                             ),
                             onTap: () {
                               Get.offAll(
@@ -68,17 +85,6 @@ class SignInPageState1 extends State<SignInPage1> {
                               );
                             },
                           ),
-                          SizedBox(
-                            width: 5,
-                          ),
-                          Text(Strings.back,
-                              style: TextStyle(
-                                decoration: TextDecoration.underline,
-                                color: bottomNavigationColor,
-                                fontFamily: Strings.fontFamilyName,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              )),
                           Spacer(),
                           Row(
                             children: List.generate(

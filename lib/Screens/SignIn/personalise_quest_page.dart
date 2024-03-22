@@ -12,6 +12,7 @@ import '../../Utils/strings.dart';
 import '../../widgets/stepper_widget.dart';
 
 class PersonalizeQuestionScreen extends StatefulWidget {
+  static String routeName = "/PersonalizeQuestionScreen";
   @override
   State<StatefulWidget> createState() {
     return _PersonalizeQuestionScreenState();

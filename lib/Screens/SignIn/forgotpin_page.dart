@@ -17,6 +17,7 @@ import 'Components/OtpView.dart';
 import 'Components/SignInComponents.dart';
 
 class ForgotPinPage extends StatefulWidget {
+  static String routeName = "/ForgotPinPage";
   const ForgotPinPage({super.key});
 
   @override

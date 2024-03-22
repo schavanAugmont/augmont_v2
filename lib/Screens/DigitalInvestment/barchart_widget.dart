@@ -1,4 +1,5 @@
 import 'package:augmont_v2/Utils/colors.dart';
+import 'package:augmont_v2/models/barchart_model.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -7,15 +8,15 @@ class BarchartWidegt extends StatelessWidget{
    final String screen;
    BarchartWidegt({super.key, required this.screen});
 
-  List<_SalesData> data = [
-    _SalesData('Total \nInvestment', 250000),
-    _SalesData('Other Platform\n Returns', 1725000),
-    _SalesData('Augmont \nReturns', 1925000),
+  List<BarchartModel> data = [
+    BarchartModel('Total \nInvestment', 250000),
+    BarchartModel('Other Platform\n Returns', 1725000),
+    BarchartModel('Augmont \nReturns', 1925000),
   ];
 
-  List<_SalesData> data1 = [
-    _SalesData('Normal SIP', 250000),
-    _SalesData('Step-upSIP', 1725000),
+  List<BarchartModel> data1 = [
+    BarchartModel('Normal SIP', 250000),
+    BarchartModel('Step-upSIP', 1725000),
   ];
   @override
   Widget build(BuildContext context) {
@@ -29,22 +30,16 @@ class BarchartWidegt extends StatelessWidget{
           isVisible: false,
         ),
         plotAreaBorderWidth: 0,
-        series: <CartesianSeries<_SalesData, String>>[
-          ColumnSeries<_SalesData, String>(
+        series: <CartesianSeries<BarchartModel, String>>[
+          ColumnSeries<BarchartModel, String>(
             width: 0.45,
               color: primaryTextColor,
               dataSource: screen=='stepup'?data1:data,
-              xValueMapper: (_SalesData sales, _) => sales.year,
-              yValueMapper: (_SalesData sales, _) => sales.sales,
+              xValueMapper: (BarchartModel sales, _) => sales.year,
+              yValueMapper: (BarchartModel sales, _) => sales.sales,
               dataLabelSettings: DataLabelSettings(isVisible: true)),
         ]);
   }
 
 }
 
-class _SalesData {
-  _SalesData(this.year, this.sales);
-
-  final String year;
-  final double sales;
-}

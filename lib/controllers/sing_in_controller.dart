@@ -1165,38 +1165,39 @@ class SignInController extends GetxController with StateMixin<dynamic> {
       await MobileNumber.requestPhonePermission;
       return;
     }
-    try {
-      simCard = (await MobileNumber.getSimCards)!;
-      for (var s in simCard) {
-        print('Serial number: ${s.number}');
-      }
-      print(simCard.length);
 
-      showDialog(
-        context: Get.context!,
-        builder: (BuildContext context) => MobileSelectionPopup(
-          simCard: simCard,
-          callBack: (String mobile) {
-            if (mobile.length > 10) {
-              int startcount = mobile.length - 10;
-              int endcount = mobile.length;
-              mobile = mobile.substring(startcount, endcount);
-            }
-            mobileTextController.text = mobile;
-            setEnableGenrateOtpButton(true);
-            isShowMobilePop(false);
-            update();
-            Get.back();
-          },
-          closecallBack: () {
-            isShowMobilePop(false);
-            update();
-            Get.back();
-          },
-        ),
-      );
-    } on PlatformException catch (e) {
-      debugPrint("Failed to get mobile number because of '${e.message}'");
+    simCard = (await MobileNumber.getSimCards)!;
+    if (simCard.isNotEmpty) {
+      try {
+        showDialog(
+          context: Get.context!,
+          builder: (BuildContext context) =>
+              MobileSelectionPopup(
+                simCard: simCard,
+                callBack: (String mobile) {
+                  if (mobile.length > 10) {
+                    int startcount = mobile.length - 10;
+                    int endcount = mobile.length;
+                    mobile = mobile.substring(startcount, endcount);
+                  }
+                  mobileTextController.text = mobile;
+                  setEnableGenrateOtpButton(true);
+                  isShowMobilePop(false);
+                  update();
+                  Get.back();
+                },
+                closecallBack: () {
+                  isShowMobilePop(false);
+                  update();
+                  Get.back();
+                },
+              ),
+        );
+      } on PlatformException catch (e) {
+        debugPrint("Failed to get mobile number because of '${e.message}'");
+      }
+    } else {
+      isShowMobilePop(false);
     }
   }
 }

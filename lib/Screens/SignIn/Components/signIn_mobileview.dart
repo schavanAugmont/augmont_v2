@@ -82,7 +82,7 @@ class _SignInMobileViewState extends State<SignInMobileView> {
                             //     .isUserAuthenticated.value,
                             keyboardType: Platform.isIOS
                                 ? const TextInputType.numberWithOptions(
-                                    signed: true, decimal: true)
+                                    signed: true, decimal: false)
                                 : TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
                               FilteringTextInputFormatter.digitsOnly

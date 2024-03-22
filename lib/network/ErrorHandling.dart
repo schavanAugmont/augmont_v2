@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../Bindings/signin_binding.dart';
+import '../Screens/SignIn/signin_page1.dart';
 import '../Utils/colors.dart';
 import '../Utils/session_manager.dart';
 import '../Utils/strings.dart';
@@ -148,6 +150,7 @@ class ErrorHandling {
     isAlreadyOnLogout = true;
     SessionManager.clearAll();
     showToast(Strings.yourAccIsCurrentlyLoggedInOnAnotherDevice);
+    Get.offAll(() => SignInPage1(), binding: SignInBiding(), transition: Transition.rightToLeft,);
   }
 
   static void showToast(String msg) {

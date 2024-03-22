@@ -13,6 +13,7 @@ import '../../widgets/animated_dot.dart';
 import 'Components/signIn_otpview.dart';
 
 class SignInPage2 extends StatefulWidget {
+  static String routeName = "/SignInPage2";
   const SignInPage2({super.key});
 
   @override
@@ -46,26 +47,30 @@ class SignInPageState2 extends State<SignInPage2> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         GestureDetector(
-                          child: Icon(
-                            size: 24,
-                            Icons.arrow_back_outlined,
-                            color: bottomNavigationColor,
+                          child: Row(
+                            children: [
+                              Icon(
+                                size: 24,
+                                Icons.arrow_back_outlined,
+                                color: bottomNavigationColor,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(Strings.back,
+                                  style: TextStyle(
+                                    decoration: TextDecoration.underline,
+                                    color: bottomNavigationColor,
+                                    fontFamily: Strings.fontFamilyName,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ))
+                            ],
                           ),
                           onTap: () {
                             controller.clearBackStack();
                           },
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(Strings.back,
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: bottomNavigationColor,
-                              fontFamily: Strings.fontFamilyName,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            )),
                         Spacer(),
                         Row(
                           children: List.generate(

@@ -18,6 +18,7 @@ class MoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<MoreController>(builder: (controller) {
+
       return Scaffold(
         body: SafeArea(
           child: GestureDetector(

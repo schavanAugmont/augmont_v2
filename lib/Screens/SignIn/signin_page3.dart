@@ -14,6 +14,7 @@ import '../../widgets/animated_dot.dart';
 import 'Components/OtpView.dart';
 
 class SignInPage3 extends StatefulWidget {
+  static String routeName = "/SignInPage3";
   final bool isForgot;
   final String refCode;
 
@@ -77,6 +78,9 @@ class SignInPageState3 extends State<SignInPage3> {
                             ],
                           ),
                           onTap: () {
+                            controller.pinError(false);
+                            controller.repinError(false);
+                            controller.update();
                             if (widget.isForgot) {
                               Get.offAll(
                                   () => const SignInPage3(

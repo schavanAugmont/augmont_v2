@@ -1,3 +1,4 @@
+import 'package:augmont_v2/Controllers/home_controller.dart';
 import 'package:augmont_v2/Screens/DigitalInvestment/digiinvestment_dashborad_screen.dart';
 import 'package:augmont_v2/controllers/editnominee_controller.dart';
 import 'package:augmont_v2/controllers/editprofile_controller.dart';
@@ -30,6 +31,7 @@ class MoreBinding extends Bindings {
     Get.lazyPut<WishlistController>(() => WishlistController());
     Get.lazyPut<MyOrdersController>(() => MyOrdersController());
     Get.lazyPut<DigitalInvestmentController>(() => DigitalInvestmentController());
+    Get.lazyPut<HomeController>(() => HomeController());
 
   }
 }

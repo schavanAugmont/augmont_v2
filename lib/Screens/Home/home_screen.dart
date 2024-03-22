@@ -43,7 +43,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     var size = const MediaQueryData().size;
-    return GetBuilder<HomeController>(
+    return GetBuilder<HomeController>(initState: (state) {
+      HomeController.to.isLoggedIn();
+    },
       builder: (controller) {
         return Scaffold(
           appBar: AppBar(

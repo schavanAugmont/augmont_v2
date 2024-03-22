@@ -23,7 +23,9 @@ import 'package:augmont_v2/bindings/more_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import '../Bindings/main_screen_binding.dart';
 import '../Bindings/signin_binding.dart';
+import '../Screens/Main/main_screen.dart';
 import '../Screens/SignIn/signin_page1.dart';
 import '../Utils/colors.dart';
 import '../Utils/popover.dart';
@@ -300,15 +302,15 @@ class MoreController extends GetxController with StateMixin<dynamic> {
                                color: primaryTextColor,
                              ),
                            ),
-                           onPressed: () {
+                           onPressed: () async {
 
+                             Get.back();
                              SessionManager.clearAll();
                              SessionManager.setSelectedProduct(Strings.moduleOther);
                              SessionManager.setIsDashSelected(true);
-                             checkLoginStatus();
-                             HomeController.to.isLoggedIn();
                              update();
-                             Get.back();
+                             Get.offAll(() => SignInPage1(), binding: SignInBiding(), transition: Transition.rightToLeft,);
+
                            },
                            child: Text('Log-out',
                                style: TextStyle(
