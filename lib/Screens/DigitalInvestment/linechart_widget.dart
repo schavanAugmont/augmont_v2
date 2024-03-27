@@ -28,7 +28,8 @@ class LinechartWidget extends StatelessWidget{
               dataSource: data,
               xValueMapper: (_SalesData sales, _) => sales.year,
               yValueMapper: (_SalesData sales, _) => sales.sales,
-              dataLabelSettings: DataLabelSettings(isVisible: false))
+              dataLabelSettings: DataLabelSettings(isVisible: false)),
+
         ]);
   }
   

@@ -21,7 +21,6 @@ class BarchartWidegt extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return  SfCartesianChart(
-
         primaryXAxis: CategoryAxis(
           isVisible: true,
             majorGridLines: const MajorGridLines(width: 0)
@@ -33,7 +32,8 @@ class BarchartWidegt extends StatelessWidget{
         series: <CartesianSeries<BarchartModel, String>>[
           ColumnSeries<BarchartModel, String>(
             width: 0.45,
-              color: primaryTextColor,
+              color: primaryColor,
+              isTrackVisible: false,
               dataSource: screen=='stepup'?data1:data,
               xValueMapper: (BarchartModel sales, _) => sales.year,
               yValueMapper: (BarchartModel sales, _) => sales.sales,

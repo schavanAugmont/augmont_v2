@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:augmont_v2/Screens/DigitalInvestment/digiinvestment_dashborad_screen.dart';
 import 'package:augmont_v2/Screens/GoldGift/gold_gift_screen.dart';
+import 'package:augmont_v2/Utils/RateCalculator.dart';
 import 'package:augmont_v2/bindings/gifting_binding.dart';
 import 'package:augmont_v2/controllers/wallet_controller.dart';
 import 'package:augmont_v2/models/HomeProductModel.dart';
@@ -66,6 +67,7 @@ class HomeController extends GetxController with StateMixin<dynamic> {
   var standardGoldRates = 0.0.obs;
   var plusGoldRates = 0.0.obs;
   var diffrenceGoldRate = 0.0.obs;
+  var totalAmount=0.0.obs;
   var isVisible=true.obs;
 
   @override
@@ -145,13 +147,10 @@ class HomeController extends GetxController with StateMixin<dynamic> {
 
   Future<void> isLoggedIn() async {
     var boo = SessionManager.isLoggedIn();
-    ErrorHandling.showToast("refresh controller");
-    // futureDate = await SessionManager.getDate();
     isUserLoggedIn(boo);
     update();
     if (isUserLoggedIn.value) {
       fetchPassbookDetails();
-      getFDDetails();
       getStepupSIPList();
     } else {
       setWalletData();
@@ -191,7 +190,7 @@ class HomeController extends GetxController with StateMixin<dynamic> {
 
           goldInGrams(double.parse(details.result.data.goldGrms));
           silverInGrams(double.parse(details.result.data.silverGrms));
-
+          getFDDetails();
           setDifferenceCal();
 
           update();
@@ -405,11 +404,17 @@ class HomeController extends GetxController with StateMixin<dynamic> {
     update();
   }
 
-  void setDifferenceCal() {
+  Future<void> setDifferenceCal() async {
     var totalgoldRate = goldBuyRate * goldInGrams.value;
     standardGoldRates((11 / 100) * totalgoldRate);
     plusGoldRates((16 / 100) * totalgoldRate);
     diffrenceGoldRate(plusGoldRates.value - standardGoldRates.value);
+
+    var gold = await RateCalculator.getAmountFromCalculation(goldInGrams.toString(), goldBuyRate);
+    var sliver = await RateCalculator.getAmountFromCalculation(silverInGrams.toString(), silverBuyRate);
+    var fd=await RateCalculator.getAmountFromCalculation(goldFDGrams.toString(), plusGoldRates.value);
+
+    totalAmount(gold+sliver+fd);
     update();
   }
 

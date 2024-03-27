@@ -5,25 +5,34 @@ import 'package:augmont_v2/Screens/DigitalInvestment/SIP/sip_details_screen.dart
 import 'package:augmont_v2/Screens/DigitalInvestment/dg_sip_screen.dart';
 import 'package:augmont_v2/Utils/RateCalculator.dart';
 import 'package:augmont_v2/Utils/extension_util.dart';
+import 'package:augmont_v2/models/MySIPListModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../Models/PassbookDetailsModel.dart';
 import '../Network/ErrorHandling.dart';
+import '../Network/Providers/SignInProvider.dart';
 import '../Screens/MetalPice/metal_price_screen.dart';
 import '../Screens/SignIn/Components/SignInComponents.dart';
 import '../Utils/colors.dart';
+import '../Utils/dialog_helper.dart';
 import '../Utils/popover.dart';
 import '../Utils/print_logs.dart';
 import '../Utils/session_manager.dart';
 import '../Utils/strings.dart';
 import '../bindings/digitalinvestment_binding.dart';
+import '../models/FDPassbookDetailsModel.dart';
 import '../models/GoldRateModel.dart';
 import '../models/barchart_model.dart';
 import '../network/Providers/HomeProvider.dart';
+import '../network/Providers/SipDetailsProvider.dart';
+import '../network/Providers/WalletProvider.dart';
 
 class DigitalInvestmentController extends GetxController {
+  var sipDetailList = <SIPData>[].obs;
   bool isGoldSelected = true;
+  var isUserLoggedIn = false.obs;
   bool isSwitched = false;
   bool enableEditButton = false;
   late TextEditingController priceTextController = TextEditingController();
@@ -49,6 +58,24 @@ class DigitalInvestmentController extends GetxController {
   double goldSellRate = 0.0;
   double silverSellRate = 0.0;
 
+  var walletGoldInGrams = "".obs;
+  var walletFDGoldInGrams = "".obs;
+  var walletSilverInGrams = "".obs;
+  var walletAmt = 0.0.obs;
+
+  var sellableGoldBalance = 0.0.obs;
+  var sellableSilverBalance = 0.0.obs;
+
+  var goldInGrams = 0.0.obs;
+  var goldFDGrams = 0.0.obs;
+  var silverInGrams = 0.0.obs;
+
+  var standardGoldRates = 0.0.obs;
+  var plusGoldRates = 0.0.obs;
+  var diffrenceGoldRate = 0.0.obs;
+  var totalGoldAmount = 0.0.obs;
+  var totalSilverAmount = 0.0.obs;
+
   List<BarchartModel> barchartData = [];
 
   late SessionManager sessionManager;
@@ -60,9 +87,10 @@ class DigitalInvestmentController extends GetxController {
     currentSilverBuyRate('₹ $silverBuyRate/gm');
     currentGoldSellRate('₹ $goldSellRate/gm');
     currentSilverSellRate('₹ $silverSellRate/gm');
+    setWalletData();
     fetchGoldRate();
     setTimer();
-
+    isLoggedIn();
     super.onInit();
   }
 
@@ -364,8 +392,13 @@ class DigitalInvestmentController extends GetxController {
                               Container(
                                 margin: EdgeInsets.only(bottom: 10, top: 10),
                                 decoration: BoxDecoration(
-                                  color: radioId==1?borderColor1:Colors.transparent,
-                                  border: Border.all(color: radioId==1?primaryColor:borderColor),
+                                  color: radioId == 1
+                                      ? borderColor1
+                                      : Colors.transparent,
+                                  border: Border.all(
+                                      color: radioId == 1
+                                          ? primaryColor
+                                          : borderColor),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 padding: EdgeInsets.all(10),
@@ -419,8 +452,8 @@ class DigitalInvestmentController extends GetxController {
                                               },
                                             ),
                                             10.h,
-                                            
-                                            Image.asset("assets/images/grow_icon.png")
+                                            Image.asset(
+                                                "assets/images/grow_icon.png")
                                           ],
                                         )),
                                   ],
@@ -429,8 +462,13 @@ class DigitalInvestmentController extends GetxController {
                               Container(
                                 margin: EdgeInsets.only(bottom: 10, top: 10),
                                 decoration: BoxDecoration(
-                                  color: radioId==2?borderColor1:Colors.transparent,
-                                  border: Border.all(color: radioId==2?primaryColor:borderColor),
+                                  color: radioId == 2
+                                      ? borderColor1
+                                      : Colors.transparent,
+                                  border: Border.all(
+                                      color: radioId == 2
+                                          ? primaryColor
+                                          : borderColor),
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 padding: EdgeInsets.all(10),
@@ -442,11 +480,12 @@ class DigitalInvestmentController extends GetxController {
                                         flex: 6,
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                           mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                              MainAxisAlignment.start,
                                           children: [
-                                            Text("16%* returns on your investement",
+                                            Text(
+                                                "16%* returns on your investement",
                                                 style: TextStyle(
                                                   color: primaryTextColor,
                                                   fontFamily: Strings
@@ -458,7 +497,8 @@ class DigitalInvestmentController extends GetxController {
                                                 "Earn an additional 5% interest annually with Gold+ lease your gold to repatued jewellers and opt out whenever you want extra",
                                                 style: TextStyle(
                                                   color: primaryTextColor,
-                                                  fontFamily: Strings.fontFamilyName,
+                                                  fontFamily:
+                                                      Strings.fontFamilyName,
                                                   fontWeight: FontWeight.normal,
                                                   fontSize: 11,
                                                 )),
@@ -475,28 +515,27 @@ class DigitalInvestmentController extends GetxController {
                                         flex: 4,
                                         child: Column(
                                           crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                              CrossAxisAlignment.end,
                                           mainAxisAlignment:
-                                          MainAxisAlignment.end,
+                                              MainAxisAlignment.end,
                                           children: [
-                                        Radio(
-                                          value: 2,
-                                          groupValue: radioId,
-                                          onChanged: (val) {
-                                            setState(() {
-                                              radioId = 2;
-                                            });
-                                          },
-                                        ),
-                                        10.h,
-
-                                        Image.asset("assets/images/plus_icon.png")
-                                      ],
-                                    )),
+                                            Radio(
+                                              value: 2,
+                                              groupValue: radioId,
+                                              onChanged: (val) {
+                                                setState(() {
+                                                  radioId = 2;
+                                                });
+                                              },
+                                            ),
+                                            10.h,
+                                            Image.asset(
+                                                "assets/images/plus_icon.png")
+                                          ],
+                                        )),
                                     SizedBox(
                                       height: 10,
                                     ),
-
                                   ],
                                 ),
                               ),
@@ -506,8 +545,7 @@ class DigitalInvestmentController extends GetxController {
                               ElevatedButton(
                                   onPressed: () {
                                     Get.back();
-                                    Get.to(() => DgSIPScreen(),
-                                        binding: DigitalInvestmentBiding());
+                                    goToDGSummaryPage();
                                   },
                                   style: ElevatedButton.styleFrom(
                                     minimumSize: Size(double.infinity, 40.0),
@@ -719,5 +757,150 @@ class DigitalInvestmentController extends GetxController {
     var grams = await RateCalculator.getGramFromCalculation(
         amount.toString(), goldBuyRate, goldBuyGstRate.toString());
     var currentValue = grams * goldBuyRate;
+  }
+
+  Future<void> isLoggedIn() async {
+    var boo = SessionManager.isLoggedIn();
+    isUserLoggedIn(boo);
+    update();
+    if (isUserLoggedIn.value) {
+      fetchPassbookDetails();
+      fetchSipList();
+    } else {
+      setWalletData();
+    }
+
+    // if(boo) FirebaseUtil.login();
+    // if (boo) {
+    //   final token = await sessionManager.getFcmToken();
+    //   sessionManager.isFcmTokenSet().then((value) {
+    //     if(value == false){
+    //       ApiBaseHelper().putApi('customer/app/notification/fcm-update',jsonEncode({
+    //         'fcmToken':token,
+    //       })).then((value){
+    //         sessionManager.setIsFcmTokenSet(true);
+    //       });
+    //     }
+    //   });
+    // }
+  }
+
+  void setWalletData() {
+    walletGoldInGrams("0.00g");
+    walletFDGoldInGrams("0.00g");
+    walletSilverInGrams("0.00g");
+    update();
+  }
+
+  Future<void> fetchPassbookDetails({showDialog = true}) async {
+    if (showDialog) DialogHelper.showLoading();
+    SignInProvider().getPassbookDetails().then(
+      (value) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        try {
+          var jsonMap = jsonDecode(value);
+          var details = PassbookDetailsModel.fromJson(jsonMap);
+          walletGoldInGrams(details.result.data.goldGrms + "g");
+          walletSilverInGrams(details.result.data.silverGrms + "g");
+
+          sellableGoldBalance(
+              double.parse(details.result.data.sellableGoldBalance));
+          sellableSilverBalance(
+              double.parse(details.result.data.sellableSilverBalance));
+
+          goldInGrams(double.parse(details.result.data.goldGrms));
+          silverInGrams(double.parse(details.result.data.silverGrms));
+          getFDDetails();
+          setDifferenceCal();
+
+          update();
+        } catch (e) {
+          PrintLogs.printException(e);
+        }
+      },
+      onError: (error) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        ErrorHandling.handleErrors(error);
+      },
+    );
+  }
+
+  Future<void> getFDDetails({showDialog = true}) async {
+    if (showDialog) DialogHelper.showLoading();
+    WalletProvider().getFDBalance().then(
+      (value) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        try {
+          var jsonMap = jsonDecode(value);
+          var details = FDPassbookDetailsModel.fromJson(jsonMap);
+          walletFDGoldInGrams(details.data!.result!.data!.investedGold! + "g");
+          goldFDGrams(double.parse(details.data!.result!.data!.investedGold!));
+          update();
+        } catch (e) {
+          PrintLogs.printException(e);
+        }
+      },
+      onError: (error) {
+        if (showDialog) DialogHelper.dismissLoader();
+
+        ErrorHandling.handleErrors(error);
+      },
+    );
+  }
+
+  Future<void> setDifferenceCal() async {
+    var totalgoldRate = goldBuyRate * goldInGrams.value;
+    standardGoldRates((11 / 100) * totalgoldRate);
+    plusGoldRates((16 / 100) * totalgoldRate);
+    diffrenceGoldRate(plusGoldRates.value - standardGoldRates.value);
+
+    var gold = await RateCalculator.getAmountFromCalculation(
+        goldInGrams.toString(), goldBuyRate);
+    var sliver = await RateCalculator.getAmountFromCalculation(
+        silverInGrams.toString(), silverBuyRate);
+    var fd = await RateCalculator.getAmountFromCalculation(
+        goldFDGrams.toString(), plusGoldRates.value);
+
+    totalGoldAmount(gold + fd);
+    totalSilverAmount(sliver);
+    update();
+  }
+
+  void fetchSipList() async {
+    DialogHelper.showLoading();
+    var customerId = await SessionManager.getCustomerId();
+    SipDetailsProvider().fetchSipList(1, 25, customerId).then((value) {
+      DialogHelper.dismissLoader();
+      try {
+        var jsonMap = jsonDecode(value);
+        var data = jsonMap["data"];
+        var tempsipDetailList = <SIPData>[].obs;
+        tempsipDetailList
+            .addAll(List<SIPData>.from(data.map((x) => SIPData.fromJson(x))));
+        print("esd ${tempsipDetailList.length}");
+
+        for (var _tempsipDetailList in tempsipDetailList) {
+         // if (_tempsipDetailList.sipStatus.toString().toLowerCase() =="approved") {
+            sipDetailList.add(_tempsipDetailList);
+            update();
+          //}
+        }
+
+        update();
+      } catch (e) {
+        PrintLogs.printException(e);
+      }
+    }, onError: (error) {
+      DialogHelper.dismissLoader();
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
+  void goToDGSummaryPage() {
+    Get.to(() => DgSIPScreen(),
+        binding: DigitalInvestmentBiding());
   }
 }

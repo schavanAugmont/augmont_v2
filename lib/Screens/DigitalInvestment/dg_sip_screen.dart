@@ -1,7 +1,10 @@
+import 'package:augmont_v2/Screens/SignIn/Components/SignInComponents.dart';
+import 'package:augmont_v2/Utils/extension_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../Utils/RateCalculator.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/strings.dart';
 import '../../controllers/dgsip_controller.dart';
@@ -21,66 +24,105 @@ class _DgSIPState extends State<DgSIPScreen> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<DgSIPController>(builder: (controller) {
-      return SafeArea(
-          child: Scaffold(
+      return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
+          toolbarHeight: 80,
           backgroundColor: Colors.white,
           centerTitle: false,
           titleSpacing: 0.0,
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-              size: 16,
-            ),
-            //replace with our own icon data.
+          title: Column(
+            children: [
+              10.h,
+              GestureDetector(
+                onTap: () {
+                  Get.back();
+                },
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    20.w,
+                    Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.black,
+                      size: 16,
+                    ),
+                    10.w,
+                    Text(Strings.digitalGold,
+                        style: TextStyle(
+                          color: primaryTextColor,
+                          fontFamily: Strings.fontFamilyName,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        )),
+                  ],
+                ),
+              ),
+              MetalPriceScreen(
+                metalPrice: controller.currentGoldBuyRate.value,
+              )
+            ],
           ),
-          title: Transform(
-              // you can forcefully translate values left side using Transform
-              transform: Matrix4.translationValues(-15.0, 0.0, 0.0),
-              child: Text(Strings.digitalGold,
-                  style: TextStyle(
-                    color: primaryTextColor,
-                    fontFamily: Strings.fontFamilyName,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ))),
+          flexibleSpace: new Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                colors: [
+                  Colors.amber.withOpacity(0.2),
+                  Colors.amber.withOpacity(0.1),
+                ],
+              ),
+            ),
+          ),
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         bottomNavigationBar: Container(
             height: 55,
+            margin: EdgeInsets.only(bottom: 20),
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             // Adjust padding as needed
             child: ElevatedButton(
                 onPressed: () {
-                  if(controller.isGoldSelected){
+                  if (controller.isSIPSelected) {
                     controller.otgDailog(context);
-                  }else {
+                  } else {
                     controller.enableLeasingDailog(context);
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 55.0),
-                    backgroundColor: Colors.black),
-                child: Text(Strings.proceed,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: Strings.fontFamilyName,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    )))),
+                  backgroundColor: deliveryDescTextColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5.0),
+                    ),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(Strings.proceed.toTitleCase(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: Strings.fontFamilyName,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        )),
+                    Image.asset(
+                      "assets/images/arrow_right.png",
+                      height: 20,
+                    )
+                  ],
+                ))),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              MetalPriceScreen(metalPrice: "₹ 0,00/gm",),
               projectedGrowthView(context),
               growthCal(controller),
             ],
           ),
         ),
-      ));
+      );
     });
   }
 
@@ -94,7 +136,10 @@ class _DgSIPState extends State<DgSIPScreen> {
           children: [
             Container(
               margin: EdgeInsets.only(bottom: 20),
-              color: kycProductBackgroundColor,
+              decoration: BoxDecoration(
+                color: borderColor,
+                borderRadius: BorderRadius.circular(10.0),
+              ),
               padding: EdgeInsets.all(15),
               child: Row(
                 children: [
@@ -103,14 +148,15 @@ class _DgSIPState extends State<DgSIPScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(  controller.isSwitched
-                          ? Strings.goldplusEnablemsg
-                          : Strings.switchgoldmsg,
+                      Text(
+                          controller.isSwitched
+                              ? Strings.goldplusEnablemsg
+                              : Strings.switchgoldmsg,
                           style: TextStyle(
                             color: primaryTextColor,
-                            fontFamily: Strings.fontFamilyName,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 11,
+                            fontFamily: Strings.fontfamilyCabinetGrotesk,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14,
                           )),
                       SizedBox(
                         height: 2,
@@ -136,7 +182,10 @@ class _DgSIPState extends State<DgSIPScreen> {
                           //   controller.isSwitched = value;
                           //   print(controller.isSwitched);
                           // });
-                          controller.enableGoldPlusDailog(context);
+                          //controller.enableGoldPlusDailog(context);
+
+                          controller.isSwitched = value;
+                          controller.update();
                         },
                         activeTrackColor: primaryTextColor,
                         activeColor: Colors.white,
@@ -147,10 +196,9 @@ class _DgSIPState extends State<DgSIPScreen> {
             Align(
               alignment: Alignment.center,
               child: Container(
-                width: MediaQuery.sizeOf(context).width,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: kycProductBackgroundColor,
+                  border: Border.all(color: borderColor),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -161,61 +209,63 @@ class _DgSIPState extends State<DgSIPScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Expanded(child: Container(
-                        height: 25,
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                         decoration: BoxDecoration(
-                          color: controller.isGoldSelected
-                              ? Colors.white
-                              : kycProductBackgroundColor,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: GestureDetector(
-                            onTap: () {
-                              controller.onViewTap(true);
-                            },
-                            child: Center(
-                              child: Text(
-                                'One Time',
-                                style: TextStyle(
-                                  fontFamily: Strings.fontFamilyName,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                  color: controller.isGoldSelected
-                                      ? primaryTextColor
-                                      : Colors.black45,
-                                ),
-                              ),
-                            )),
-                      )),
-                      SizedBox(
-                        width: 10,
-                      ),
-                     Expanded(child: Container(
-                        height: 25,
-                        decoration: BoxDecoration(
-                          color: controller.isGoldSelected
-                              ? kycProductBackgroundColor
+                          color: controller.isSIPSelected
+                              ? primaryColor
                               : Colors.white,
-                          borderRadius: BorderRadius.circular(5),
+                          borderRadius: BorderRadius.circular(10),
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            controller.onViewTap(false);
+                            controller.onViewTap(true);
                           },
                           child: Center(
                               child: Text(
                             'SIP (Recommanded)',
                             style: TextStyle(
                               fontFamily: Strings.fontFamilyName,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
                               fontSize: 12,
-                              color: controller.isGoldSelected
-                                  ? Colors.black45
-                                  : primaryTextColor,
+                              color: controller.isSIPSelected
+                                  ? Colors.white
+                                  : bottomNavigationColor,
                             ),
                           )),
                         ),
-                     ))
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: controller.isSIPSelected
+                              ? Colors.white
+                              : primaryColor,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: GestureDetector(
+                            onTap: () {
+                              controller.onViewTap(false);
+                            },
+                            child: Center(
+                              child: Text(
+                                'One Time',
+                                style: TextStyle(
+                                  fontFamily: Strings.fontFamilyName,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 12,
+                                  color: controller.isSIPSelected
+                                      ? bottomNavigationColor
+                                      : Colors.white,
+                                ),
+                              ),
+                            )),
+                      ),
                     ],
                   ),
                 ),
@@ -224,198 +274,143 @@ class _DgSIPState extends State<DgSIPScreen> {
             SizedBox(
               height: 25,
             ),
-
-            if(controller.isGoldSelected)...[
+            if (!controller.isSIPSelected) ...[
               Container(
-                color: kycProductBackgroundColor,
-                padding: EdgeInsets.all(15),
-                child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("Swtich to SIP for great earnings!",
-                                style: TextStyle(
-                                  color: primaryTextColor,
-                                  fontFamily: Strings.fontFamilyName,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 11,
-                                )),
-                            SizedBox(
-                              height: 2,
-                            ),
-                            Text("Expert suggest invest reguraly in gold help counter the fluction for better profits ",
-                                style: TextStyle(
-                                  color: primaryTextColor,
-                                  fontFamily: Strings.fontFamilyName,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 11,
-                                )),
-                          ],
-                        )
-              ),
+                  color: kycProductBackgroundColor,
+                  padding: EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text("Swtich to SIP for great earnings!",
+                          style: TextStyle(
+                            color: primaryTextColor,
+                            fontFamily: Strings.fontfamilyCabinetGrotesk,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 11,
+                          )),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Text(
+                          "Expert suggest invest reguraly in gold help counter the fluction for better profits ",
+                          style: TextStyle(
+                            color: primaryTextColor,
+                            fontFamily: Strings.fontFamilyName,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 11,
+                          )),
+                    ],
+                  )),
             ],
-            if(!controller.isGoldSelected)...[
-            Text(
-              'Investment Pattern',
-              style: TextStyle(
-                fontFamily: Strings.fontFamilyName,
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
-                color: primaryTextColor,
+            if (controller.isSIPSelected) ...[
+              Text(
+                'Investment Pattern',
+                style: TextStyle(
+                  fontFamily: Strings.fontFamilyName,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                  color: primaryTextColor,
+                ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              padding: EdgeInsets.all(5),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                      flex: 2,
-                      child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              controller.timeline = controller.timelineList[1];
-                            });
-                          },
-                          child: Container(
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                    width: 1.0,
-                                    color: controller.timeline ==
-                                            controller.timelineList[1]
-                                        ? primaryTextColor
-                                        : kycProductBackgroundColor),
-                              ),
-                              child: Center(
-                                  child: Text(controller.timelineList[1],
-                                      style: TextStyle(
-                                        color: controller.timeline ==
-                                                controller.timelineList[1]
-                                            ? primaryTextColor
-                                            : shadowColor,
-                                        fontFamily: Strings.fontFamilyName,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12,
-                                      )))))),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                      flex: 2,
-                      child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              controller.timeline = controller.timelineList[2];
-                            });
-                          },
-                          child: Container(
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                    width: 1.0,
-                                    color: controller.timeline ==
-                                            controller.timelineList[2]
-                                        ? primaryTextColor
-                                        : kycProductBackgroundColor),
-                              ),
-                              child: Center(
-                                  child: Text(controller.timelineList[2],
-                                      style: TextStyle(
-                                        color: controller.timeline ==
-                                                controller.timelineList[2]
-                                            ? primaryTextColor
-                                            : shadowColor,
-                                        fontFamily: Strings.fontFamilyName,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12,
-                                      )))))),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                      flex: 2,
-                      child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              controller.timeline = controller.timelineList[3];
-                            });
-                          },
-                          child: Container(
-                              height: 30,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(
-                                    width: 1.0,
-                                    color: controller.timeline ==
-                                            controller.timelineList[3]
-                                        ? primaryTextColor
-                                        : kycProductBackgroundColor),
-                              ),
-                              child: Center(
-                                  child: Text(controller.timelineList[3],
-                                      style: TextStyle(
-                                        color: controller.timeline ==
-                                                controller.timelineList[3]
-                                            ? primaryTextColor
-                                            : shadowColor,
-                                        fontFamily: Strings.fontFamilyName,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12,
-                                      )))))),
-                ],
+              SizedBox(
+                height: 10,
               ),
-            ),
+              SizedBox(
+                  height: 35,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: controller.timelineList.length,
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            controller.timeline =
+                                controller.timelineList[index];
+
+                            controller.update();
+                          },
+                          child: Container(
+                              margin: EdgeInsets.only(right: 5),
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              decoration: BoxDecoration(
+                                color: controller.timeline ==
+                                        controller.timelineList[index]
+                                    ? primaryColor
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(10.0),
+                                border: Border.all(
+                                    color: controller.timeline ==
+                                            controller.timelineList[index]
+                                        ? primaryColor
+                                        : borderColor),
+                              ),
+                              child: Center(
+                                  child: Text(
+                                      "${controller.timelineList[index]}",
+                                      style: TextStyle(
+                                        color: controller.timeline ==
+                                                controller.timelineList[index]
+                                            ? Colors.white
+                                            : bottomNavigationColor,
+                                        fontFamily: Strings.fontFamilyName,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 12,
+                                      )))),
+                        );
+                      })),
             ],
             SizedBox(
               height: 20,
             ),
-            Text(
+            subtitle(
               'Enter Amount',
-              style: TextStyle(
-                fontFamily: Strings.fontFamilyName,
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
-                color: primaryTextColor,
-              ),
             ),
             SizedBox(
               height: 10,
             ),
-            TextFormField(
-              keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
+    SizedBox(
+    height: 55,
+    child:  Row(
+              children: [
+               Expanded(child:  TextFormField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  textAlign: TextAlign.start,
+                  maxLength: 10,
+                  maxLines: 1,
+                  controller: controller.priceTextController,
+                  onChanged: (value) {
+
+                  },
+                  validator: (value) {
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    fillColor: Colors.white,
+                    filled: true,
+                    counterText: "",
+                    hintText: Strings.enterCustomPrice,
+                  ),
+                  style: TextStyle(
+                    fontFamily: Strings.fontFamilyName,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
+                    color: primaryTextColor,
+                  ),
+                )),
+                if(controller.priceTextController.text.isNotEmpty)
+                Text('= ${controller.ValuesforAmt}',
+                    style: TextStyle(
+                      fontFamily: Strings.fontFamilyName,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 12,
+                    )),
               ],
-              textAlign: TextAlign.start,
-              maxLength: 10,
-              maxLines: 1,
-              controller: controller.priceTextController,
-              onChanged: (value) {},
-              validator: (value) {
-                return null;
-              },
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                fillColor: kycProductBackgroundColor,
-                filled: true,
-                counterText: "",
-                hintText: Strings.enterCustomPrice,
-              ),
-              style: TextStyle(
-                fontFamily: Strings.fontFamilyName,
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-                color: primaryTextColor,
-              ),
-            ),
+    )  ),
             SizedBox(
               height: 20,
             ),
@@ -428,31 +423,34 @@ class _DgSIPState extends State<DgSIPScreen> {
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
-                          setState(() {
-                            controller.selectedamount =
-                                controller.amountList[index];
-                            controller.priceTextController.text =
-                                controller.selectedamount;
-                          });
+                          controller.selectedamount =
+                              controller.amountList[index];
+                          controller.priceTextController.text =
+                              controller.selectedamount;
+                          controller.setValuesforAmt();
+                          controller.update();
                         },
                         child: Container(
                             margin: EdgeInsets.only(right: 5),
                             padding: EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5.0),
+                              color: controller.selectedamount ==
+                                      controller.amountList[index]
+                                  ? primaryColor
+                                  : Colors.white,
+                              borderRadius: BorderRadius.circular(10.0),
                               border: Border.all(
                                   color: controller.selectedamount ==
                                           controller.amountList[index]
-                                      ? primaryTextColor
-                                      : Colors.grey),
+                                      ? primaryColor
+                                      : borderColor),
                             ),
                             child: Text("₹ ${controller.amountList[index]}",
                                 style: TextStyle(
                                   color: controller.selectedamount ==
                                           controller.amountList[index]
-                                      ? primaryTextColor
-                                      : Colors.grey,
+                                      ? Colors.white
+                                      : bottomNavigationColor,
                                   fontFamily: Strings.fontFamilyName,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 12,
@@ -466,27 +464,32 @@ class _DgSIPState extends State<DgSIPScreen> {
   Widget projectedGrowthView(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: kycProductBackgroundColor),
+        border: Border.all(color: borderColor),
         borderRadius: BorderRadius.circular(10.0),
       ),
-      margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      margin: EdgeInsets.all(20),
       child: Column(
         children: [
-          Padding(padding: EdgeInsets.all(20),
-          child:Column(
-            children: [
-              Center(
-                  child: Text("Projected Growth",
+          Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text("Projected Growth",
                       style: TextStyle(
                         color: primaryTextColor,
-                        fontFamily: Strings.fontFamilyName,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ))),
-              Container(height: 200,child:  DonutChartWidget(),),
-              Center(
-                child: RichText(
-                    text: TextSpan(
+                        fontFamily: Strings.fontfamilyCabinetGrotesk,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                      )),
+                  Container(
+                    height: 200,
+                    child: DonutChartWidget(),
+                  ),
+                  Center(
+                    child: RichText(
+                        text: TextSpan(
                       text: "Total Returns: ",
                       style: TextStyle(
                         color: primaryTextColor,
@@ -504,38 +507,11 @@ class _DgSIPState extends State<DgSIPScreen> {
                             fontSize: 12,
                           ),
                         ),
-
                       ],
-                    )),)
-            ],
-          )),
-          Container(
-              width: MediaQuery.of(context).size.width,
-              color: kycProductBackgroundColor,
-              height: 40,
-              child: Center(
-                  child: RichText(
-                      text: TextSpan(
-                        text: "Saving with Augmont: ",
-                        style: TextStyle(
-                          color: primaryTextColor,
-                          fontFamily: Strings.fontFamilyName,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 12,
-                        ),
-                        children: <InlineSpan>[
-                          TextSpan(
-                            text: '₹ 1450* annually',
-                            style: TextStyle(
-                              color: primaryTextColor,
-                              fontFamily: Strings.fontFamilyName,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 12,
-                            ),
-                          ),
-
-                        ],
-                      )),))
+                    )),
+                  )
+                ],
+              )),
         ],
       ),
     );

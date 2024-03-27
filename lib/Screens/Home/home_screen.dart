@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:augmont_v2/Screens/Home/Components/home_components.dart';
 import 'package:augmont_v2/Utils/colors.dart';
 import 'package:augmont_v2/models/HomeProductModel.dart';
@@ -1403,7 +1405,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 5,
                     ),
-                    Text("₹1,03,500",
+                    Text("₹${controller.totalAmount.value.toStringAsFixed(4)}",
                         style: TextStyle(
                           color: primaryTextColor,
                           fontFamily: Strings.fontfamilyCabinetGrotesk,

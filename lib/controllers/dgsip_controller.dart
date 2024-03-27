@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:augmont_v2/Screens/DigitalInvestment/OneTime/onetime_summary_screen.dart';
 import 'package:augmont_v2/Screens/DigitalInvestment/SIP/edit_sip_screen.dart';
 import 'package:augmont_v2/Screens/DigitalInvestment/SIP/edit_sip_structure_screen.dart';
@@ -8,16 +11,23 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../Network/ErrorHandling.dart';
 import '../Screens/DigitalInvestment/SIP/sip_stepup_screen.dart';
 import '../Screens/SignIn/Components/SignInComponents.dart';
+import '../Utils/RateCalculator.dart';
 import '../Utils/colors.dart';
+import '../Utils/dialog_helper.dart';
 import '../Utils/popover.dart';
+import '../Utils/print_logs.dart';
 import '../Utils/strings.dart';
 import '../Utils/utils.dart';
 import '../bindings/digitalinvestment_binding.dart';
+import '../models/GoldRateModel.dart';
+import '../network/Providers/DGProvider.dart';
+import '../network/Providers/HomeProvider.dart';
 
 class DgSIPController extends GetxController {
-  bool isGoldSelected = true;
+  bool isSIPSelected = true;
   bool isSwitched = false;
   bool isEnabled = true;
   var selectedPartner = 0;
@@ -27,7 +37,7 @@ class DgSIPController extends GetxController {
   var selectedTime = '';
   var selectedamount = '';
   List<String> amountList = ['500', '1000', '20000', '5000', '6000'];
-  List<String> timelineList = ['One Time', 'Daily', 'Weekly', 'Monthly'];
+  List<String> timelineList = ['Daily', 'Weekly', 'Monthly'];
   List<String> stepupAmtList = ['20', '50', '100', '200', '500'];
   List<String> stepupPercList = ['5%', '10%', '6%', '15%', '20%'];
   List<String> stepamountList = ['20', '50', '100', '200', '500'];
@@ -46,12 +56,25 @@ class DgSIPController extends GetxController {
   late TextEditingController investmentController;
   late TextEditingController startDateController;
 
+  var currentGoldBuyRate = "".obs;
+  var currentSilverBuyRate = "".obs;
+  var currentGoldSellRate = "".obs;
+  var currentSilverSellRate = "".obs;
+  Timer? timer;
+  double goldBuyGstRate = 0.0;
+  double silverBuyGstRate = 0.0;
+  double goldBuyRate = 0.0;
+  double silverBuyRate = 0.0;
+  double goldSellRate = 0.0;
+  double silverSellRate = 0.0;
+
   var isPANError = false.obs;
   var isDOBError = false.obs;
   late DateTime currentDate;
   var selectedDate = "".obs;
   var errorMessage = "".obs;
   var dobErrorMessage = "".obs;
+  var ValuesforAmt = '';
 
   var isInvestError = false.obs;
   var isSelectDateError = false.obs;
@@ -59,18 +82,83 @@ class DgSIPController extends GetxController {
   @override
   void onInit() {
     panCardController = TextEditingController();
-
     investmentController = TextEditingController();
     startDateController = TextEditingController();
-
     dobController = TextEditingController(text: selectedDate.value);
     currentDate = DateTime.now();
+    fetchGoldRate();
+    fetchDGConfig();
+    setTimer();
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    cancelTimer();
+    super.onClose();
+  }
+
+  @override
+  void dispose() {
+    cancelTimer();
+    super.dispose();
+  }
+
+  checkForNewRatePrice() {
+    fetchGoldRate(isFromTimer: true);
+  }
+
+  void fetchGoldRate({var isFromTimer = false}) async {
+    HomeProvider().getGoldRate().then((value) {
+      try {
+        var jsonMap = jsonDecode(value);
+
+        var rates = GoldRateModel.fromJson(jsonMap);
+        goldBuyRate = double.parse(rates.rate.rates.gBuy);
+        silverBuyRate = double.parse(rates.rate.rates.sBuy);
+
+        goldSellRate = double.parse(rates.rate.rates.gSell);
+        silverSellRate = double.parse(rates.rate.rates.sSell);
+
+        goldBuyGstRate = double.parse(rates.rate.rates.gBuyGst);
+        silverBuyGstRate = double.parse(rates.rate.rates.sBuyGst);
+
+        currentGoldBuyRate('₹ $goldBuyRate/gm');
+        currentSilverBuyRate('₹ $silverBuyRate/gm');
+
+        currentGoldSellRate('₹ $goldSellRate/gm');
+        currentSilverSellRate('₹ $silverSellRate/gm');
+
+        update();
+      } catch (e) {
+        PrintLogs.printException(e);
+      }
+    }, onError: (error) {
+      if (!isFromTimer) {
+        ErrorHandling.handleErrors(error);
+      }
+    });
+  }
+
   void onViewTap(bool bool) {
-    isGoldSelected = bool;
+    isSIPSelected = bool;
+    priceTextController.clear();
+    timeline = '';
+    selectedamount = '';
     update();
+  }
+
+  void setTimer() async {
+    cancelTimer();
+
+    timer = Timer.periodic(
+        const Duration(seconds: 30), (Timer t) => checkForNewRatePrice());
+  }
+
+  void cancelTimer() {
+    if (timer != null) {
+      timer?.cancel();
+    }
   }
 
   void enableGoldPlusDailog(BuildContext context) {
@@ -1060,5 +1148,31 @@ class DgSIPController extends GetxController {
   void setStepupValue(bool isEditable) {
     isEnabled = isEditable;
     //update();
+  }
+
+  void fetchDGConfig() async {
+    DialogHelper.showLoading();
+    DGProvider().fetchDGConfig().then((value) {
+      DialogHelper.dismissLoader();
+      try {
+        var jsonMap = jsonDecode(value);
+
+        update();
+      } catch (e) {
+        PrintLogs.printException(e);
+      }
+    }, onError: (error) {
+      DialogHelper.dismissLoader();
+      ErrorHandling.handleErrors(error);
+    });
+  }
+
+  Future<void> setValuesforAmt() async {
+  var  Amt = await RateCalculator.getGramFromCalculation(
+        priceTextController.text.toString(),
+        goldBuyRate,
+        goldBuyGstRate.toString());
+    ValuesforAmt=Amt.toStringAsFixed(4);
+    update();
   }
 }

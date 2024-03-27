@@ -233,7 +233,7 @@ class _SIPStepupState extends State<SIPStepupScreen> {
                               height: 25,
                               width: 160,
                               decoration: BoxDecoration(
-                                color: controller.isGoldSelected
+                                color: controller.isSIPSelected
                                     ? Colors.white
                                     : kycProductBackgroundColor,
                                 borderRadius: BorderRadius.circular(5),
@@ -249,7 +249,7 @@ class _SIPStepupState extends State<SIPStepupScreen> {
                                         fontFamily: Strings.fontFamilyName,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 12,
-                                        color: controller.isGoldSelected
+                                        color: controller.isSIPSelected
                                             ? primaryTextColor
                                             : Colors.black45,
                                       ),
@@ -263,7 +263,7 @@ class _SIPStepupState extends State<SIPStepupScreen> {
                               width: 160,
                               height: 25,
                               decoration: BoxDecoration(
-                                color: controller.isGoldSelected
+                                color: controller.isSIPSelected
                                     ? kycProductBackgroundColor
                                     : Colors.white,
                                 borderRadius: BorderRadius.circular(5),
@@ -279,7 +279,7 @@ class _SIPStepupState extends State<SIPStepupScreen> {
                                         fontFamily: Strings.fontFamilyName,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 12,
-                                        color: controller.isGoldSelected
+                                        color: controller.isSIPSelected
                                             ? Colors.black45
                                             : primaryTextColor,
                                       ),
@@ -311,7 +311,7 @@ class _SIPStepupState extends State<SIPStepupScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text(
-            controller.isGoldSelected
+            controller.isSIPSelected
                 ? 'Select % to Step-Up'
                 : 'Select Amount to Step-Up',
             style: TextStyle(
@@ -358,7 +358,7 @@ class _SIPStepupState extends State<SIPStepupScreen> {
               height: 35,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: controller.isGoldSelected
+                  itemCount: controller.isSIPSelected
                       ? controller.stepupPercList.length
                       : controller.stepupAmtList.length,
                   shrinkWrap: true,
@@ -366,7 +366,7 @@ class _SIPStepupState extends State<SIPStepupScreen> {
                     return GestureDetector(
                       onTap: () {
                         setState(() {
-                          controller.selectedamount = controller.isGoldSelected
+                          controller.selectedamount = controller.isSIPSelected
                               ? controller.stepupPercList[index]
                               : controller.stepupAmtList[index];
                           controller.priceTextController.text =
@@ -381,19 +381,19 @@ class _SIPStepupState extends State<SIPStepupScreen> {
                             borderRadius: BorderRadius.circular(5.0),
                             border: Border.all(
                                 color: controller.selectedamount ==
-                                        (controller.isGoldSelected
+                                        (controller.isSIPSelected
                                             ? controller.stepupPercList[index]
                                             : controller.stepupAmtList[index])
                                     ? primaryTextColor
                                     : Colors.grey),
                           ),
                           child: Text(
-                              controller.isGoldSelected
+                              controller.isSIPSelected
                                   ? "${controller.stepupPercList[index]}"
                                   : "₹ ${controller.stepupAmtList[index]}",
                               style: TextStyle(
                                 color: controller.selectedamount ==
-                                        (controller.isGoldSelected
+                                        (controller.isSIPSelected
                                             ? controller.stepupPercList[index]
                                             : controller.stepupAmtList[index])
                                     ? primaryTextColor
