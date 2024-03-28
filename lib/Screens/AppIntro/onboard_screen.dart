@@ -96,7 +96,6 @@ class _OnboardScreenState extends State<OnboardScreen> {
                                           Radius.circular(5.0),
                                         ),
                                       ),
-                                      primary: lightgreenshede1,
                                       backgroundColor: deliveryDescTextColor),
                                   child: Row(
                                     mainAxisAlignment:
