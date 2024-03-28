@@ -1,4 +1,3 @@
-import 'package:augmont_v2/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -38,7 +37,6 @@ class AugmontApp extends StatelessWidget {
       title: Strings.goldForAll,
       theme: CustomTheme.lightTheme,
       home: const SplashScreen(),
-      getPages: routeList,
       defaultTransition: Transition.rightToLeft,
     );
   }
